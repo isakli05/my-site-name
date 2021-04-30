@@ -1,0 +1,22 @@
+# THEMENAME.info.yml file for Reboot example theme.
+name: Reboot
+type: theme
+description: A demo theme created based on Bootstrap.
+package: Other
+core_version_requirement: ^8 || ^9
+base theme: classy
+
+regions:
+  header: 'Header'
+  primary menu: 'Primary_menu'
+  secondary menu: 'Secondary_menu'
+  page top: 'Page_top'
+  page bottom: 'Page_bottom'
+  highlighted: 'Highlighted'
+  featured top: 'Featured_top'
+  breadcrumb: 'Breadcrumb'
+  content: 'Content'
+  sidebar first: 'Sidebar_first'
+  sidebar second: 'Sidebar_second'
+  footer first: 'Footer_first'
+  footer second: 'Footer_second'
