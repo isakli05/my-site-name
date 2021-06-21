@@ -37,8 +37,6 @@ class SiteSettingsForm extends FormBase {
    *
    * @param string $site_path
    *   The site path.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
    */
   public function __construct($site_path, RendererInterface $renderer) {
     $this->sitePath = $site_path;
@@ -46,8 +44,8 @@ class SiteSettingsForm extends FormBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
+    * {@inheritdoc}
+    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->getParameter('site.path'),

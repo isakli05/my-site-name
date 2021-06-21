@@ -48,8 +48,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     // Enable content translation on articles.
     $this->drupalGet('admin/config/regional/content-language');
     $edit = [
@@ -72,8 +71,7 @@ class ModerationContentTranslationTest extends BrowserTestBase {
       'title[0][value]' => 'Published English node',
       'langcode[0][value]' => 'en',
     ];
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
     $this->assertSession()->pageTextContains('Article Published English node has been created.');
     $english_node = $this->drupalGetNodeByTitle('Published English node');
 

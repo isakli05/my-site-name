@@ -36,7 +36,7 @@ class ResponseGeneratorTest extends BrowserTestBase {
   }
 
   /**
-   * Tests to see if generator header is added.
+   * Test to see if generator header is added.
    */
   public function testGeneratorHeaderAdded() {
 

@@ -75,7 +75,7 @@ class LayoutBuilderEntityViewDisplayTest extends SectionStorageTestBase {
   }
 
   /**
-   * Tests that setting overridable enables Layout Builder only when TRUE.
+   * Tests that setting overridable enables Layout Builder only when set to TRUE.
    */
   public function testSetOverridable() {
     // Disable Layout Builder.

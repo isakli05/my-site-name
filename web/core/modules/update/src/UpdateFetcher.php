@@ -6,7 +6,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 use Drupal\Core\Site\Settings;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Fetches project information from remote locations.
@@ -100,7 +100,7 @@ class UpdateFetcher implements UpdateFetcherInterface {
         ->get($url, ['headers' => ['Accept' => 'text/xml']])
         ->getBody();
     }
-    catch (TransferException $exception) {
+    catch (RequestException $exception) {
       watchdog_exception('update', $exception);
       if ($with_http_fallback && strpos($url, "http://") === FALSE) {
         $url = str_replace('https://', 'http://', $url);

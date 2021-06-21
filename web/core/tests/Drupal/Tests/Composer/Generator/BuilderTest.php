@@ -16,7 +16,7 @@ use Drupal\Composer\Composer;
 class BuilderTest extends TestCase {
 
   /**
-   * Provides test data for testBuilder.
+   * Test data for testBuilder.
    */
   public function builderTestData() {
     return [
@@ -82,7 +82,7 @@ class BuilderTest extends TestCase {
   }
 
   /**
-   * Tests all of the various kinds of builders.
+   * Test all of the various kinds of builders.
    *
    * @dataProvider builderTestData
    */

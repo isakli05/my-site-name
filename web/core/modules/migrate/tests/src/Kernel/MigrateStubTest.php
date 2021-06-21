@@ -120,7 +120,7 @@ class MigrateStubTest extends MigrateTestBase {
   }
 
   /**
-   * Tests invalid source id count.
+   * Test invalid source id count.
    */
   public function testInvalidSourceIdCount() {
     $this->expectException(\InvalidArgumentException::class);

@@ -36,7 +36,7 @@ class MigrateImageTest extends MigrateNodeTestBase {
   }
 
   /**
-   * Tests image migration from Drupal 6 to 8.
+   * Test image migration from Drupal 6 to 8.
    */
   public function testNode() {
     $node = Node::load(9);

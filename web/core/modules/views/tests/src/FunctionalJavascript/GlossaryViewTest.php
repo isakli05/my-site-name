@@ -100,7 +100,7 @@ class GlossaryViewTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests that the glossary also works on a language prefixed URL.
+   * Test that the glossary also works on a language prefixed URL.
    */
   public function testGlossaryLanguagePrefix() {
     ConfigurableLanguage::createFromLangcode('nl')->save();

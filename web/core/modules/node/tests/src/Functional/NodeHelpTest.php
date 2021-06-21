@@ -70,13 +70,13 @@ class NodeHelpTest extends BrowserTestBase {
     // Check the node add form.
     $this->drupalGet('node/add/' . $this->testType);
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains($this->testText);
+    $this->assertText($this->testText);
 
     // Create node and check the node edit form.
     $node = $this->drupalCreateNode(['type' => $this->testType]);
     $this->drupalGet('node/' . $node->id() . '/edit');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains($this->testText);
+    $this->assertText($this->testText);
   }
 
 }

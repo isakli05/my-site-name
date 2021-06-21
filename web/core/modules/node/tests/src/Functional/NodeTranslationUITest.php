@@ -22,7 +22,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * {@inheritdoc}
+   * {inheritdoc}
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
@@ -72,8 +72,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     // Display the language selector.
     $this->drupalLogin($this->administrator);
     $edit = ['language_configuration[language_alterable]' => TRUE];
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, 'Save content type');
     $this->drupalLogin($this->translator);
   }
 
@@ -93,12 +92,9 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $this->drupalLogin($this->administrator);
     // Delete all fields.
     $this->drupalGet('admin/structure/types/manage/article/fields');
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.' . $this->fieldName . '/delete');
-    $this->submitForm([], 'Delete');
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags/delete');
-    $this->submitForm([], 'Delete');
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/delete');
-    $this->submitForm([], 'Delete');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.' . $this->fieldName . '/delete', [], 'Delete');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags/delete', [], 'Delete');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image/delete', [], 'Delete');
 
     // Add a node.
     $default_langcode = $this->langcodes[0];
@@ -122,8 +118,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     ], ['language' => $language]);
     $edit = $this->getEditValues($values, $langcode);
     $edit['status[value]'] = FALSE;
-    $this->drupalGet($add_url);
-    $this->submitForm($edit, 'Save (this translation)');
+    $this->drupalPostForm($add_url, $edit, 'Save (this translation)');
 
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
@@ -181,10 +176,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       foreach ($this->langcodes as $langcode) {
         $options = ['language' => $languages[$langcode]];
         $url = $entity->toUrl('edit-form', $options);
-        $this->drupalGet($url, $options);
-        $this->submitForm([
-          'status[value]' => $value,
-        ], 'Save' . $this->getFormSubmitSuffix($entity, $langcode));
+        $this->drupalPostForm($url, ['status[value]' => $value], 'Save' . $this->getFormSubmitSuffix($entity, $langcode), $options);
       }
       $storage->resetCache([$this->entityId]);
       $entity = $storage->load($this->entityId);
@@ -193,7 +185,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
         // status first.
         $status = !$index;
         $translation = $entity->getTranslation($langcode);
-        $this->assertEquals($status, $this->manager->getTranslationMetadata($translation)->isPublished(), 'The translation has been correctly unpublished.');
+        $this->assertEqual($status, $this->manager->getTranslationMetadata($translation)->isPublished(), 'The translation has been correctly unpublished.');
       }
     }
   }
@@ -229,8 +221,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
       ];
       $options = ['language' => $languages[$langcode]];
       $url = $entity->toUrl('edit-form', $options);
-      $this->drupalGet($url, $options);
-      $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
+      $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode), $options);
     }
 
     $storage->resetCache([$this->entityId]);
@@ -238,10 +229,10 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     foreach ($this->langcodes as $langcode) {
       $translation = $entity->getTranslation($langcode);
       $metadata = $this->manager->getTranslationMetadata($translation);
-      $this->assertEquals($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
-      $this->assertEquals($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
-      $this->assertEquals($values[$langcode]['sticky'], $translation->isSticky(), 'Sticky of Translation correctly stored.');
-      $this->assertEquals($values[$langcode]['promote'], $translation->isPromoted(), 'Promoted of Translation correctly stored.');
+      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEqual($values[$langcode]['sticky'], $translation->isSticky(), 'Sticky of Translation correctly stored.');
+      $this->assertEqual($values[$langcode]['promote'], $translation->isPromoted(), 'Promoted of Translation correctly stored.');
     }
   }
 
@@ -257,16 +248,14 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $edit = [];
     $edit['admin_theme'] = 'seven';
     $edit['use_admin_theme'] = TRUE;
-    $this->drupalGet('admin/appearance');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
     $this->drupalGet('node/' . $article->id() . '/translations');
     // Verify that translation uses the admin theme if edit is admin.
     $this->assertRaw('core/themes/seven/css/base/elements.css');
 
     // Turn off admin theme for editing, assert inheritance to translations.
     $edit['use_admin_theme'] = FALSE;
-    $this->drupalGet('admin/appearance');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalPostForm('admin/appearance', $edit, 'Save configuration');
     $this->drupalGet('node/' . $article->id() . '/translations');
     // Verify that translation uses the frontend theme if edit is frontend.
     $this->assertNoRaw('core/themes/seven/css/base/elements.css');
@@ -359,7 +348,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
           $num_match_found++;
         }
       }
-      $this->assertSame(1, $num_match_found, 'There is 1 Read more link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
+      $this->assertTrue($num_match_found == 1, 'There is 1 Read more link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
     }
 
     // Check the frontpage for 'Add new comment' links that include the
@@ -381,7 +370,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
           $num_match_found++;
         }
       }
-      $this->assertSame(1, $num_match_found, 'There is 1 Add new comment link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
+      $this->assertTrue($num_match_found == 1, 'There is 1 Add new comment link, ' . $expected_href . ', for the ' . $langcode . ' translation of a node on the frontpage. (Found ' . $num_match_found . '.)');
     }
 
     // Test that the node page displays the correct translations.
@@ -403,7 +392,7 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $languages = $this->container->get('language_manager')->getLanguages();
     foreach ($this->langcodes as $langcode) {
       $this->drupalGet($path, ['language' => $languages[$langcode]]);
-      $this->assertSession()->pageTextContains($values[$langcode]['title'][0]['value']);
+      $this->assertText($values[$langcode]['title'][0]['value']);
     }
   }
 
@@ -532,43 +521,41 @@ class NodeTranslationUITest extends ContentTranslationUITestBase {
     $original_revision_url = $original_revision->toUrl('revision')->toString();
 
     // Should be different from regular node URL.
-    $this->assertNotSame($original_revision_url, $original_revision->toUrl()->toString());
+    $this->assertNotIdentical($original_revision_url, $original_revision->toUrl()->toString());
     $this->drupalGet($original_revision_url);
     $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in English, of correct revision.
-    $this->assertSession()->pageTextContains('First rev en title');
+    $this->assertText('First rev en title');
     $this->assertNoText('First rev fr title');
 
     // Get a French view.
     $url_fr = $original_revision->getTranslation('fr')->toUrl('revision')->toString();
 
     // Should have different URL from English.
-    $this->assertNotSame($url_fr, $original_revision->toUrl()->toString());
-    $this->assertNotSame($url_fr, $original_revision_url);
+    $this->assertNotIdentical($url_fr, $original_revision->toUrl()->toString());
+    $this->assertNotIdentical($url_fr, $original_revision_url);
     $this->drupalGet($url_fr);
     $this->assertSession()->statusCodeEquals(200);
 
     // Contents should be in French, of correct revision.
-    $this->assertSession()->pageTextContains('First rev fr title');
+    $this->assertText('First rev fr title');
     $this->assertNoText('First rev en title');
   }
 
   /**
-   * Tests title is not escaped (but XSS-filtered) for details form element.
+   * Test that title is not escaped (but XSS-filtered) for details form element.
    */
   public function testDetailsTitleIsNotEscaped() {
     $this->drupalLogin($this->administrator);
     // Make the image field a multi-value field in order to display a
     // details form element.
     $edit = ['cardinality_number' => 2];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image/storage', $edit, 'Save field settings');
 
     // Make the image field non-translatable.
     $edit = ['settings[node][article][fields][field_image]' => FALSE];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
 
     // Create a node.
     $nid = $this->createEntity(['title' => 'Node with multi-value image field en title'], 'en');

@@ -351,7 +351,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the per-user login flood control.
+   * Test the per-user login flood control.
    *
    * @see \Drupal\user\Tests\UserLoginTest::testPerUserLoginFloodControl
    * @see \Drupal\basic_auth\Tests\Authentication\BasicAuthTest::testPerUserLoginFloodControl
@@ -452,7 +452,7 @@ class UserLoginHttpTest extends BrowserTestBase {
   }
 
   /**
-   * Tests csrf protection of User Logout route.
+   * Test csrf protection of User Logout route.
    */
   public function testLogoutCsrfProtection() {
     $client = \Drupal::httpClient();

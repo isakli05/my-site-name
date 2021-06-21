@@ -101,7 +101,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     // Create a test filter format with a known label.
     $name = 'filter.format.plain_text';
 
-    /** @var \Drupal\filter\Entity\FilterFormat $entity */
+    /** @var $entity \Drupal\filter\Entity\FilterFormat */
     $entity = FilterFormat::load('plain_text');
     $plugin_collection = $entity->getPluginCollections()['filters'];
 
@@ -133,7 +133,7 @@ class ConfigEntityImportTest extends KernelTestBase {
     // Create a test image style with a known label.
     $name = 'image.style.thumbnail';
 
-    /** @var \Drupal\image\Entity\ImageStyle $entity */
+    /** @var $entity \Drupal\image\Entity\ImageStyle */
     $entity = ImageStyle::load('thumbnail');
     $plugin_collection = $entity->getPluginCollections()['effects'];
 

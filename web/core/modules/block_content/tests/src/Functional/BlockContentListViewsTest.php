@@ -48,16 +48,23 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->fieldExists('type');
 
     // Test for the table.
-    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table');
+    $element = $this->xpath('//div[@class="layout-content"]//table');
+    $this->assertNotEmpty($element, 'Views table found.');
 
-    // Test the table header, four cells should be present.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 4);
+    // Test the table header.
+    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
+    $this->assertCount(4, $elements, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Block description');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Block type');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Updated Sort ascending');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[4]', 'Operations');
+    $expected_items = ['Block description', 'Block type', 'Updated Sort ascending', 'Operations'];
+    foreach ($elements as $key => $element) {
+      if ($element->find('xpath', 'a')) {
+        $this->assertSame($expected_items[$key], trim($element->find('xpath', 'a')->getText()));
+      }
+      else {
+        $this->assertSame($expected_items[$key], trim($element->getText()));
+      }
+    }
 
     $label = 'Antelope';
     $new_label = 'Albatross';
@@ -76,11 +83,12 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->elementTextContains('xpath', '//td/a', $label);
 
     // Check the number of table row cells.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr/td', 4);
+    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr/td');
+    $this->assertCount(4, $elements, 'Correct number of table row cells found.');
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr/td/a', $label);
+    $this->assertSame($label, $elements[0]->find('xpath', 'a')->getText());
 
     // Edit the entity using the operations link.
     $blocks = $this->container
@@ -116,7 +124,7 @@ class BlockContentListViewsTest extends BlockContentTestBase {
     $this->assertSession()->elementTextNotContains('xpath', '//td', $new_label);
 
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('There are no custom blocks available.');
+    $this->assertText('There are no custom blocks available.');
     $this->assertSession()->linkExists('custom block');
 
     $block_content = BlockContent::create([

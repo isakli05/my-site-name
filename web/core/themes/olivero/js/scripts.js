@@ -9,56 +9,34 @@
   Drupal.olivero = {};
 
   function isDesktopNav() {
-    var navButtons = document.querySelector('[data-drupal-selector="mobile-buttons"]');
+    var navButtons = document.querySelector('.mobile-buttons');
     return window.getComputedStyle(navButtons).getPropertyValue('display') === 'none';
   }
 
   Drupal.olivero.isDesktopNav = isDesktopNav;
-  var stickyHeaderToggleButton = document.querySelector('[data-drupal-selector="sticky-header-toggle"]');
-  var siteHeaderFixable = document.querySelector('[data-drupal-selector="site-header-fixable"]');
+  var wideNavButton = document.querySelector('.nav-primary__button');
+  var siteHeaderFixable = document.querySelector('.site-header__fixable');
 
-  function stickyHeaderIsEnabled() {
-    return stickyHeaderToggleButton.getAttribute('aria-checked') === 'true';
+  function wideNavIsOpen() {
+    return wideNavButton.getAttribute('aria-expanded') === 'true';
   }
 
-  function setStickyHeaderStorage(expandedState) {
-    var now = new Date();
-    var item = {
-      value: expandedState,
-      expiry: now.getTime() + 20160000
-    };
-    localStorage.setItem('Drupal.olivero.stickyHeaderState', JSON.stringify(item));
-  }
-
-  function toggleStickyHeaderState(pinnedState) {
+  function showWideNav() {
     if (isDesktopNav()) {
-      if (pinnedState === true) {
-        siteHeaderFixable.classList.add('is-expanded');
-      } else {
-        siteHeaderFixable.classList.remove('is-expanded');
-      }
-
-      stickyHeaderToggleButton.setAttribute('aria-checked', pinnedState);
-      setStickyHeaderStorage(pinnedState);
+      wideNavButton.setAttribute('aria-expanded', 'true');
+      siteHeaderFixable.classList.add('is-expanded');
     }
   }
 
-  function getStickyHeaderStorage() {
-    var stickyHeaderState = localStorage.getItem('Drupal.olivero.stickyHeaderState');
-    if (!stickyHeaderState) return false;
-    var item = JSON.parse(stickyHeaderState);
-    var now = new Date();
-
-    if (now.getTime() > item.expiry) {
-      localStorage.removeItem('Drupal.olivero.stickyHeaderState');
-      return false;
+  function hideWideNav() {
+    if (isDesktopNav()) {
+      wideNavButton.setAttribute('aria-expanded', 'false');
+      siteHeaderFixable.classList.remove('is-expanded');
     }
-
-    return item.value;
   }
 
   if ('IntersectionObserver' in window && 'IntersectionObserverEntry' in window && 'intersectionRatio' in window.IntersectionObserverEntry.prototype) {
-    var fixableElements = document.querySelectorAll('[data-drupal-selector="site-header-fixable"], [data-drupal-selector="social-bar-inner"]');
+    var fixableElements = document.querySelectorAll('.fixable');
 
     function toggleDesktopNavVisibility(entries) {
       if (!isDesktopNav()) return;
@@ -92,7 +70,7 @@
     }
 
     function monitorNavPosition() {
-      var primaryNav = document.querySelector('[data-drupal-selector="site-header"]');
+      var primaryNav = document.querySelector('.site-header');
       var options = {
         rootMargin: getRootMargin(),
         threshold: [0.999, 1]
@@ -101,22 +79,25 @@
       observer.observe(primaryNav);
     }
 
-    stickyHeaderToggleButton.addEventListener('click', function () {
-      toggleStickyHeaderState(!stickyHeaderIsEnabled());
-    });
-    document.querySelector('[data-drupal-selector="site-header-inner"]').addEventListener('focusin', function () {
-      if (isDesktopNav() && !stickyHeaderIsEnabled()) {
-        var header = document.querySelector('[data-drupal-selector="site-header"]');
-        var headerNav = header.querySelector('[data-drupal-selector="header-nav"]');
-        var headerMargin = header.clientHeight - headerNav.clientHeight;
-
-        if (window.scrollY > headerMargin) {
-          window.scrollTo(0, headerMargin);
-        }
+    wideNavButton.addEventListener('click', function () {
+      if (!wideNavIsOpen()) {
+        showWideNav();
+      } else {
+        hideWideNav();
       }
     });
+    siteHeaderFixable.querySelector('.site-header__inner').addEventListener('focusin', showWideNav);
+    document.querySelector('.skip-link').addEventListener('click', hideWideNav);
     monitorNavPosition();
-    setStickyHeaderStorage(getStickyHeaderStorage());
-    toggleStickyHeaderState(getStickyHeaderStorage());
   }
+
+  document.addEventListener('keyup', function (e) {
+    if (e.keyCode === 27) {
+      if ('toggleSearchVisibility' in Drupal.olivero && 'searchIsVisible' in Drupal.olivero && Drupal.olivero.searchIsVisible()) {
+        Drupal.olivero.toggleSearchVisibility(false);
+      } else {
+          hideWideNav();
+        }
+    }
+  });
 })(Drupal);

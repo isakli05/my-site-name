@@ -19,20 +19,12 @@ class AdvisoryParser
         $this->advisoriesDirectory = $advisoriesDirectory;
     }
 
-    public function getAdvisories(array $allowList = [])
+    public function getAdvisories()
     {
         $files = (new Finder)->in($this->advisoriesDirectory)->files()->name('*.yaml');
 
         foreach ($files as $fileInfo) {
             $contents = Yaml::parseFile($fileInfo->getRealPath());
-
-            if (isset($contents['cve']) && in_array($contents['cve'], $allowList, true)) {
-                continue;
-            }
-
-            if (isset($contents['title']) && in_array($contents['title'], $allowList, true)) {
-                continue;
-            }
 
             $package = str_replace('composer://', '', $contents['reference']);
 

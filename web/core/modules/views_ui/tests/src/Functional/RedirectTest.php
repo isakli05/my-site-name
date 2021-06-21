@@ -32,8 +32,7 @@ class RedirectTest extends UITestBase {
 
     // Verify that the user gets redirected to the expected page defined in the
     // destination.
-    $this->drupalGet($edit_path, ['query' => ['destination' => $random_destination]]);
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm($edit_path, [], 'Save', ['query' => ['destination' => $random_destination]]);
     $this->assertSession()->addressEquals($random_destination);
 
     // Setup a view with a certain page display path. If you change the path
@@ -45,10 +44,8 @@ class RedirectTest extends UITestBase {
     $edit_path = "admin/structure/views/view/$view_name/edit";
     $path_edit_path = "admin/structure/views/nojs/display/$view_name/page_1/path";
 
-    $this->drupalGet($path_edit_path);
-    $this->submitForm(['path' => $new_path], 'Apply');
-    $this->drupalGet($edit_path, ['query' => ['destination' => 'test-redirect-view']]);
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm($path_edit_path, ['path' => $new_path], 'Apply');
+    $this->drupalPostForm($edit_path, [], 'Save', ['query' => ['destination' => 'test-redirect-view']]);
     // Verify that the user gets redirected to the expected page after changing
     // the URL of a page display.
     $this->assertSession()->addressEquals($new_path);

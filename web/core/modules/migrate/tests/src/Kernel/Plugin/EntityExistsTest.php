@@ -29,7 +29,7 @@ class EntityExistsTest extends KernelTestBase {
   }
 
   /**
-   * Tests the EntityExists plugin.
+   * Test the EntityExists plugin.
    */
   public function testEntityExists() {
     $user = User::create([

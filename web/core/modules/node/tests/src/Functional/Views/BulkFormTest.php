@@ -219,7 +219,7 @@ class BulkFormTest extends NodeTestBase {
   }
 
   /**
-   * Tests multiple deletion.
+   * Test multiple deletion.
    */
   public function testBulkDeletion() {
     // Select a bunch of translated and untranslated nodes and check that
@@ -254,14 +254,14 @@ class BulkFormTest extends NodeTestBase {
     $this->submitForm($edit, 'Apply to selected items');
 
     $label = $this->loadNode(1)->label();
-    $this->assertSession()->pageTextContains("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertText("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(2)->label();
-    $this->assertSession()->pageTextContains("$label (Original translation) - The following content item translations will be deleted:");
+    $this->assertText("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(3)->getTranslation('en')->label();
-    $this->assertSession()->pageTextContains($label);
+    $this->assertText($label);
     $this->assertNoText("$label (Original translation) - The following content item translations will be deleted:");
     $label = $this->loadNode(4)->label();
-    $this->assertSession()->pageTextContains($label);
+    $this->assertText($label);
     $this->assertNoText("$label (Original translation) - The following content item translations will be deleted:");
 
     $this->submitForm([], 'Delete');
@@ -278,7 +278,7 @@ class BulkFormTest extends NodeTestBase {
     $node = $this->loadNode(5);
     $this->assertNotEmpty($node, '5: Node has not been deleted');
 
-    $this->assertSession()->pageTextContains('Deleted 8 content items.');
+    $this->assertText('Deleted 8 content items.');
   }
 
   /**

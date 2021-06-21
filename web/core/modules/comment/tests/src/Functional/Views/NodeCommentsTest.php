@@ -29,7 +29,7 @@ class NodeCommentsTest extends CommentTestBase {
   public static $testViews = ['test_new_comments', 'test_comment_count'];
 
   /**
-   * Tests the new comments field plugin.
+   * Test the new comments field plugin.
    */
   public function testNewComments() {
     $this->drupalGet('test-new-comments');

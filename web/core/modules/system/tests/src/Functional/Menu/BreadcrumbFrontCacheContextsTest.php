@@ -90,7 +90,7 @@ class BreadcrumbFrontCacheContextsTest extends BrowserTestBase {
     $breadcrumbs = $this->assertSession()->elementExists('css', '.block-system-breadcrumb-block');
     $crumbs = $breadcrumbs->findAll('css', 'ol li');
     $this->assertCount(1, $crumbs);
-    $this->assertSame('Home', $crumbs[0]->getText());
+    $this->assertTrue($crumbs[0]->getText() === 'Home');
   }
 
 }

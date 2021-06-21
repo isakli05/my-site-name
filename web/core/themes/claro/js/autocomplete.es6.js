@@ -3,11 +3,13 @@
  * Claro's enhancement for autocomplete form element.
  */
 
-(($, Drupal, once) => {
+(($, Drupal) => {
   Drupal.behaviors.claroAutoCompete = {
     attach(context) {
-      once('claroAutoComplete', 'input.form-autocomplete', context).forEach(
-        (value) => {
+      $(context)
+        .find('input.form-autocomplete')
+        .once('claroAutoComplete')
+        .each((index, value) => {
           const $input = $(value);
           const timeout = 400;
           let classRemoveTimeout;
@@ -35,8 +37,7 @@
               );
             },
           );
-        },
-      );
+        });
     },
   };
-})(jQuery, Drupal, once);
+})(jQuery, Drupal);

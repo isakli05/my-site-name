@@ -173,7 +173,7 @@ class ViewsModerationStateFilterTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests the moderation filter with a non-translatable entity type.
+   * Test the moderation filter with a non-translatable entity type.
    */
   public function testNonTranslatableEntityType() {
     $workflow = Workflow::load('editorial');

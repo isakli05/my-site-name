@@ -28,7 +28,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Tests the breakpoint group created for a theme.
+   * Test the breakpoint group created for a theme.
    */
   public function testThemeBreakpoints() {
     // Verify the breakpoint group for breakpoint_theme_test was created.
@@ -85,7 +85,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_theme_test');
     foreach ($expected_breakpoints as $id => $expected_breakpoint) {
-      $this->assertEquals($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
+      $this->assertEqual($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
     }
 
     // Test that the order is as expected.
@@ -93,7 +93,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
   }
 
   /**
-   * Tests the custom breakpoint group provided by a theme and a module.
+   * Test the custom breakpoint group provided by a theme and a module.
    */
   public function testCustomBreakpointGroups() {
     // Verify the breakpoint group for breakpoint_theme_test.group2 was created.
@@ -140,12 +140,12 @@ class BreakpointDiscoveryTest extends KernelTestBase {
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_theme_test.group2');
     foreach ($expected_breakpoints as $id => $expected_breakpoint) {
-      $this->assertEquals($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
+      $this->assertEqual($expected_breakpoint, $breakpoints[$id]->getPluginDefinition());
     }
   }
 
   /**
-   * Tests the breakpoint group created for a module.
+   * Test the breakpoint group created for a module.
    */
   public function testModuleBreakpoints() {
     $expected_breakpoints = [
@@ -177,11 +177,11 @@ class BreakpointDiscoveryTest extends KernelTestBase {
     ];
 
     $breakpoints = \Drupal::service('breakpoint.manager')->getBreakpointsByGroup('breakpoint_module_test');
-    $this->assertEquals(array_keys($expected_breakpoints), array_keys($breakpoints));
+    $this->assertEqual(array_keys($expected_breakpoints), array_keys($breakpoints));
   }
 
   /**
-   * Tests the collection of breakpoint groups.
+   * Test the collection of breakpoint groups.
    */
   public function testBreakpointGroups() {
     $expected = [
@@ -199,7 +199,7 @@ class BreakpointDiscoveryTest extends KernelTestBase {
       'breakpoint_module_test' => 'module',
     ];
     $breakpoint_group_providers = \Drupal::service('breakpoint.manager')->getGroupProviders('breakpoint_theme_test.group2');
-    $this->assertEquals($expected, $breakpoint_group_providers);
+    $this->assertEqual($expected, $breakpoint_group_providers);
   }
 
 }

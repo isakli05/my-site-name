@@ -48,6 +48,7 @@ class CreateSampleEntityTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('node_type');
+    $this->installEntitySchema('file');
     $this->installEntitySchema('comment');
     $this->installEntitySchema('comment_type');
     $this->installEntitySchema('path_alias');

@@ -14,7 +14,7 @@ use Drupal\Tests\UnitTestCase;
 class YamlTest extends UnitTestCase {
 
   /**
-   * Tests that the overridden serializer is called.
+   * Test that the overridden serializer is called.
    *
    * @covers ::getSerializer
    * @runInSeparateProcess

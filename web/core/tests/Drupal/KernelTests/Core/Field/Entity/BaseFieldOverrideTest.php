@@ -68,7 +68,7 @@ class BaseFieldOverrideTest extends KernelTestBase {
   }
 
   /**
-   * Tests the default value callback.
+   * Test the default value callback.
    */
   public function testDefaultValueCallback() {
     $base_field = BaseFieldDefinition::create('entity_reference')

@@ -45,7 +45,7 @@ class LayoutTest extends KernelTestBase {
   }
 
   /**
-   * Tests rendering a layout.
+   * Test rendering a layout.
    *
    * @dataProvider renderLayoutData
    */

@@ -534,9 +534,9 @@
           $description = $option.find('.description');
           options[i] = {
             // Search on the lowercase version of the title text + description.
-            searchText: `${$title.text().toLowerCase()} ${$description
+            searchText: `${$title
               .text()
-              .toLowerCase()}`,
+              .toLowerCase()} ${$description.text().toLowerCase()}`,
             // Maintain a reference to the jQuery object for each row, so we don't
             // have to create a new object inside the performance-sensitive keyup
             // handler.

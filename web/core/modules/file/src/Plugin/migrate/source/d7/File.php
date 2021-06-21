@@ -30,6 +30,13 @@ class File extends DrupalSqlBase {
   protected $privatePath;
 
   /**
+   * The temporary file directory path.
+   *
+   * @var string
+   */
+  protected $temporaryPath;
+
+  /**
    * {@inheritdoc}
    */
   public function query() {
@@ -66,6 +73,7 @@ class File extends DrupalSqlBase {
   protected function initializeIterator() {
     $this->publicPath = $this->variableGet('file_public_path', 'sites/default/files');
     $this->privatePath = $this->variableGet('file_private_path', NULL);
+    $this->temporaryPath = $this->variableGet('file_temporary_path', '/tmp');
     return parent::initializeIterator();
   }
 
@@ -75,7 +83,7 @@ class File extends DrupalSqlBase {
   public function prepareRow(Row $row) {
     // Compute the filepath property, which is a physical representation of
     // the URI relative to the Drupal root.
-    $path = str_replace(['public:/', 'private:/'], [$this->publicPath, $this->privatePath], $row->getSourceProperty('uri'));
+    $path = str_replace(['public:/', 'private:/', 'temporary:/'], [$this->publicPath, $this->privatePath, $this->temporaryPath], $row->getSourceProperty('uri'));
     // At this point, $path could be an absolute path or a relative path,
     // depending on how the scheme's variable was set. So we need to shear out
     // the source_base_path in order to make them all relative.

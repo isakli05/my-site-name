@@ -44,7 +44,7 @@ class StateFormatterTest extends KernelTestBase {
   }
 
   /**
-   * Tests the embed field.
+   * Test the embed field.
    *
    * @dataProvider formatterTestCases
    */
@@ -62,7 +62,7 @@ class StateFormatterTest extends KernelTestBase {
   }
 
   /**
-   * Test cases for testStateFieldFormatter().
+   * Test cases for ::
    */
   public function formatterTestCases() {
     return [

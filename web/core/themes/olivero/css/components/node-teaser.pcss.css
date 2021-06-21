@@ -40,14 +40,10 @@
     }
   }
 
-  & .primary-image {
+  & .field--name-field-image {
     flex-shrink: 0;
     margin: 0;
     margin-inline-end: var(--sp1);
-
-    & a {
-      display: block;
-    }
 
     & img {
       width: calc(3.5 * var(--sp));

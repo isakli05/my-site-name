@@ -84,17 +84,12 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
             return $value;
         }
 
-        if (!$value instanceof Definition || $value->hasErrors() || $value->isDeprecated()) {
+        if (!$value instanceof Definition || $value->hasErrors()) {
             return parent::processValue($value, $isRoot);
         }
 
-        if (!$this->autoload) {
-            if (!$class = $value->getClass()) {
-                return parent::processValue($value, $isRoot);
-            }
-            if (!class_exists($class, false) && !interface_exists($class, false)) {
-                return parent::processValue($value, $isRoot);
-            }
+        if (!$this->autoload && !class_exists($class = $value->getClass(), false) && !interface_exists($class, false)) {
+            return parent::processValue($value, $isRoot);
         }
 
         if (ServiceLocator::class === $value->getClass()) {
@@ -158,27 +153,26 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
     /**
      * @throws InvalidParameterTypeException When a parameter is not compatible with the declared type
      */
-    private function checkType(Definition $checkedDefinition, $value, \ReflectionParameter $parameter, ?string $envPlaceholderUniquePrefix, \ReflectionType $reflectionType = null): void
+    private function checkType(Definition $checkedDefinition, $value, \ReflectionParameter $parameter, ?string $envPlaceholderUniquePrefix, string $type = null): void
     {
-        $reflectionType = $reflectionType ?? $parameter->getType();
+        if (null === $type) {
+            $type = $parameter->getType();
 
-        if ($reflectionType instanceof \ReflectionUnionType) {
-            foreach ($reflectionType->getTypes() as $t) {
-                try {
-                    $this->checkType($checkedDefinition, $value, $parameter, $envPlaceholderUniquePrefix, $t);
+            if ($type instanceof \ReflectionUnionType) {
+                foreach ($type->getTypes() as $type) {
+                    try {
+                        $this->checkType($checkedDefinition, $value, $parameter, $envPlaceholderUniquePrefix, $type);
 
-                    return;
-                } catch (InvalidParameterTypeException $e) {
+                        return;
+                    } catch (InvalidParameterTypeException $e) {
+                    }
                 }
+
+                throw new InvalidParameterTypeException($this->currentId, $e->getCode(), $parameter);
             }
 
-            throw new InvalidParameterTypeException($this->currentId, $e->getCode(), $parameter);
+            $type = $type->getName();
         }
-        if (!$reflectionType instanceof \ReflectionNamedType) {
-            return;
-        }
-
-        $type = $reflectionType->getName();
 
         if ($value instanceof Reference) {
             if (!$this->container->has($value = (string) $value)) {
@@ -205,7 +199,7 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
         if ($value instanceof Definition) {
             $class = $value->getClass();
 
-            if ($class && isset(self::BUILTIN_TYPES[strtolower($class)])) {
+            if (isset(self::BUILTIN_TYPES[strtolower($class)])) {
                 $class = strtolower($class);
             } elseif (!$class || (!$this->autoload && !class_exists($class, false) && !interface_exists($class, false))) {
                 return;
@@ -285,26 +279,15 @@ final class CheckTypeDeclarationsPass extends AbstractRecursivePass
             return;
         }
 
-        if ('mixed' === $type) {
-            return;
-        }
-
         if (is_a($class, $type, true)) {
             return;
         }
 
-        if ('false' === $type) {
-            if (false === $value) {
-                return;
-            }
-        } elseif ($reflectionType->isBuiltin()) {
-            $checkFunction = sprintf('is_%s', $type);
-            if ($checkFunction($value)) {
-                return;
-            }
-        }
+        $checkFunction = sprintf('is_%s', $type);
 
-        throw new InvalidParameterTypeException($this->currentId, \is_object($value) ? $class : \gettype($value), $parameter);
+        if (!$parameter->getType()->isBuiltin() || !$checkFunction($value)) {
+            throw new InvalidParameterTypeException($this->currentId, \is_object($value) ? $class : \gettype($value), $parameter);
+        }
     }
 
     private function getExpressionLanguage(): ExpressionLanguage

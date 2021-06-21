@@ -29,10 +29,8 @@ class TrustedHostsTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the status page behavior with no setting.
-   *
-   * Checks that an error is shown when the trusted host setting is missing from
-   * settings.php
+   * Tests that the status page shows an error when the trusted host setting
+   * is missing from settings.php
    */
   public function testStatusPageWithoutConfiguration() {
     $this->drupalGet('admin/reports/status');
@@ -77,7 +75,7 @@ class TrustedHostsTest extends BrowserTestBase {
     $this->writeSettings($settings);
 
     $this->drupalGet('trusted-hosts-test/fake-request');
-    $this->assertSession()->pageTextContains('Host: ' . $host);
+    $this->assertText('Host: ' . $host);
   }
 
   /**

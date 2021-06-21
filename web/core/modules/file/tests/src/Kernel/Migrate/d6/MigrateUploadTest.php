@@ -64,7 +64,7 @@ class MigrateUploadTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests upload migration from Drupal 6 to Drupal 8.
+   * Test upload migration from Drupal 6 to Drupal 8.
    */
   public function testUpload() {
     $this->container->get('entity_type.manager')

@@ -136,7 +136,7 @@ class OverviewTerms extends FormBase {
     $vocabulary_hierarchy = $this->storageController->getVocabularyHierarchyType($taxonomy_vocabulary->id());
     $parent_fields = FALSE;
 
-    $page = $this->pagerManager->findPage();
+    $page = $this->getRequest()->query->get('page') ?: 0;
     // Number of terms per page.
     $page_increment = $this->config('taxonomy.settings')->get('terms_per_page_admin');
     // Elements shown on this page.
@@ -340,7 +340,7 @@ class OverviewTerms extends FormBase {
         'operations' => [],
         'weight' => $update_tree_access->isAllowed() ? [] : NULL,
       ];
-      /** @var \Drupal\Core\Entity\EntityInterface $term */
+      /** @var $term \Drupal\Core\Entity\EntityInterface */
       $term = $this->entityRepository->getTranslationFromContext($term);
       $form['terms'][$key]['#term'] = $term;
       $indentation = [];
@@ -593,7 +593,7 @@ class OverviewTerms extends FormBase {
    * Redirects to confirmation form for the reset action.
    */
   public function submitReset(array &$form, FormStateInterface $form_state) {
-    /** @var \Drupal\taxonomy\VocabularyInterface $vocabulary */
+    /** @var $vocabulary \Drupal\taxonomy\VocabularyInterface */
     $vocabulary = $form_state->get(['taxonomy', 'vocabulary']);
     $form_state->setRedirectUrl($vocabulary->toUrl('reset-form'));
   }

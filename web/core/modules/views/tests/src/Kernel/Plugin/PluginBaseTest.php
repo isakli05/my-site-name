@@ -30,7 +30,7 @@ class PluginBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the token replacement in views works correctly.
+   * Test that the token replacement in views works correctly.
    */
   public function testViewsTokenReplace() {
     $text = '{{ langcode__value }} means {{ langcode }}';
@@ -44,7 +44,7 @@ class PluginBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests that the token replacement in views works correctly with dots.
+   * Test that the token replacement in views works correctly with dots.
    */
   public function testViewsTokenReplaceWithDots() {
     $text = '{{ argument.first }} comes before {{ argument.second }}';

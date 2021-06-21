@@ -50,7 +50,7 @@ class ViewsMenuLinkTest extends ViewsKernelTestBase {
   }
 
   /**
-   * Tests views internal menu link options.
+   * Test views internal menu link options.
    */
   public function testMenuLinkOverrides() {
     // Link from views module.

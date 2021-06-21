@@ -26,7 +26,6 @@ class MigrateTaxonomyVocabularyTranslationTest extends MigrateDrupal6TestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->executeMigrations([
-      'language',
       'd6_taxonomy_vocabulary',
       'd6_taxonomy_vocabulary_translation',
     ]);

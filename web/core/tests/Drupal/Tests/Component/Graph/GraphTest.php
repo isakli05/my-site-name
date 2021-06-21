@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class GraphTest extends TestCase {
 
   /**
-   * Tests depth-first-search features.
+   * Test depth-first-search features.
    */
   public function testDepthFirstSearch() {
     // The sample graph used is:

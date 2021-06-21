@@ -27,7 +27,7 @@ class MediaOverviewPageTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Tests that the Media overview page (/admin/content/media).
+   * Test that the Media overview page (/admin/content/media).
    */
   public function testMediaOverviewPage() {
     $assert_session = $this->assertSession();

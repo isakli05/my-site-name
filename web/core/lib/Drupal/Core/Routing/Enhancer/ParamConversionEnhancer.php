@@ -56,7 +56,7 @@ class ParamConversionEnhancer implements EnhancerInterface, EventSubscriberInter
    * @return \Symfony\Component\HttpFoundation\ParameterBag
    */
   protected function copyRawVariables(array $defaults) {
-    /** @var \Symfony\Component\Routing\Route $route */
+    /** @var $route \Symfony\Component\Routing\Route */
     $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
     $variables = array_flip($route->compile()->getVariables());
     // Foreach will copy the values from the array it iterates. Even if they

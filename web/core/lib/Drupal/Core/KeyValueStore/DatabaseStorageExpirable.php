@@ -226,6 +226,7 @@ class DatabaseStorageExpirable extends DatabaseStorage implements KeyValueStoreE
       ],
       'primary key' => ['collection', 'name'],
       'indexes' => [
+        'all' => ['name', 'collection', 'expire'],
         'expire' => ['expire'],
       ],
     ];

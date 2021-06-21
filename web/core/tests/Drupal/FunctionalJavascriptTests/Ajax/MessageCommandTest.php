@@ -22,7 +22,7 @@ class MessageCommandTest extends WebDriverTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests AJAX MessageCommand use in a form.
+   * Test AJAX MessageCommand use in a form.
    */
   public function testMessageCommand() {
     $page = $this->getSession()->getPage();

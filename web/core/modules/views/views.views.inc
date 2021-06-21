@@ -60,7 +60,7 @@ function views_views_data() {
 
   $data['views']['area'] = [
     'title' => t('Text area'),
-    'help' => t('Provide markup for the area using any available text format.'),
+    'help' => t('Provide markup text for the area.'),
     'area' => [
       'id' => 'text',
     ],
@@ -68,7 +68,7 @@ function views_views_data() {
 
   $data['views']['area_text_custom'] = [
     'title' => t('Unfiltered text'),
-    'help' => t('Provide markup for the area with minimal filtering.'),
+    'help' => t('Add unrestricted, custom text or markup. This is similar to the custom text field.'),
     'area' => [
       'id' => 'text_custom',
     ],

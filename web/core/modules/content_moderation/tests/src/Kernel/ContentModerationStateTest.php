@@ -48,7 +48,6 @@ class ContentModerationStateTest extends KernelTestBase {
     'text',
     'workflows',
     'path_alias',
-    'taxonomy',
   ];
 
   /**
@@ -478,7 +477,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests changing the language of content without adding a translation.
+   * Test changing the language of content without adding a translation.
    */
   public function testChangingContentLangcode() {
     $this->createContentType([
@@ -613,7 +612,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests the content moderation workflow dependencies for non-config bundles.
+   * Test the content moderation workflow dependencies for non-config bundles.
    */
   public function testWorkflowNonConfigBundleDependencies() {
     // Create a bundle not based on any particular configuration.
@@ -648,7 +647,7 @@ class ContentModerationStateTest extends KernelTestBase {
   }
 
   /**
-   * Tests the revision default state of the moderation state entity revisions.
+   * Test the revision default state of the moderation state entity revisions.
    *
    * @param string $entity_type_id
    *   The ID of entity type to be tested.
@@ -786,16 +785,6 @@ class ContentModerationStateTest extends KernelTestBase {
     if ($published !== NULL && $entity instanceof EntityPublishedInterface) {
       $this->assertSame($published, $entity->isPublished());
     }
-  }
-
-  /**
-   * Tests that the 'taxonomy_term' entity type cannot be moderated.
-   */
-  public function testTaxonomyTermEntityTypeModeration() {
-    /** @var \Drupal\content_moderation\ModerationInformationInterface $moderation_info */
-    $moderation_info = \Drupal::service('content_moderation.moderation_information');
-    $entity_type = \Drupal::entityTypeManager()->getDefinition('taxonomy_term');
-    $this->assertFalse($moderation_info->canModerateEntitiesOfEntityType($entity_type));
   }
 
 }

@@ -98,7 +98,7 @@ class MigrateEntityContentBaseTest extends KernelTestBase {
   }
 
   /**
-   * Tests importing and rolling back translated entities.
+   * Test importing and rolling back translated entities.
    */
   public function testTranslated() {
     // Create a destination.

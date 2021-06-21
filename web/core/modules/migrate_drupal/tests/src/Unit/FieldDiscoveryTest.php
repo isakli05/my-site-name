@@ -213,7 +213,7 @@ class FieldDiscoveryTest extends UnitTestCase {
   }
 
   /**
-   * Tests the protected getCoreVersion method.
+   * Test the protected getCoreVersion method.
    *
    * @param string[] $tags
    *   The migration tags.

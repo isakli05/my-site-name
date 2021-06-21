@@ -42,7 +42,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
 
     // Check the language direction.
     $direction = current($this->xpath('/@dir'))->getText();
-    $this->assertEquals('ltr', $direction);
+    $this->assertEqual('ltr', $direction);
   }
 
   /**
@@ -62,7 +62,7 @@ class InstallerTranslationQueryTest extends InstallerTestBase {
 
     // Verify German was configured but not English.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertSession()->pageTextContains('German');
+    $this->assertText('German');
     $this->assertNoText('English');
   }
 

@@ -93,7 +93,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Tests the standard profile configuration for media type 'audio'.
+   * Test the standard profile configuration for media type 'audio'.
    */
   protected function audioTest() {
     $assert_session = $this->assertSession();
@@ -185,7 +185,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Tests the standard profile configuration for media type 'image'.
+   * Test the standard profile configuration for media type 'image'.
    */
   protected function imageTest() {
     $assert_session = $this->assertSession();
@@ -279,7 +279,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Tests the standard profile configuration for media type 'document'.
+   * Test the standard profile configuration for media type 'document'.
    */
   protected function documentTest() {
     $assert_session = $this->assertSession();
@@ -369,7 +369,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Tests the standard profile configuration for media type 'remote_video'.
+   * Test the standard profile configuration for media type 'remote_video'.
    */
   protected function remoteVideoTest() {
     $assert_session = $this->assertSession();
@@ -464,7 +464,7 @@ class MediaStandardProfileTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Tests the standard profile configuration for media type 'video'.
+   * Test the standard profile configuration for media type 'video'.
    */
   protected function videoTest() {
     $assert_session = $this->assertSession();

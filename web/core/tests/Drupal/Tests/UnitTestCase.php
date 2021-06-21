@@ -10,16 +10,11 @@ use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\PluralTranslatableMarkup;
 use Drupal\Tests\Traits\PhpUnitWarnings;
-use Drupal\TestTools\TestVarDumper;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Provides a base class and helpers for Drupal unit tests.
- *
- * Using Symfony's dump() function() in Unit tests will produce output on the
- * command line.
  *
  * @ingroup testing
  */
@@ -42,14 +37,6 @@ abstract class UnitTestCase extends TestCase {
    * @var string
    */
   protected $root;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function setUpBeforeClass() {
-    parent::setUpBeforeClass();
-    VarDumper::setHandler(TestVarDumper::class . '::cliHandler');
-  }
 
   /**
    * {@inheritdoc}

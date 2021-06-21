@@ -5,7 +5,6 @@ namespace Drupal\Tests\comment\Functional;
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\comment\CommentInterface;
-use Drupal\comment\CommentManagerInterface;
 use Drupal\user\RoleInterface;
 use Drupal\comment\Entity\Comment;
 
@@ -77,16 +76,6 @@ class CommentLinksTest extends CommentTestBase {
     $comment->save();
     $this->comment = $comment;
 
-    // Tests that reply link is not visible when threading is disabled.
-    $this->drupalLogin($this->webUser);
-    $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_FLAT, 'Comment paging changed.');
-    $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->linkNotExists('Reply');
-    // Tests that reply link is visible when threading is enabled.
-    $this->setCommentSettings('default_mode', CommentManagerInterface::COMMENT_MODE_THREADED, 'Comment paging changed.');
-    $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->linkExists('Reply');
-
     // Change comment settings.
     $this->setCommentSettings('form_location', CommentItemInterface::FORM_BELOW, 'Set comment form location');
     $this->setCommentAnonymous(TRUE);
@@ -149,7 +138,7 @@ class CommentLinksTest extends CommentTestBase {
 
     // Visit the full node, make sure there are links for the comment.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->pageTextContains($comment->getSubject());
+    $this->assertText($comment->getSubject());
     $this->assertSession()->linkExists('Reply');
 
     // Make sure we can hide comment links.
@@ -157,7 +146,7 @@ class CommentLinksTest extends CommentTestBase {
       ->removeComponent('links')
       ->save();
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertSession()->pageTextContains($comment->getSubject());
+    $this->assertText($comment->getSubject());
     $this->assertSession()->linkNotExists('Reply');
   }
 

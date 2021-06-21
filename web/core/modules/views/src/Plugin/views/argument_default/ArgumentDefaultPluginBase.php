@@ -55,7 +55,8 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   }
 
   /**
-   * Retrieve the options when this is a new access control plugin.
+   * Retrieve the options when this is a new access
+   * control plugin
    */
   protected function defineOptions() {
     return [];
@@ -77,7 +78,8 @@ abstract class ArgumentDefaultPluginBase extends PluginBase {
   public function submitOptionsForm(&$form, FormStateInterface $form_state, &$options = []) {}
 
   /**
-   * Determine if the administrator has the privileges to use this plugin.
+   * Determine if the administrator has the privileges to use this
+   * plugin
    */
   public function access() {
     return TRUE;

@@ -85,8 +85,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
       'title[0][value]' => $this->randomMachineName(),
     ];
     $edit['files[' . $field_name . '_0]'] = \Drupal::service('file_system')->realpath($image->uri);
-    $this->drupalGet('node/add/' . $type);
-    $this->submitForm($edit, 'Preview');
+    $this->drupalPostForm('node/add/' . $type, $edit, 'Preview');
   }
 
   /**
@@ -106,8 +105,7 @@ abstract class ImageFieldTestBase extends BrowserTestBase {
       'title[0][value]' => $this->randomMachineName(),
     ];
     $edit['files[' . $field_name . '_0]'] = \Drupal::service('file_system')->realpath($image->uri);
-    $this->drupalGet('node/add/' . $type);
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/' . $type, $edit, 'Save');
     if ($alt) {
       // Add alt text.
       $this->submitForm([$field_name . '[0][alt]' => $alt], 'Save');

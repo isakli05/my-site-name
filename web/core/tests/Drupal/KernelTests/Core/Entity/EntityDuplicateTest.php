@@ -26,7 +26,7 @@ class EntityDuplicateTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests duplicating a non-default revision.
+   * Test duplicating a non-default revision.
    */
   public function testDuplicateNonDefaultRevision() {
     $entity = EntityTestRev::create([

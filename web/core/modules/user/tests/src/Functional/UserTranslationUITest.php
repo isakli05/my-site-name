@@ -86,7 +86,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
   }
 
   /**
-   * Tests translated user deletion.
+   * Test translated user deletion.
    */
   public function testTranslatedUserDeletion() {
     $this->drupalLogin($this->administrator);
@@ -102,8 +102,7 @@ class UserTranslationUITest extends ContentTranslationUITestBase {
       'edit-form',
       ['language' => $this->container->get('language_manager')->getLanguage('en')]
     );
-    $this->drupalGet($url);
-    $this->submitForm([], 'Cancel account');
+    $this->drupalPostForm($url, [], 'Cancel account');
     $this->assertSession()->statusCodeEquals(200);
   }
 

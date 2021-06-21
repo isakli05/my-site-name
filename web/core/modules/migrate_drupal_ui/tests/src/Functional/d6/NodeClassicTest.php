@@ -75,14 +75,33 @@ class NodeClassicTest extends MigrateUpgradeExecuteTestBase {
   }
 
   /**
-   * Tests node classic migration via the UI.
+   * Tests ID Conflict form.
    */
-  public function testNodeClassicUpgrade() {
+  public function testMigrateUpgradeExecute() {
     // Add a node classic migrate table to d8.
     $this->makeNodeMigrateMapTable(NodeMigrateType::NODE_MIGRATE_TYPE_CLASSIC, '6');
 
+    $this->drupalGet('/upgrade');
+    $session = $this->assertSession();
+    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
+
+    $this->submitForm([], 'Continue');
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
+
+    // Get valid credentials.
+    $edits = $this->translatePostValues($this->getCredentials());
+
     // Start the upgrade process.
-    $this->submitCredentialForm();
+    $this->drupalGet('/upgrade');
+    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
+
+    $this->submitForm([], 'Continue');
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
+
+    // When the Credential form is submitted the migrate map tables are created.
+    $this->submitForm($edits, 'Review upgrade');
 
     // Confirm there are only classic node migration map tables. This shows
     // that only the classic migration will run.

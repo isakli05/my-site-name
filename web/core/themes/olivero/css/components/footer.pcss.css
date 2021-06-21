@@ -28,6 +28,7 @@
   & a {
     color: inherit;
 
+    &:focus,
     &:hover {
       text-decoration: none;
     }

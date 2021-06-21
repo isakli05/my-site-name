@@ -258,8 +258,9 @@
 
             case 3:
               // Position against a highlighted field.
-              highlightedField =
-                Drupal.quickedit.app.model.get('highlightedField');
+              highlightedField = Drupal.quickedit.app.model.get(
+                'highlightedField',
+              );
               of =
                 highlightedField &&
                 highlightedField.editorView &&
@@ -273,9 +274,8 @@
               let topMostField = null;
               // Position against the topmost field.
               for (let i = 0; i < fieldModels.length; i++) {
-                const pos = fieldModels[i]
-                  .get('el')
-                  .getBoundingClientRect().top;
+                const pos = fieldModels[i].get('el').getBoundingClientRect()
+                  .top;
                 if (pos < topMostPosition) {
                   topMostPosition = pos;
                   topMostField = fieldModels[i];
@@ -496,8 +496,9 @@
         const activeFieldLabel =
           activeField && activeField.get('metadata').label;
         // Label of a highlighted field, if it exists.
-        const highlightedField =
-          Drupal.quickedit.app.model.get('highlightedField');
+        const highlightedField = Drupal.quickedit.app.model.get(
+          'highlightedField',
+        );
         const highlightedFieldLabel =
           highlightedField && highlightedField.get('metadata').label;
         // The label is constructed in a priority order.

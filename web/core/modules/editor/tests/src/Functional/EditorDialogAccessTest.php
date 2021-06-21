@@ -26,7 +26,7 @@ class EditorDialogAccessTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests access to the editor image dialog.
+   * Test access to the editor image dialog.
    */
   public function testEditorImageDialogAccess() {
     $url = Url::fromRoute('editor.image_dialog', ['editor' => 'plain_text']);

@@ -59,7 +59,7 @@ abstract class NodeTestBase extends BrowserTestBase {
    */
   public function assertNodeAccess(array $ops, NodeInterface $node, AccountInterface $account) {
     foreach ($ops as $op => $result) {
-      $this->assertEquals($this->accessHandler->access($node, $op, $account), $result, $this->nodeAccessAssertMessage($op, $result, $node->language()->getId()));
+      $this->assertEqual($this->accessHandler->access($node, $op, $account), $result, $this->nodeAccessAssertMessage($op, $result, $node->language()->getId()));
     }
   }
 
@@ -77,7 +77,7 @@ abstract class NodeTestBase extends BrowserTestBase {
    *   to check. If NULL, the untranslated (fallback) access is checked.
    */
   public function assertNodeCreateAccess($bundle, $result, AccountInterface $account, $langcode = NULL) {
-    $this->assertEquals($this->accessHandler->createAccess($bundle, $account, ['langcode' => $langcode]), $result, $this->nodeAccessAssertMessage('create', $result, $langcode));
+    $this->assertEqual($this->accessHandler->createAccess($bundle, $account, ['langcode' => $langcode]), $result, $this->nodeAccessAssertMessage('create', $result, $langcode));
   }
 
   /**

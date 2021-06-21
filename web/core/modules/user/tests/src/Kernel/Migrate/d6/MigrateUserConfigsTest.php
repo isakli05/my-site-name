@@ -46,8 +46,12 @@ class MigrateUserConfigsTest extends MigrateDrupal6TestBase {
     $this->assertSame('Account details for [user:name] at [site:name] (blocked)', $config->get('status_blocked.subject'));
     $this->assertSame("[user:name],\n\nYour account on [site:name] has been blocked.", $config->get('status_blocked.body'));
     $this->assertConfigSchema(\Drupal::service('config.typed'), 'user.mail', $config->get());
+  }
 
-    // Tests migration of user variables to user.settings.yml.
+  /**
+   * Tests migration of user variables to user.settings.yml.
+   */
+  public function testUserSettings() {
     $config = $this->config('user.settings');
     $this->assertTrue($config->get('notify.status_blocked'));
     $this->assertFalse($config->get('notify.status_activated'));

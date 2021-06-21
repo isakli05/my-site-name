@@ -124,7 +124,7 @@ class MessengerTest extends KernelTestBase {
   }
 
   /**
-   * Tests adding markup.
+   * Test adding markup.
    *
    * @covers ::addStatus
    * @covers ::deleteByType

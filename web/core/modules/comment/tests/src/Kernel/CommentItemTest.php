@@ -63,7 +63,7 @@ class CommentItemTest extends FieldKernelTestBase {
     ], 'Comment status value in defined range');
 
     $mainProperty = $entity->comment[0]->mainPropertyName();
-    $this->assertEquals('status', $mainProperty);
+    $this->assertEqual('status', $mainProperty);
   }
 
   /**

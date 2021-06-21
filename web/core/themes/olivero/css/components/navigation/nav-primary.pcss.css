@@ -40,11 +40,6 @@
   &:hover {
     color: inherit;
   }
-
-  &:focus {
-    outline: auto 2px var(--color--blue-50);
-    outline-offset: 2px;
-  }
 }
 
 .primary-nav__menu-link--nolink {
@@ -156,7 +151,7 @@
   opacity: 0;
   border-inline-start: solid var(--sp) var(--color--blue-50);
 
-  &.is-active-menu-parent {
+  &.is-active {
     visibility: visible;
     max-height: none;
     margin-block-start: var(--sp1-5);

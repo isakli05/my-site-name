@@ -90,8 +90,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'page[style][style_plugin]' => 'default',
       'page[style][row_plugin]' => 'fields',
     ];
-    $this->drupalGet('admin/structure/views/add');
-    $this->submitForm($edit, 'Save and edit');
+    $this->drupalPostForm('admin/structure/views/add', $edit, 'Save and edit');
     $this->submitForm([], 'Duplicate as Entity Reference');
     $this->clickLink(t('Settings'));
     $edit = [
@@ -103,12 +102,10 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     $edit = [
       'name[node_field_data.nid]' => 1,
     ];
-    $this->drupalGet('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort');
-    $this->submitForm($edit, 'Add and configure sort criteria');
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/node_test_view/entity_reference_1/sort', $edit, 'Add and configure sort criteria');
     $this->submitForm([], 'Apply');
 
-    $this->drupalGet('admin/structure/views/view/node_test_view/edit/entity_reference_1');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/views/view/node_test_view/edit/entity_reference_1', [], 'Save');
     $this->clickLink(t('Settings'));
 
     // Create a test entity reference field.
@@ -118,8 +115,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'label' => 'Test Entity Reference Field',
       'field_name' => $field_name,
     ];
-    $this->drupalGet($bundle_path . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->drupalPostForm($bundle_path . '/fields/add-field', $edit, 'Save and continue');
 
     // Set to unlimited.
     $edit = [
@@ -161,8 +157,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
 
     // Try to add a new node, fill the entity reference field and submit the
     // form.
-    $this->drupalGet('node/add/' . $this->type);
-    $this->submitForm([], 'Add another item');
+    $this->drupalPostForm('node/add/' . $this->type, [], 'Add another item');
     $edit = [
       'title[0][value]' => 'Example',
       'field_test_entity_ref_field[0][target_id]' => 'Foo Node (' . $node1->id() . ')',
@@ -175,32 +170,29 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'title[0][value]' => 'Example',
       'field_test_entity_ref_field[0][target_id]' => 'Test',
     ];
-    $this->drupalGet('node/add/' . $this->type);
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert that entity reference autocomplete field is validated.
-    $this->assertSession()->pageTextContains('There are no content items matching "Test"');
+    $this->assertText('There are no entities matching "Test"');
 
     $edit = [
       'title[0][value]' => 'Test',
       'field_test_entity_ref_field[0][target_id]' => $node1->getTitle(),
     ];
-    $this->drupalGet('node/add/' . $this->type);
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
 
     // Assert the results multiple times to avoid sorting problem of nodes with
     // the same title.
-    $this->assertSession()->pageTextContains('Multiple content items match this reference;');
-    $this->assertSession()->pageTextContains($node1->getTitle() . ' (' . $node1->id() . ')');
-    $this->assertSession()->pageTextContains($node2->getTitle() . ' (' . $node2->id() . ')');
-    $this->assertSession()->pageTextContains('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
+    $this->assertText('Multiple entities match this reference;');
+    $this->assertText($node1->getTitle() . ' (' . $node1->id() . ')');
+    $this->assertText($node2->getTitle() . ' (' . $node2->id() . ')');
+    $this->assertText('Specify the one you want by appending the id in parentheses, like "' . $node2->getTitle() . ' (' . $node2->id() . ')' . '".');
 
     $edit = [
       'title[0][value]' => 'Test',
       'field_test_entity_ref_field[0][target_id]' => $node1->getTitle() . ' (' . $node1->id() . ')',
     ];
-    $this->drupalGet('node/add/' . $this->type);
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/' . $this->type, $edit, 'Save');
     $this->assertSession()->linkExists($node1->getTitle());
 
     // Tests adding default values to autocomplete widgets.
@@ -329,8 +321,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
       'settings[handler_settings][target_bundles][' . $vocabularies[1]->id() . ']' => TRUE,
     ];
     // Enable the second vocabulary as a target bundle.
-    $this->drupalGet($path);
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm($path, $edit, 'Save settings');
     $this->drupalGet($path);
     // Expect a select element with the two vocabularies as options.
     $this->assertSession()->optionExists('settings[handler_settings][auto_create_bundle]', $vocabularies[0]->id());
@@ -345,7 +336,7 @@ class EntityReferenceAdminTest extends BrowserTestBase {
     /** @var \Drupal\field\Entity\FieldConfig $field_config */
     $field_config = FieldConfig::load($field_id);
     // Expect that the target bundle has been saved in the backend.
-    $this->assertEquals($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
+    $this->assertEqual($vocabularies[1]->id(), $field_config->getSetting('handler_settings')['auto_create_bundle']);
 
     // Delete the other bundle. Field config should not be affected.
     $vocabularies[0]->delete();

@@ -37,11 +37,11 @@ class ConfigTest extends BrowserTestBase {
     ];
 
     // Check that public and private can be selected as default scheme.
-    $this->assertSession()->pageTextContains('Public local files served by the webserver.');
-    $this->assertSession()->pageTextContains('Private local files served by Drupal.');
+    $this->assertText('Public local files served by the webserver.');
+    $this->assertText('Private local files served by Drupal.');
 
     $this->submitForm($fields, 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->assertText('The configuration options have been saved.');
     foreach ($fields as $field => $value) {
       $this->assertSession()->fieldValueEquals($field, $value);
     }
@@ -56,7 +56,7 @@ class ConfigTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     $this->drupalGet('admin/config/media/file-system');
-    $this->assertSession()->pageTextContains('Public local files served by the webserver.');
+    $this->assertText('Public local files served by the webserver.');
     $this->assertNoText('Private local files served by Drupal.');
   }
 

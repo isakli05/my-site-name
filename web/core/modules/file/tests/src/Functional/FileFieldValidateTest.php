@@ -35,13 +35,12 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Try to post a new node without uploading a file.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalGet('node/add/' . $type_name);
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
     $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]));
 
     // Create a new node with the uploaded file.
     $nid = $this->uploadNodeFile($test_file, $field_name, $type_name);
-    $this->assertNotFalse($nid, new FormattableMarkup('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', ['@test_file' => $test_file->getFileUri(), '@field_name' => $field_name, '@type_name' => $type_name]));
+    $this->assertTrue($nid !== FALSE, new FormattableMarkup('uploadNodeFile(@test_file, @field_name, @type_name) succeeded', ['@test_file' => $test_file->getFileUri(), '@field_name' => $field_name, '@type_name' => $type_name]));
 
     $node_storage->resetCache([$nid]);
     $node = $node_storage->load($nid);
@@ -57,8 +56,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Try to post a new node without uploading a file in the multivalue field.
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName();
-    $this->drupalGet('node/add/' . $type_name);
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/' . $type_name, $edit, 'Save');
     $this->assertRaw(t('@title field is required.', ['@title' => $field->getLabel()]));
 
     // Create a new node with the uploaded file into the multivalue field.
@@ -192,7 +190,7 @@ class FileFieldValidateTest extends FileFieldTestBase {
     // Check that the file can still be removed.
     $this->removeNodeFile($nid);
     $this->assertNoText('Only files with the following extensions are allowed: txt.');
-    $this->assertSession()->pageTextContains('Article ' . $node->getTitle() . ' has been updated.');
+    $this->assertText('Article ' . $node->getTitle() . ' has been updated.');
   }
 
 }

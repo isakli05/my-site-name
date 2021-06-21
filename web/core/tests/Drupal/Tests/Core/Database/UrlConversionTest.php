@@ -205,7 +205,7 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * Tests ::convertDbUrlToConnectionInfo() exception for invalid arguments.
+   * Test ::convertDbUrlToConnectionInfo() exception for invalid arguments.
    *
    * @dataProvider providerInvalidArgumentsUrlConversion
    */
@@ -357,7 +357,7 @@ class UrlConversionTest extends UnitTestCase {
   }
 
   /**
-   * Tests ::getConnectionInfoAsUrl() exception for invalid arguments.
+   * Test ::getConnectionInfoAsUrl() exception for invalid arguments.
    *
    * @covers ::getConnectionInfoAsUrl
    *

@@ -46,7 +46,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
         '@op' => $op,
       ]);
 
-      $this->assertEquals($object->access($op, $account), $result, $message);
+      $this->assertEqual($object->access($op, $account), $result, $message);
     }
   }
 
@@ -286,7 +286,7 @@ class EntityAccessControlHandlerTest extends EntityLanguageTestBase {
     $entity->access('create');
     $this->assertTrue($state->get('entity_test_entity_create_access'));
     $this->assertSame(['entity_type_id' => 'entity_test', 'langcode' => LanguageInterface::LANGCODE_DEFAULT], $state->get('entity_test_entity_create_access_context'));
-    $this->assertEquals(TRUE, $state->get('entity_test_entity_test_create_access'));
+    $this->assertEqual(TRUE, $state->get('entity_test_entity_test_create_access'));
 
     // Test hook_entity_access() and hook_ENTITY_TYPE_access().
     $entity->access('view');

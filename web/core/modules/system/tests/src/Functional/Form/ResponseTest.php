@@ -32,8 +32,7 @@ class ResponseTest extends BrowserTestBase {
       'content' => $this->randomString(),
       'status' => 200,
     ];
-    $this->drupalGet('form-test/response');
-    $this->submitForm($edit, 'Submit');
+    $this->drupalPostForm('form-test/response', $edit, 'Submit');
     $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSame($edit['content'], $content, 'Response content matches');
@@ -46,8 +45,7 @@ class ResponseTest extends BrowserTestBase {
       'content' => $this->randomString(),
       'status' => 418,
     ];
-    $this->drupalGet('form-test/response');
-    $this->submitForm($edit, 'Submit');
+    $this->drupalPostForm('form-test/response', $edit, 'Submit');
     $content = Json::decode($this->getSession()->getPage()->getContent());
     $this->assertSession()->statusCodeEquals(418);
     $this->assertSame($edit['content'], $content, 'Response content matches');

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal.
+ */
+
 use Drupal\Core\DependencyInjection\ContainerNotInitializedException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -75,7 +80,7 @@ class Drupal {
   /**
    * The current system version.
    */
-  const VERSION = '9.2.0';
+  const VERSION = '9.1.7';
 
   /**
    * Core API compatibility.
@@ -132,7 +137,7 @@ class Drupal {
    * message, but Drupal can still be installed. Used for (e.g.) PHP versions
    * that have reached their EOL or will in the near future.
    */
-  const RECOMMENDED_PHP = '7.4';
+  const RECOMMENDED_PHP = '7.3';
 
   /**
    * The currently active container object, or NULL if not initialized yet.

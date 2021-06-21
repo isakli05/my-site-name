@@ -31,6 +31,7 @@
 			"../position",
 			"../safe-active-element",
 			"../safe-blur",
+			"../tabbable",
 			"../unique-id",
 			"../version",
 			"../widget"

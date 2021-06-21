@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Route;
 class WorkflowStateTransitionOperationsAccessCheckTest extends UnitTestCase {
 
   /**
-   * Tests the access method correctly proxies to the entity access system.
+   * Test the access method correctly proxies to the entity access system.
    *
    * @covers ::access
    * @dataProvider accessTestCases

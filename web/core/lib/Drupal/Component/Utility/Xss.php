@@ -247,15 +247,13 @@ class Xss {
         case 1:
           // Equals sign or valueless ("selected").
           if (preg_match('/^\s*=\s*/', $attributes)) {
-            $working = 1;
-            $mode = 2;
+            $working = 1; $mode = 2;
             $attributes = preg_replace('/^\s*=\s*/', '', $attributes);
             break;
           }
 
           if (preg_match('/^\s+/', $attributes)) {
-            $working = 1;
-            $mode = 0;
+            $working = 1; $mode = 0;
             if (!$skip) {
               $attributes_array[] = $attribute_name;
             }
@@ -283,8 +281,7 @@ class Xss {
             if (!$skip) {
               $attributes_array[] = "$attribute_name='$value'";
             }
-            $working = 1;
-            $mode = 0;
+            $working = 1; $mode = 0;
             $attributes = preg_replace("/^'[^']*'(\s+|$)/", '', $attributes);
             break;
           }
@@ -295,8 +292,7 @@ class Xss {
             if (!$skip) {
               $attributes_array[] = "$attribute_name=\"$value\"";
             }
-            $working = 1;
-            $mode = 0;
+            $working = 1; $mode = 0;
             $attributes = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attributes);
           }
           break;

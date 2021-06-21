@@ -50,7 +50,7 @@ class DateTimeTest extends BrowserTestBase {
   }
 
   /**
-   * Tests time zones and DST handling.
+   * Test time zones and DST handling.
    */
   public function testTimeZoneHandling() {
     // Setup date/time settings for Honolulu time.
@@ -72,10 +72,10 @@ class DateTimeTest extends BrowserTestBase {
     // Confirm date format and time zone.
     $this->drupalGet('node/' . $node1->id());
     // Date should be identical, with GMT offset of -10 hours.
-    $this->assertSession()->pageTextContains('2007-01-31 21:00:00 -1000');
+    $this->assertText('2007-01-31 21:00:00 -1000');
     $this->drupalGet('node/' . $node2->id());
     // Date should be identical, with GMT offset of -10 hours.
-    $this->assertSession()->pageTextContains('2007-07-31 21:00:00 -1000');
+    $this->assertText('2007-07-31 21:00:00 -1000');
 
     // Set time zone to Los Angeles time.
     $config->set('timezone.default', 'America/Los_Angeles')->save();
@@ -84,14 +84,14 @@ class DateTimeTest extends BrowserTestBase {
     // Confirm date format and time zone.
     $this->drupalGet('node/' . $node1->id());
     // Date should be two hours ahead, with GMT offset of -8 hours.
-    $this->assertSession()->pageTextContains('2007-01-31 23:00:00 -0800');
+    $this->assertText('2007-01-31 23:00:00 -0800');
     $this->drupalGet('node/' . $node2->id());
     // Date should be three hours ahead, with GMT offset of -7 hours.
-    $this->assertSession()->pageTextContains('2007-08-01 00:00:00 -0700');
+    $this->assertText('2007-08-01 00:00:00 -0700');
   }
 
   /**
-   * Tests date format configuration.
+   * Test date format configuration.
    */
   public function testDateFormatConfiguration() {
     // Confirm 'no custom date formats available' message appears.
@@ -107,16 +107,15 @@ class DateTimeTest extends BrowserTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     ];
-    $this->drupalGet('admin/config/regional/date-time/formats/add');
-    $this->submitForm($edit, 'Add format');
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     // Check that date format added confirmation message appears.
-    $this->assertSession()->pageTextContains('Custom date format added.');
+    $this->assertText('Custom date format added.');
     // Check that custom date format appears in the date format list.
-    $this->assertSession()->pageTextContains($name);
+    $this->assertText($name);
     // Check that the delete link for custom date format appears.
-    $this->assertSession()->pageTextContains('Delete');
+    $this->assertText('Delete');
 
     // Edit the custom date format and re-save without editing the format.
     $this->drupalGet('admin/config/regional/date-time');
@@ -124,7 +123,7 @@ class DateTimeTest extends BrowserTestBase {
     $this->submitForm([], 'Save format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
-    $this->assertSession()->pageTextContains('Custom date format updated.');
+    $this->assertText('Custom date format updated.');
 
     // Edit custom date format.
     $this->drupalGet('admin/config/regional/date-time');
@@ -132,16 +131,14 @@ class DateTimeTest extends BrowserTestBase {
     $edit = [
       'date_format_pattern' => 'Y m',
     ];
-    $this->drupalGet($this->getUrl());
-    $this->submitForm($edit, 'Save format');
+    $this->drupalPostForm($this->getUrl(), $edit, 'Save format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
-    $this->assertSession()->pageTextContains('Custom date format updated.');
+    $this->assertText('Custom date format updated.');
 
     // Delete custom date format.
     $this->clickLink(t('Delete'));
-    $this->drupalGet('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete');
-    $this->submitForm([], 'Delete');
+    $this->drupalPostForm('admin/config/regional/date-time/formats/manage/' . $date_format_id . '/delete', [], 'Delete');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
     $this->assertRaw(t('The date format %format has been deleted.', ['%format' => $name]));
@@ -159,15 +156,14 @@ class DateTimeTest extends BrowserTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     ];
-    $this->drupalGet('admin/config/regional/date-time/formats/add');
-    $this->submitForm($edit, 'Add format');
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
-    $this->assertSession()->pageTextContains('Custom date format added.');
+    $this->assertText('Custom date format added.');
     // Check that the custom date format appears in the date format list.
-    $this->assertSession()->pageTextContains($name);
+    $this->assertText($name);
     // Check that the delete link for custom date format appears.
-    $this->assertSession()->pageTextContains('Delete');
+    $this->assertText('Delete');
 
     $date_format = DateFormat::create([
       'id' => 'xss_short',
@@ -189,18 +185,17 @@ class DateTimeTest extends BrowserTestBase {
       'label' => $name,
       'date_format_pattern' => $date_format,
     ];
-    $this->drupalGet('admin/config/regional/date-time/formats/add');
-    $this->submitForm($edit, 'Add format');
+    $this->drupalPostForm('admin/config/regional/date-time/formats/add', $edit, 'Add format');
     // Verify that the user is redirected to the correct page.
     $this->assertSession()->addressEquals(Url::fromRoute('entity.date_format.collection'));
-    $this->assertSession()->pageTextContains('Custom date format added.');
+    $this->assertText('Custom date format added.');
     // Check that the custom date format appears in the date format list.
-    $this->assertSession()->pageTextContains($name);
+    $this->assertText($name);
     $this->assertSession()->assertEscaped('<em>' . date("Y") . '</em>');
   }
 
   /**
-   * Tests handling case with invalid data in selectors (like February, 31st).
+   * Test handling case with invalid data in selectors (like February, 31st).
    */
   public function testEnteringDateTimeViaSelectors() {
 
@@ -215,11 +210,10 @@ class DateTimeTest extends BrowserTestBase {
       'label' => 'dt',
       'field_name' => 'dt',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
+    $this->drupalPostForm('admin/structure/types/manage/page_with_date/fields/add-field', $edit, 'Save and continue');
     // Check that the new datetime field was created, and process is now set
     // to continue for configuration.
-    $this->assertSession()->pageTextContains('These settings apply to the');
+    $this->assertText('These settings apply to the');
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
     $edit = [
@@ -227,19 +221,17 @@ class DateTimeTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => '1',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage');
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm('admin/structure/types/manage/page_with_date/fields/node.page_with_date.field_dt/storage', $edit, 'Save field settings');
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/fields');
-    $this->assertSession()->pageTextContains('field_dt');
+    $this->assertText('field_dt');
 
     $this->drupalGet('admin/structure/types/manage/page_with_date/form-display');
     $edit = [
       'fields[field_dt][type]' => 'datetime_datelist',
       'fields[field_dt][region]' => 'content',
     ];
-    $this->drupalGet('admin/structure/types/manage/page_with_date/form-display');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/page_with_date/form-display', $edit, 'Save');
     $this->drupalLogout();
 
     // Now log in as a regular editor.
@@ -256,17 +248,15 @@ class DateTimeTest extends BrowserTestBase {
       'field_dt[0][value][hour]' => '1',
       'field_dt[0][value][minute]' => '30',
     ];
-    $this->drupalGet('node/add/page_with_date');
-    $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('Selected combination of day and month is not valid.');
+    $this->drupalPostForm('node/add/page_with_date', $edit, 'Save');
+    $this->assertText('Selected combination of day and month is not valid.');
 
     $edit['field_dt[0][value][day]'] = '29';
-    $this->drupalGet('node/add/page_with_date');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page_with_date', $edit, 'Save');
     $this->assertNoText('Selected combination of day and month is not valid.');
 
     $this->drupalGet('node/1');
-    $this->assertSession()->pageTextContains('Mon, 02/29/2016 - 01:30');
+    $this->assertText('Mon, 02/29/2016 - 01:30');
   }
 
 }

@@ -73,4 +73,3 @@ destination:
 migration_dependencies:
   required:
     - d6_user_mail
-    - language

@@ -4,7 +4,6 @@ namespace Drupal\Core\Extension;
 
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\DrupalKernelInterface;
 use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\FieldableEntityInterface;
@@ -46,13 +45,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
   protected $root;
 
   /**
-   * The database connection.
-   *
-   * @var \Drupal\Core\Database\Connection
-   */
-  protected $connection;
-
-  /**
    * The uninstall validators.
    *
    * @var \Drupal\Core\Extension\ModuleUninstallValidatorInterface[]
@@ -68,21 +60,14 @@ class ModuleInstaller implements ModuleInstallerInterface {
    *   The module handler.
    * @param \Drupal\Core\DrupalKernelInterface $kernel
    *   The drupal kernel.
-   * @param \Drupal\Core\Database\Connection $connection
-   *   The database connection.
    *
    * @see \Drupal\Core\DrupalKernel
    * @see \Drupal\Core\CoreServiceProvider
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel, Connection $connection = NULL) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, DrupalKernelInterface $kernel) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->kernel = $kernel;
-    if (!$connection) {
-      @trigger_error('The database connection must be passed to ' . __METHOD__ . '(). Creating ' . __CLASS__ . ' without it is deprecated in drupal:9.2.0 and will be required in drupal:10.0.0. See https://www.drupal.org/node/2970993', E_USER_DEPRECATED);
-      $connection = \Drupal::service('database');
-    }
-    $this->connection = $connection;
   }
 
   /**
@@ -242,7 +227,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
         $this->moduleHandler->invokeAll('module_preinstall', [$module]);
 
         // Now install the module's schema if necessary.
-        $this->installSchema($module);
+        drupal_install_schema($module);
 
         // Clear plugin manager caches.
         \Drupal::getContainer()->get('plugin.cache_clearer')->clearCachedDefinitions();
@@ -483,7 +468,7 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
 
       // Remove the schema.
-      $this->uninstallSchema($module);
+      drupal_uninstall_schema($module);
 
       // Remove the module's entry from the config. Don't check schema when
       // uninstalling a module since we are only clearing a key.
@@ -600,7 +585,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
     // dependencies.
     $container = $this->kernel->getContainer();
     $this->moduleHandler = $container->get('module_handler');
-    $this->connection = $container->get('database');
   }
 
   /**
@@ -620,40 +604,6 @@ class ModuleInstaller implements ModuleInstallerInterface {
       }
     }
     return $reasons;
-  }
-
-  /**
-   * Creates all tables defined in a module's hook_schema().
-   *
-   * @param string $module
-   *   The module for which the tables will be created.
-   *
-   * @internal
-   */
-  protected function installSchema(string $module): void {
-    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
-    $schema = $this->connection->schema();
-    foreach ($tables as $name => $table) {
-      $schema->createTable($name, $table);
-    }
-  }
-
-  /**
-   * Removes all tables defined in a module's hook_schema().
-   *
-   * @param string $module
-   *   The module for which the tables will be removed.
-   *
-   * @internal
-   */
-  protected function uninstallSchema(string $module): void {
-    $tables = $this->moduleHandler->invoke($module, 'schema') ?? [];
-    $schema = $this->connection->schema();
-    foreach (array_keys($tables) as $table) {
-      if ($schema->tableExists($table)) {
-        $schema->dropTable($table);
-      }
-    }
   }
 
 }

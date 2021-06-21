@@ -11,11 +11,18 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-(function ($, Modernizr, Drupal, once) {
+(function ($, Modernizr, Drupal) {
   Drupal.behaviors.date = {
     attach: function attach(context, settings) {
+      var dataFieldElements = 'data-drupal-field-elements';
+      var dataDatepickerProcessed = 'data-datepicker-is-processed';
+
+      var getDateSelector = function getDateSelector(elements) {
+        return ["[".concat(dataFieldElements, "=\"").concat(elements, "\"]"), ":not([".concat(dataDatepickerProcessed, "=\"").concat(elements, "\"])")].join('');
+      };
+
       if (Modernizr.inputtypes.date === false) {
-        once('datepicker', '[data-drupal-field-elements="date-time"]').forEach(function (dateTime) {
+        Array.prototype.forEach.call(document.querySelectorAll(getDateSelector('date-time')), function (dateTime) {
           var dateInput = dateTime.querySelector('input[type="date"]');
           var timeInput = dateTime.querySelector('input[type="time"]');
           var help = Drupal.theme.dateTimeHelp({
@@ -29,8 +36,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             input.setAttribute('type', 'text');
           });
           Drupal.DatepickerPolyfill.attachDescription(dateTime, help);
+          dateTime.setAttribute(dataDatepickerProcessed, 'date-time');
         });
-        once('datepicker', '[data-drupal-field-elements="date"]').forEach(function (date) {
+        Array.prototype.forEach.call(document.querySelectorAll(getDateSelector('date')), function (date) {
           var dateInput = date.querySelector('input[type="date"]');
           var help = Drupal.theme.dateHelp({
             dateDesc: dateInput.dataset.help
@@ -39,6 +47,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           dateInput.setAttribute('aria-describedby', id);
           dateInput.setAttribute('type', 'text');
           Drupal.DatepickerPolyfill.attachDescription(date, help, id);
+          date.setAttribute(dataDatepickerProcessed, 'date');
         });
       }
     }
@@ -91,4 +100,4 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         timeDesc = _ref2.timeDesc;
     return "<div class=\"no-native-datepicker-help\">\n       <span id=\"".concat(dateId, "\">").concat(dateDesc, "</span> <span id=\"").concat(timeId, "\">").concat(timeDesc, "</span>\n     </div>");
   };
-})(jQuery, Modernizr, Drupal, once);
+})(jQuery, Modernizr, Drupal);

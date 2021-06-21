@@ -34,7 +34,7 @@ class ClassyTest extends KernelTestBase {
   }
 
   /**
-   * Tests the classy theme.
+   * Test the classy theme.
    */
   public function testClassyTheme() {
     \Drupal::messenger()->addError('An error occurred');

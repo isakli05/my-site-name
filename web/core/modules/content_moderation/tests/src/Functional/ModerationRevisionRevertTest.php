@@ -60,19 +60,17 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
   }
 
   /**
-   * Tests that reverting a revision works.
+   * Test that reverting a revision works.
    */
   public function testEditingAfterRevertRevision() {
     // Create a draft.
-    $this->drupalGet('node/add/moderated_bundle');
-    $this->submitForm([
+    $this->drupalPostForm('node/add/moderated_bundle', [
       'title[0][value]' => 'First draft node',
       'moderation_state[0][state]' => 'draft',
     ], 'Save');
 
     // Now make it published.
-    $this->drupalGet('node/1/edit');
-    $this->submitForm([
+    $this->drupalPostForm('node/1/edit', [
       'title[0][value]' => 'Published node',
       'moderation_state[0][state]' => 'published',
     ], 'Save');
@@ -93,8 +91,9 @@ class ModerationRevisionRevertTest extends BrowserTestBase {
     $this->assertSession()
       ->pageTextContains('First draft node');
     // Try to save the node.
-    $this->drupalGet('node/1/edit');
-    $this->submitForm(['moderation_state[0][state]' => 'draft'], 'Save');
+    $this->drupalPostForm('node/1/edit', [
+      'moderation_state[0][state]' => 'draft',
+    ], 'Save');
 
     // Check if the submission passed the EntityChangedConstraintValidator.
     $this->assertSession()

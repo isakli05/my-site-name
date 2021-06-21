@@ -39,7 +39,7 @@ class DefaultAccessCheckTest extends UnitTestCase {
   }
 
   /**
-   * Tests the access method.
+   * Test the access method.
    */
   public function testAccess() {
     $request = new Request([]);

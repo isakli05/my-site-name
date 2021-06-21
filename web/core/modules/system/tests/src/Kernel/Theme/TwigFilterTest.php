@@ -19,7 +19,7 @@ class TwigFilterTest extends KernelTestBase {
   protected static $modules = ['twig_theme_test'];
 
   /**
-   * Tests Twig "without" filter.
+   * Test Twig "without" filter.
    */
   public function testTwigWithoutFilter() {
     $filter_test = [

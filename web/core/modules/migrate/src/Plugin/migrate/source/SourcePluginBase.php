@@ -2,7 +2,6 @@
 
 namespace Drupal\migrate\Plugin\migrate\source;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\Core\Plugin\PluginBase;
 use Drupal\migrate\Event\MigrateRollbackEvent;
 use Drupal\migrate\Event\RollbackAwareInterface;
@@ -247,9 +246,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
         $this->$property = (bool) $configuration[$config_key];
       }
     }
-    if ($this->cacheCounts) {
-      $this->cacheKey = $configuration['cache_key'] ?? $plugin_id . '-' . hash('sha256', Json::encode($configuration));
-    }
+    $this->cacheKey = !empty($configuration['cache_key']) ? $configuration['cache_key'] : NULL;
     $this->idMap = $this->migration->getIdMap();
     $this->highWaterProperty = !empty($configuration['high_water_property']) ? $configuration['high_water_property'] : FALSE;
 
@@ -268,7 +265,7 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
    * Initializes the iterator with the source data.
    *
    * @return \Iterator
-   *   Returns an iterable object of data for this source.
+   *   Returns an iteratable object of data for this source.
    */
   abstract protected function initializeIterator();
 
@@ -489,18 +486,29 @@ abstract class SourcePluginBase extends PluginBase implements MigrateSourceInter
       return -1;
     }
 
-    // Return the cached count if we are caching counts and a refresh is not
-    // requested.
-    if ($this->cacheCounts && !$refresh) {
+    if (!isset($this->cacheKey)) {
+      $this->cacheKey = hash('sha256', $this->getPluginId());
+    }
+
+    // If a refresh is requested, or we're not caching counts, ask the derived
+    // class to get the count from the source.
+    if ($refresh || !$this->cacheCounts) {
+      $count = $this->doCount();
+      $this->getCache()->set($this->cacheKey, $count);
+    }
+    else {
+      // Caching is in play, first try to retrieve a cached count.
       $cache_object = $this->getCache()->get($this->cacheKey, 'cache');
       if (is_object($cache_object)) {
-        return $cache_object->data;
+        // Success.
+        $count = $cache_object->data;
       }
-    }
-    $count = $this->doCount();
-    // Update the cache if we are caching counts.
-    if ($this->cacheCounts) {
-      $this->getCache()->set($this->cacheKey, $count);
+      else {
+        // No cached count, ask the derived class to count 'em up, and cache
+        // the result.
+        $count = $this->doCount();
+        $this->getCache()->set($this->cacheKey, $count);
+      }
     }
     return $count;
   }

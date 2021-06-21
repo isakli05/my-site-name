@@ -297,7 +297,7 @@ class AccessManagerTest extends UnitTestCase {
   }
 
   /**
-   * Tests \Drupal\Core\Access\AccessManager::check() with conjunctions.
+   * Test \Drupal\Core\Access\AccessManager::check() with conjunctions.
    *
    * @dataProvider providerTestCheckConjunctions
    */

@@ -4,6 +4,7 @@ namespace Drupal\Tests\views\Functional;
 
 use Behat\Mink\Exception\ElementNotFoundException;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Database\Query\SelectInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\views\Tests\ViewResultAssertionTrait;
 use Drupal\views\Tests\ViewTestData;
@@ -113,7 +114,7 @@ abstract class ViewTestBase extends BrowserTestBase {
   }
 
   /**
-   * Executes a view.
+   * Executes a view with debugging.
    *
    * @param \Drupal\views\ViewExecutable $view
    *   The view object.
@@ -126,6 +127,11 @@ abstract class ViewTestBase extends BrowserTestBase {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();
+    $verbose_message = '<pre>Executed view: ' . ((string) $view->build_info['query']) . '</pre>';
+    if ($view->build_info['query'] instanceof SelectInterface) {
+      $verbose_message .= '<pre>Arguments: ' . print_r($view->build_info['query']->getArguments(), TRUE) . '</pre>';
+    }
+    $this->verbose($verbose_message);
   }
 
   /**

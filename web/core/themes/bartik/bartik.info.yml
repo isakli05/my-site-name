@@ -42,8 +42,6 @@ libraries-extend:
     - bartik/classy.media_library
   media_library/widget:
     - bartik/classy.media_library
-  tour/tour:
-    - bartik/tour
   user/drupal.user:
     - bartik/user
 

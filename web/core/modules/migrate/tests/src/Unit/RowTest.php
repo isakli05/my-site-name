@@ -310,7 +310,7 @@ class RowTest extends UnitTestCase {
   }
 
   /**
-   * Tests getting source and destination properties.
+   * Test getting source and destination properties.
    *
    * @param string $key
    *   The key to look up.
@@ -354,7 +354,7 @@ class RowTest extends UnitTestCase {
   }
 
   /**
-   * Tests getting multiple source and destination properties.
+   * Test getting multiple source and destination properties.
    *
    * @param array $keys
    *   An array of keys to look up.

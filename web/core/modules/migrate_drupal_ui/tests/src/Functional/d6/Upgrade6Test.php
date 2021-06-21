@@ -15,18 +15,20 @@ use Drupal\Tests\migrate_drupal_ui\Functional\MigrateUpgradeExecuteTestBase;
 class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
 
   /**
-   * {@inheritdoc}
+   * Modules to enable.
+   *
+   * @var array
    */
   protected static $modules = [
+    'language',
+    'content_translation',
+    'config_translation',
+    'migrate_drupal_ui',
+    'telephone',
     'aggregator',
     'book',
-    'config_translation',
-    'content_translation',
     'forum',
-    'language',
-    'migrate_drupal_ui',
     'statistics',
-    'telephone',
     'update',
   ];
 
@@ -197,9 +199,8 @@ class Upgrade6Test extends MigrateUpgradeExecuteTestBase {
   /**
    * Executes all steps of migrations upgrade.
    */
-  public function testUpgradeAndIncremental() {
-    // Perform upgrade followed by an incremental upgrade.
-    $this->doUpgradeAndIncremental();
+  public function testMigrateUpgradeExecute() {
+    parent::testMigrateUpgradeExecute();
 
     // Ensure a migrated user can log in.
     $this->assertUserLogIn(2, 'john.doe_pass');

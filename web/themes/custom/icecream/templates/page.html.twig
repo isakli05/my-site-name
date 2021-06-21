@@ -1,4 +1,4 @@
-<div class="container">
+<div class="layout-container">
 
 	<header role="banner">
 		{{ page.header }}
@@ -18,38 +18,9 @@
 		<a id="main-content" tabindex="-1"></a>
 		{# link is in html.html.twig #}
 
-		<div class="layout-content">
+		<div
+			class="layout-content">
 			{# {{ dump(variable_key) }} #}
-			<p>{{ (random()/100)|number_format(1) }}</p>
-			<div>{{ 3.14159|round(2) }}</div>
-			{{ 'now'|date('m/d/Y') }}
-			{% if random(10) < 5 %}
-				<p>Sayı 5 ten küçük</p>
-			{% else %}
-				<p>sayı 5 ten büyük</p>
-			{% endif %}
-			{% filter upper %}
-				All of this text will become uppercase.
-			{% endfilter %}
-			<div>{{ user.name|lower|escape }}</div>
-			<div>{{ 3.14159|round(method="floor") }}</div>
-			<a href="//default/" title="{{ 'Home'|t }}">{{ 'Home'|t }}</a>
-			{%
-			  set classes = [
-			    'my-class',
-			    'my-other-class',
-			    'my-special-class',
-
-			  ]
-			%}
-			<div{{attributes.setAttribute('id','myID')}}></div>
-			<div{{attributes.setAttribute('data-bundle',node.bundle)}}></div>
-			<div{{attributes.addClass(classes).removeClass('my-special-class')}}>Add class Remove class
-				{% if attribute.hasClass('myClass') %}
-					<p>evet bu sınıf var</p>
-				{% endif %}
-			</div>
-
 
 			{{ page.content }}
 			{{ page.content_bottom }}
@@ -72,5 +43,6 @@
 
 		</footer>
 	{% endif %}
+
 </div>
 {# /.layout-container #}

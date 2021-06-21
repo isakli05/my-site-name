@@ -362,7 +362,7 @@ class EntityViewBuilder extends EntityHandlerBase implements EntityHandlerInterf
       $rel = 'revision';
       $key .= '_revision';
     }
-    if ($entity->hasLinkTemplate($rel) && $entity->toUrl($rel)->isRouted()) {
+    if ($entity->hasLinkTemplate($rel)) {
       $build['#contextual_links'][$key] = [
         'route_parameters' => $entity->toUrl($rel)->getRouteParameters(),
       ];

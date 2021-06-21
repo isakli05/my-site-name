@@ -57,7 +57,7 @@ class QuickEditImageTest extends QuickEditJavascriptTestBase {
   }
 
   /**
-   * Tests that quick editor works correctly with images.
+   * Test that quick editor works correctly with images.
    *
    * @covers ::isCompatible
    * @covers ::getAttachments

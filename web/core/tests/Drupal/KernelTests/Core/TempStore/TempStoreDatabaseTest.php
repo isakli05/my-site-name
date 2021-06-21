@@ -3,7 +3,6 @@
 namespace Drupal\KernelTests\Core\TempStore;
 
 use Drupal\Core\KeyValueStore\KeyValueExpirableFactory;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Core\TempStore\SharedTempStoreFactory;
 use Drupal\Core\Lock\DatabaseLockBackend;
@@ -29,14 +28,7 @@ class TempStoreDatabaseTest extends KernelTestBase {
 
     // Create a key/value collection.
     $database = Database::getConnection();
-    // Mock the current user service so that isAnonymous returns FALSE.
-    $current_user = $this->prophesize(AccountProxyInterface::class);
-    $factory = new SharedTempStoreFactory(
-      new KeyValueExpirableFactory(\Drupal::getContainer()),
-      new DatabaseLockBackend($database),
-      $this->container->get('request_stack'),
-      $current_user->reveal()
-    );
+    $factory = new SharedTempStoreFactory(new KeyValueExpirableFactory(\Drupal::getContainer()), new DatabaseLockBackend($database), $this->container->get('request_stack'));
     $collection = $this->randomMachineName();
 
     // Create two mock users.
@@ -56,13 +48,13 @@ class TempStoreDatabaseTest extends KernelTestBase {
     for ($i = 0; $i <= 1; $i++) {
       // setIfNotExists() should be TRUE the first time (when $i is 0) and
       // FALSE the second time (when $i is 1).
-      $this->assertEquals(!$i, $stores[0]->setIfNotExists($key, $objects[$i]));
+      $this->assertEqual(!$i, $stores[0]->setIfNotExists($key, $objects[$i]));
       $metadata = $stores[0]->getMetadata($key);
-      $this->assertEquals($users[0], $metadata->getOwnerId());
+      $this->assertEqual($users[0], $metadata->getOwnerId());
       $this->assertEquals($objects[0], $stores[0]->get($key));
       // Another user should get the same result.
       $metadata = $stores[1]->getMetadata($key);
-      $this->assertEquals($users[0], $metadata->getOwnerId());
+      $this->assertEqual($users[0], $metadata->getOwnerId());
       $this->assertEquals($objects[0], $stores[1]->get($key));
     }
 
@@ -88,11 +80,11 @@ class TempStoreDatabaseTest extends KernelTestBase {
     $this->assertEquals($objects[3], $stores[0]->get($key));
     $this->assertEquals($objects[3], $stores[1]->get($key));
     $metadata = $stores[1]->getMetadata($key);
-    $this->assertEquals($users[1], $metadata->getOwnerId());
+    $this->assertEqual($users[1], $metadata->getOwnerId());
 
     // The first user should be informed that the second now owns the data.
     $metadata = $stores[0]->getMetadata($key);
-    $this->assertEquals($users[1], $metadata->getOwnerId());
+    $this->assertEqual($users[1], $metadata->getOwnerId());
 
     // The first user should no longer be allowed to get, update, delete.
     $this->assertNull($stores[0]->getIfOwner($key));

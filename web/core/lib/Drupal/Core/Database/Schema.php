@@ -72,13 +72,13 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Get information about the table name and schema from the prefix.
    *
-   * @param string $table
+   * @param
    *   Name of table to look prefix up for. Defaults to 'default' because that's
    *   default key for prefix.
-   * @param bool $add_prefix
+   * @param $add_prefix
    *   Boolean that indicates whether the given table name should be prefixed.
    *
-   * @return array
+   * @return
    *   A keyed array with information about the schema, table name and prefix.
    */
   protected function getPrefixInfo($table = 'default', $add_prefix = TRUE) {
@@ -238,9 +238,9 @@ abstract class Schema implements PlaceholderInterface {
   /**
    * Check if a column exists in the given table.
    *
-   * @param string $table
+   * @param $table
    *   The name of the table in drupal (no prefixing).
-   * @param string $column
+   * @param $column
    *   The name of the column.
    *
    * @return

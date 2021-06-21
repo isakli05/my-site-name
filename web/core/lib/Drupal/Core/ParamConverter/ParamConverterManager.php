@@ -74,7 +74,7 @@ class ParamConverterManager implements ParamConverterManagerInterface {
    * {@inheritdoc}
    */
   public function convert(array $defaults) {
-    /** @var \Symfony\Component\Routing\Route $route */
+    /** @var $route \Symfony\Component\Routing\Route */
     $route = $defaults[RouteObjectInterface::ROUTE_OBJECT];
 
     // Skip this enhancer if there are no parameter definitions.

@@ -38,7 +38,6 @@ class DrupalComponentTest extends TestCase {
    *
    * @param $component_path
    *   The path to the component.
-   *
    * @dataProvider \Drupal\Tests\Component\DrupalComponentTest::getComponents
    */
   public function testComponentLicence($component_path) {

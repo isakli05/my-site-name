@@ -2,7 +2,6 @@
 
 namespace Drupal\Core\Pager;
 
-use Drupal\Core\Database\Query\PagerSelectExtender;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
 
 /**
@@ -31,13 +30,6 @@ class PagerManager implements PagerManagerInterface {
    * @var array
    */
   protected $pagers;
-
-  /**
-   * The highest pager ID created so far.
-   *
-   * @var int
-   */
-  protected $maxPagerElementId = -1;
 
   /**
    * Construct a PagerManager object.
@@ -69,13 +61,6 @@ class PagerManager implements PagerManagerInterface {
   /**
    * {@inheritdoc}
    */
-  public function findPage(int $pager_id = 0): int {
-    return $this->pagerParams->findPage($pager_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getUpdatedParameters(array $query, $element, $index) {
     // Build the 'page' query parameter. This is built based on the current
     // page of each pager element (or NULL if the pager is not set), with the
@@ -98,20 +83,13 @@ class PagerManager implements PagerManagerInterface {
   }
 
   /**
-   * {@inheritdoc}
+   * Gets the extent of the pager page element IDs.
+   *
+   * @return int
+   *   The maximum element ID available, -1 if there are no elements.
    */
-  public function getMaxPagerElementId() {
-    return $this->maxPagerElementId;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function reservePagerElementId(int $element): void {
-    $this->maxPagerElementId = max($element, $this->maxPagerElementId);
-    // BC for PagerSelectExtender::$maxElement.
-    // @todo remove the line below in D10.
-    PagerSelectExtender::$maxElement = $this->getMaxPagerElementId();
+  protected function getMaxPagerElementId() {
+    return empty($this->pagers) ? -1 : max(array_keys($this->pagers));
   }
 
   /**
@@ -123,7 +101,6 @@ class PagerManager implements PagerManagerInterface {
    *   The pager index.
    */
   protected function setPager(Pager $pager, $element = 0) {
-    $this->maxPagerElementId = max($element, $this->maxPagerElementId);
     $this->pagers[$element] = $pager;
   }
 

@@ -80,7 +80,7 @@ class AjaxPageStateTest extends BrowserTestBase {
   }
 
   /**
-   * Tests if multiple libraries can be excluded.
+   * Test if multiple libraries can be excluded.
    *
    * The ajax_page_state[libraries] should be able to support multiple libraries
    * comma separated.

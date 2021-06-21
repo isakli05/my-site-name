@@ -175,8 +175,7 @@ class ForumBlockTest extends BrowserTestBase {
       ];
 
       // Create the forum topic, preselecting the forum ID via a URL parameter.
-      $this->drupalGet('node/add/forum', ['query' => ['forum_id' => 1]]);
-      $this->submitForm($edit, 'Save');
+      $this->drupalPostForm('node/add/forum', $edit, 'Save', ['query' => ['forum_id' => 1]]);
       $topics[] = $title;
     }
 

@@ -68,7 +68,7 @@ class FollowUpMigrationsTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests entity reference translations.
+   * Test entity reference translations.
    */
   public function testEntityReferenceTranslations() {
     // Test the entity reference field before the follow-up migrations.

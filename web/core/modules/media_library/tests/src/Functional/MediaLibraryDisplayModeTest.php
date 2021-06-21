@@ -111,8 +111,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'id' => $type_five_id,
       'source' => 'file',
     ];
-    $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains("Media Library form and view displays have been created for the $type_five_id media type.");
     $this->assertFormDisplay($type_five_id, TRUE, FALSE);
@@ -125,8 +124,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'id' => $type_six_id,
       'source' => 'file',
     ];
-    $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
     $edit = [
       'field_map[name]' => File::METADATA_ATTRIBUTE_NAME,
     ];
@@ -142,8 +140,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'id' => $type_seven_id,
       'source' => 'image',
     ];
-    $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains("Media Library form and view displays have been created for the $type_seven_id media type.");
     $this->assertFormDisplay($type_seven_id, TRUE, TRUE);
@@ -156,8 +153,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'id' => $type_eight_id,
       'source' => 'image',
     ];
-    $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
     $edit = [
       'field_map[name]' => Image::METADATA_ATTRIBUTE_NAME,
     ];
@@ -173,8 +169,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'id' => $type_id,
       'source' => 'oembed:video',
     ];
-    $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
     $edit = [
       'field_map[title]' => 'name',
     ];
@@ -188,8 +183,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
     EntityViewDisplay::load('media.type_one.media_library')->delete();
     // Make sure the form and view display are not created when saving existing
     // media types.
-    $this->drupalGet('admin/structure/media/manage/type_one');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/media/manage/type_one', [], 'Save');
     $this->assertNull(EntityFormDisplay::load('media.type_one.media_library'));
     $this->assertNull(EntityViewDisplay::load('media.type_one.media_library'));
 
@@ -203,8 +197,7 @@ class MediaLibraryDisplayModeTest extends BrowserTestBase {
       'id' => $type_nine_id,
       'source' => 'image',
     ];
-    $this->drupalGet('admin/structure/media/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/media/add', $edit, 'Save');
     $this->submitForm([], 'Save');
     $this->assertSession()->pageTextContains("Media Library form and view displays have been created for the $type_nine_id media type.");
     $this->assertFormDisplay($type_nine_id, TRUE, TRUE);

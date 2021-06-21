@@ -2,12 +2,11 @@
 ====================
 
 .. versionadded:: 2.12
-
     The ``html_to_markdown`` filter was added in Twig 2.12.
 
 The ``html_to_markdown`` filter converts a block of HTML to Markdown:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply html_to_markdown %}
         <html>
@@ -28,14 +27,14 @@ You can also use the filter on an entire template which you ``include``:
 
     .. code-block:: bash
 
-        $ composer require twig/markdown-extra
+        $ composer req twig/markdown-extra
 
     On Symfony projects, you can automatically enable it by installing the
     ``twig/extra-bundle``:
 
     .. code-block:: bash
 
-        $ composer require twig/extra-bundle
+        $ composer req twig/extra-bundle
 
     Or add the extension explicitly on the Twig environment::
 
@@ -61,14 +60,14 @@ You can also use the filter on an entire template which you ``include``:
 ``html_to_markdown`` is just a frontend; the actual conversion is done by one of
 the following compatible libraries, from which you can choose:
 
-* `erusev/parsedown`_
-* `league/html-to-markdown`_
-* `michelf/php-markdown`_
+* [erusev/parsedown](https://github.com/erusev/parsedown)
+* [thephpleague/html-to-markdown](https://github.com/thephpleague/html-to-markdown)
+* [michelf/php-markdown](https://github.com/michelf/php-markdown)
 
 Depending on the library, you can also add some options by passing them as an argument
 to the filter. Example for ``league/html-to-markdown``:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {% apply html_to_markdown({hard_break: false}) %}
         <html>
@@ -76,6 +75,3 @@ to the filter. Example for ``league/html-to-markdown``:
         </html>
     {% endapply %}
     
-.. _erusev/parsedown: https://github.com/erusev/parsedown
-.. _league/html-to-markdown: https://github.com/thephpleague/html-to-markdown
-.. _michelf/php-markdown: https://github.com/michelf/php-markdown

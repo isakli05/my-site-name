@@ -154,7 +154,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
 
       if (isset($parameters['reference'])) {
         $definition = new Definition('\stdClass');
-        $definition->setPublic(TRUE);
         $this->containerBuilder->getDefinition('referenced_service')->willReturn($definition);
       }
 
@@ -223,7 +222,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $this->containerBuilder->getDefinitions()->willReturn($services);
 
       $bar_definition = new Definition('\stdClass');
-      $bar_definition->setPublic(TRUE);
       $this->containerBuilder->getDefinition('bar')->willReturn($bar_definition);
 
       $private_definition = new Definition('\stdClass');
@@ -488,10 +486,7 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $bar_definition_php_array = [
         'class' => '\stdClass',
       ];
-      if ($public) {
-        $bar_definition->setPublic(TRUE);
-      }
-      else {
+      if (!$public) {
         $bar_definition->setPublic(FALSE);
         $bar_definition_php_array['public'] = FALSE;
       }
@@ -502,7 +497,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $aliases['bar.alias'] = 'bar';
 
       $foo = new Definition('\stdClass');
-      $foo->setPublic(TRUE);
       $foo->addArgument(new Reference('bar.alias'));
 
       $services['foo'] = $foo;
@@ -544,7 +538,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      */
     public function testGetServiceDefinitionForDecoratedService() {
       $bar_definition = new Definition('\stdClass');
-      $bar_definition->setPublic(TRUE);
       $bar_definition->setDecoratedService(new Reference('foo'));
       $services['bar'] = $bar_definition;
 
@@ -562,7 +555,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $expression = new Expression();
 
       $bar_definition = new Definition('\stdClass');
-      $bar_definition->setPublic(TRUE);
       $bar_definition->addArgument($expression);
       $services['bar'] = $bar_definition;
 
@@ -580,7 +572,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $service = new \stdClass();
 
       $bar_definition = new Definition('\stdClass');
-      $bar_definition->setPublic(TRUE);
       $bar_definition->addArgument($service);
       $services['bar'] = $bar_definition;
 
@@ -598,7 +589,6 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
       $resource = fopen('php://memory', 'r');
 
       $bar_definition = new Definition('\stdClass');
-      $bar_definition->setPublic(TRUE);
       $bar_definition->addArgument($resource);
       $services['bar'] = $bar_definition;
 
@@ -613,10 +603,8 @@ namespace Drupal\Tests\Component\DependencyInjection\Dumper {
      * @dataProvider percentsEscapeProvider
      */
     public function testPercentsEscape($expected, $argument) {
-      $definition = new Definition('\stdClass', [$argument]);
-      $definition->setPublic(TRUE);
       $this->containerBuilder->getDefinitions()->willReturn([
-        'test' => $definition,
+        'test' => new Definition('\stdClass', [$argument]),
       ]);
 
       $dump = $this->dumper->getArray();

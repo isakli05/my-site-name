@@ -58,8 +58,7 @@ class NodeAccessMenuLinkTest extends NodeTestBase {
       'menu[enabled]' => 1,
       'menu[title]' => $menu_link_title,
     ];
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $this->assertSession()->linkExists($menu_link_title);
 
     // Ensure anonymous users without "access content" permission do not see

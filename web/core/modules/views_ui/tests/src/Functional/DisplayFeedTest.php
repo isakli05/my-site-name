@@ -51,7 +51,7 @@ class DisplayFeedTest extends UITestBase {
     // Regression test: ViewListBuilder::getDisplayPaths() did not properly
     // check whether a DisplayPluginCollection was returned in iterating over
     // all displays.
-    $this->assertSession()->pageTextContains($view_name);
+    $this->assertText($view_name);
 
     // Check the attach TO interface.
     $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
@@ -68,11 +68,10 @@ class DisplayFeedTest extends UITestBase {
       }
     }
 
-    $this->assertEquals(['default', 'page'], $options, 'Make sure all displays appears as expected.');
+    $this->assertEqual(['default', 'page'], $options, 'Make sure all displays appears as expected.');
 
     // Post and save this and check the output.
-    $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
-    $this->submitForm(['displays[page]' => 'page'], 'Apply');
+    $this->drupalPostForm('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays', ['displays[page]' => 'page'], 'Apply');
     // Options summary should be escaped.
     $this->assertSession()->assertEscaped('<em>Page</em>');
     $this->assertNoRaw('<em>Page</em>');
@@ -81,8 +80,7 @@ class DisplayFeedTest extends UITestBase {
     $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Page');
 
     // Add the default display, so there should now be multiple displays.
-    $this->drupalGet('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays');
-    $this->submitForm(['displays[default]' => 'default'], 'Apply');
+    $this->drupalPostForm('admin/structure/views/nojs/display/' . $view_name . '/feed_1/displays', ['displays[default]' => 'default'], 'Apply');
     $this->drupalGet('admin/structure/views/view/' . $view_name . '/edit/feed_1');
     $this->assertSession()->elementTextContains('xpath', '//*[@id="views-feed-1-displays"]', 'Multiple displays');
   }

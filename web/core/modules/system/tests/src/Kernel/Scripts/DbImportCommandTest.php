@@ -55,7 +55,7 @@ class DbImportCommandTest extends KernelTestBase {
   ];
 
   /**
-   * Tests the command directly.
+   * Test the command directly.
    *
    * @requires extension pdo_sqlite
    */

@@ -54,16 +54,14 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Set the native language name.
     $this->saveNativeLanguageName('fr', 'français');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Enable the language switching block.
     $block = $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, [
@@ -87,7 +85,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   protected function doTestLanguageBlockAuthenticated($block_label) {
     // Assert that the language switching block is displayed on the frontpage.
     $this->drupalGet('');
-    $this->assertSession()->pageTextContains($block_label);
+    $this->assertText($block_label);
 
     // Assert that each list item and anchor element has the appropriate data-
     // attributes.
@@ -141,7 +139,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
     // Assert that the language switching block is displayed on the frontpage
     // and ensure that the active class is added when query params are present.
     $this->drupalGet('', ['query' => ['foo' => 'bar']]);
-    $this->assertSession()->pageTextContains($block_label);
+    $this->assertText($block_label);
 
     // Assert that only the current language is marked as active.
     $language_switchers = $this->xpath('//div[@id=:id]/ul/li', [':id' => 'block-test-language-block']);
@@ -180,7 +178,7 @@ class LanguageSwitchingTest extends BrowserTestBase {
   }
 
   /**
-   * Tests language switcher links for domain based negotiation.
+   * Test language switcher links for domain based negotiation.
    */
   public function testLanguageBlockWithDomain() {
     // Add the Italian language.
@@ -197,17 +195,15 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'language_interface[enabled][language-url]' => TRUE,
       'language_interface[weight][language-url]' => -10,
     ];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Do not allow blank domain.
     $edit = [
       'language_negotiation_url_part' => LanguageNegotiationUrl::CONFIG_DOMAIN,
       'domain[en]' => '',
     ];
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The domain may not be left blank for English');
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->assertText('The domain may not be left blank for English');
 
     // Change the domain for the Italian language.
     $edit = [
@@ -215,9 +211,8 @@ class LanguageSwitchingTest extends BrowserTestBase {
       'domain[en]' => \Drupal::request()->getHost(),
       'domain[it]' => 'it.example.com',
     ];
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved');
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved');
 
     // Enable the language switcher block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, ['id' => 'test_language_block']);
@@ -228,29 +223,35 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $generator = $this->container->get('url_generator');
 
     // Verify the English URL is correct
+    list($english_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
+      ':id' => 'block-test-language-block',
+      ':hreflang' => 'en',
+    ]);
     $english_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['en']]);
-    $this->assertSession()->elementAttributeContains('xpath', '//div[@id="block-test-language-block"]/ul/li/a[@hreflang="en"]', 'href', $english_url);
+    $this->assertEqual($english_link->getAttribute('href'), $english_url);
 
     // Verify the Italian URL is correct
+    list($italian_link) = $this->xpath('//div[@id=:id]/ul/li/a[@hreflang=:hreflang]', [
+      ':id' => 'block-test-language-block',
+      ':hreflang' => 'it',
+    ]);
     $italian_url = $generator->generateFromRoute('entity.user.canonical', ['user' => 2], ['language' => $languages['it']]);
-    $this->assertSession()->elementAttributeContains('xpath', '//div[@id="block-test-language-block"]/ul/li/a[@hreflang="it"]', 'href', $italian_url);
+    $this->assertEqual($italian_link->getAttribute('href'), $italian_url);
   }
 
   /**
-   * Tests active class on links when switching languages.
+   * Test active class on links when switching languages.
    */
   public function testLanguageLinkActiveClass() {
     // Add language.
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     $this->doTestLanguageLinkActiveClassAuthenticated();
     $this->doTestLanguageLinkActiveClassAnonymous();
@@ -266,13 +267,11 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Check if the default (English) admin/config page has the right class.
     $this->drupalGet('admin/config');
@@ -418,16 +417,14 @@ class LanguageSwitchingTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'fr',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Enable session language detection and selection.
     $edit = [
       'language_interface[enabled][language-url]' => FALSE,
       'language_interface[enabled][language-session]' => TRUE,
     ];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Enable the language switching block.
     $this->drupalPlaceBlock('language_block:' . LanguageInterface::TYPE_INTERFACE, [

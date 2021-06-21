@@ -23,7 +23,7 @@ class MediaSettingsTest extends MediaFunctionalTestBase {
   }
 
   /**
-   * Tests that media warning appears if oEmbed media types exists.
+   * Test that media warning appears if oEmbed media types exists.
    */
   public function testStatusPage() {
     $assert_session = $this->assertSession();

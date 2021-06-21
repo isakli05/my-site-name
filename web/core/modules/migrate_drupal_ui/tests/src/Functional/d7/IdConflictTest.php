@@ -15,15 +15,17 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
    * {@inheritdoc}
    */
   protected static $modules = [
-    'aggregator',
-    'book',
+    'file',
+    'language',
     'config_translation',
     'content_translation',
-    'forum',
-    'language',
     'migrate_drupal_ui',
-    'statistics',
     'telephone',
+    'aggregator',
+    'book',
+    'forum',
+    'rdf',
+    'statistics',
     // Required for translation migrations.
     'migrate_drupal_multilingual',
   ];
@@ -70,10 +72,27 @@ class IdConflictTest extends MigrateUpgradeExecuteTestBase {
   /**
    * Tests ID Conflict form.
    */
-  public function testIdConflictForm() {
-    // Start the upgrade process.
-    $this->submitCredentialForm();
+  public function testMigrateUpgradeExecute() {
+    $this->drupalGet('/upgrade');
+    $session = $this->assertSession();
+    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
 
+    $this->submitForm([], 'Continue');
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
+
+    // Get valid credentials.
+    $edits = $this->translatePostValues($this->getCredentials());
+
+    // Start the upgrade process.
+    $this->drupalGet('/upgrade');
+    $session->responseContains("Upgrade a site by importing its files and the data from its database into a clean and empty new install of Drupal $this->destinationSiteVersion.");
+
+    $this->submitForm([], 'Continue');
+    $session->pageTextContains('Provide credentials for the database of the Drupal site you want to upgrade.');
+    $session->fieldExists('mysql[host]');
+
+    $this->submitForm($edits, 'Review upgrade');
     $entity_types = [
       'block_content',
       'menu_link_content',

@@ -38,14 +38,13 @@ class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
     $edit = [
       'predefined_langcode' => 'es',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Overridden string for language-negotiation should not exist in the form.
     $this->drupalGet('admin/config/regional/language/detection/url');
 
     // The language-negotiation form should be found.
-    $this->assertSession()->pageTextContains('Path prefix configuration');
+    $this->assertText('Path prefix configuration');
 
     // The English override should not be found.
     $this->assertSession()->fieldValueNotEquals('prefix[en]', $overridden_value_en);
@@ -54,7 +53,7 @@ class LanguageNegotiationFormOverrideTest extends BrowserTestBase {
     $this->drupalGet($overridden_value_es . '/admin/config/regional/language/detection/url');
 
     // The language-negotiation form should be found.
-    $this->assertSession()->pageTextContains('Path prefix configuration');
+    $this->assertText('Path prefix configuration');
 
     // The Spanish override should not be found.
     $this->assertSession()->fieldValueNotEquals('prefix[es]', $overridden_value_es);

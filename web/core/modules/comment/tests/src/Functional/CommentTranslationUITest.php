@@ -36,7 +36,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
   protected $adminUser;
 
   /**
-   * {@inheritdoc}
+   * {inheritdoc}
    */
   protected $defaultCacheContexts = [
     'languages:language_interface',
@@ -148,8 +148,7 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
       if ($index > 0) {
         $edit = ['status' => 0];
         $url = $entity->toUrl('edit-form', ['language' => ConfigurableLanguage::load($langcode)]);
-        $this->drupalGet($url);
-        $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
+        $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
         $storage->resetCache();
         $entity = $storage->load($this->entityId);
         $this->assertFalse($this->manager->getTranslationMetadata($entity->getTranslation($langcode))->isPublished(), 'The translation has been correctly unpublished.');
@@ -183,16 +182,15 @@ class CommentTranslationUITest extends ContentTranslationUITestBase {
         'date[date]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'Y-m-d'),
         'date[time]' => $date_formatter->format($values[$langcode]['created'], 'custom', 'H:i:s'),
       ];
-      $this->drupalGet($url);
-      $this->submitForm($edit, $this->getFormSubmitAction($entity, $langcode));
+      $this->drupalPostForm($url, $edit, $this->getFormSubmitAction($entity, $langcode));
     }
 
     $storage->resetCache([$this->entityId]);
     $entity = $storage->load($this->entityId);
     foreach ($this->langcodes as $langcode) {
       $metadata = $this->manager->getTranslationMetadata($entity->getTranslation($langcode));
-      $this->assertEquals($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
-      $this->assertEquals($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
+      $this->assertEqual($values[$langcode]['uid'], $metadata->getAuthor()->id(), 'Translation author correctly stored.');
+      $this->assertEqual($values[$langcode]['created'], $metadata->getCreatedTime(), 'Translation date correctly stored.');
     }
   }
 

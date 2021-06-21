@@ -134,7 +134,7 @@ class MediaTypeCreationTest extends MediaJavascriptTestBase {
   }
 
   /**
-   * Tests creation of media type, reusing an existing source field.
+   * Test creation of media type, reusing an existing source field.
    */
   public function testMediaTypeCreationReuseSourceField() {
     $session = $this->getSession();

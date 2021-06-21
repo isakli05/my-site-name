@@ -43,7 +43,7 @@ class RecursiveContextualValidatorTest extends KernelTestBase {
   }
 
   /**
-   * Tests recursive propagation of violations.
+   * Test recursive propagation of violations.
    */
   public function testRecursiveViolationPropagation() {
     // We create an entity reference field with a constraint which will

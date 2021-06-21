@@ -4,6 +4,7 @@ namespace Drupal\Tests\Core\Database\Stub;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Database\Log;
+use Drupal\Core\Database\StatementEmpty;
 use Drupal\Core\Database\StatementWrapper;
 
 /**
@@ -56,7 +57,7 @@ class StubConnection extends Connection {
    * {@inheritdoc}
    */
   public function queryRange($query, $from, $count, array $args = [], array $options = []) {
-    return NULL;
+    return new StatementEmpty();
   }
 
   /**

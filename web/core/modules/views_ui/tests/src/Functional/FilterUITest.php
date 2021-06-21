@@ -56,8 +56,7 @@ class FilterUITest extends UITestBase {
     $edit = [
       'options[expose][reduce]' => TRUE,
     ];
-    $this->drupalGet($path);
-    $this->submitForm($edit, 'Apply');
+    $this->drupalPostForm($path, $edit, 'Apply');
 
     // Verifies that the option was saved as expected.
     $this->drupalGet($path);
@@ -114,26 +113,23 @@ class FilterUITest extends UITestBase {
     $edit = [
       'options[expose][identifier]' => '',
     ];
-    $this->drupalGet($path);
-    $this->submitForm($edit, 'Apply');
-    $this->assertSession()->pageTextContains('The identifier is required if the filter is exposed.');
+    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->assertText('The identifier is required if the filter is exposed.');
 
     // Set the identifier to 'value'.
     $edit = [
       'options[expose][identifier]' => 'value',
     ];
-    $this->drupalGet($path);
-    $this->submitForm($edit, 'Apply');
-    $this->assertSession()->pageTextContains('This identifier is not allowed.');
+    $this->drupalPostForm($path, $edit, 'Apply');
+    $this->assertText('This identifier is not allowed.');
 
     // Try a few restricted values for the identifier.
     foreach (['value value', 'value^value'] as $identifier) {
       $edit = [
         'options[expose][identifier]' => $identifier,
       ];
-      $this->drupalGet($path);
-      $this->submitForm($edit, 'Apply');
-      $this->assertSession()->pageTextContains('This identifier has illegal characters.');
+      $this->drupalPostForm($path, $edit, 'Apply');
+      $this->assertText('This identifier has illegal characters.');
     }
   }
 

@@ -55,17 +55,18 @@ class UserBlocksTest extends BrowserTestBase {
     ];
     foreach ($paths as $path => $expected_visibility) {
       $this->drupalGet($path);
+      $elements = $this->xpath('//div[contains(@class,"block-user-login-block") and @role="form"]');
       if ($expected_visibility) {
-        $this->assertSession()->elementExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
+        $this->assertTrue(!empty($elements), 'User login block in path "' . $path . '" should be visible');
       }
       else {
-        $this->assertSession()->elementNotExists('xpath', '//div[contains(@class,"block-user-login-block") and @role="form"]');
+        $this->assertTrue(empty($elements), 'User login block in path "' . $path . '" should not be visible');
       }
     }
   }
 
   /**
-   * Tests the user login block.
+   * Test the user login block.
    */
   public function testUserLoginBlock() {
     // Create a user with some permission that anonymous users lack.
@@ -75,8 +76,7 @@ class UserBlocksTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = $user->getAccountName();
     $edit['pass'] = $user->passRaw;
-    $this->drupalGet('admin/people/permissions');
-    $this->submitForm($edit, 'Log in');
+    $this->drupalPostForm('admin/people/permissions', $edit, 'Log in');
     $this->assertNoText('User login');
 
     // Check that we are still on the same page.
@@ -114,8 +114,7 @@ class UserBlocksTest extends BrowserTestBase {
     // Check that the user login block is not vulnerable to information
     // disclosure to third party sites.
     $this->drupalLogout();
-    $this->drupalGet('http://example.com/', ['external' => FALSE]);
-    $this->submitForm($edit, 'Log in');
+    $this->drupalPostForm('http://example.com/', $edit, 'Log in', ['external' => FALSE]);
     // Check that we remain on the site after login.
     $this->assertSession()->addressEquals($user->toUrl('canonical'));
 
@@ -125,9 +124,8 @@ class UserBlocksTest extends BrowserTestBase {
     $edit = [];
     $edit['name'] = 'foo';
     $edit['pass'] = 'invalid password';
-    $this->drupalGet('filter/tips');
-    $this->submitForm($edit, 'Log in');
-    $this->assertSession()->pageTextContains('Unrecognized username or password. Forgot your password?');
+    $this->drupalPostForm('filter/tips', $edit, 'Log in');
+    $this->assertText('Unrecognized username or password. Forgot your password?');
     $this->drupalGet('filter/tips');
     $this->assertNoText('Unrecognized username or password. Forgot your password?');
   }

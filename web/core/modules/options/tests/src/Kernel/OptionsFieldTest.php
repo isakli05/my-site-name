@@ -22,7 +22,7 @@ class OptionsFieldTest extends OptionsFieldUnitTestBase {
   protected static $modules = ['options'];
 
   /**
-   * Tests that allowed values can be updated.
+   * Test that allowed values can be updated.
    */
   public function testUpdateAllowedValues() {
     // All three options appear.

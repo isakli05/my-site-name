@@ -31,10 +31,7 @@ class MigrateLanguageContentMenuSettingsTest extends MigrateDrupal6TestBase {
     // Create some languages.
     ConfigurableLanguage::createFromLangcode('en')->save();
     ConfigurableLanguage::createFromLangcode('fr')->save();
-    $this->executeMigrations([
-      'language',
-      'd6_language_content_menu_settings',
-    ]);
+    $this->executeMigrations(['d6_language_content_menu_settings']);
   }
 
   /**

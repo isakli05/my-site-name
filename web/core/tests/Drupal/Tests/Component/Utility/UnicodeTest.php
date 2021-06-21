@@ -4,7 +4,6 @@ namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\Unicode;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 /**
  * Test unicode handling features implemented in Unicode component.
@@ -14,17 +13,14 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
  * @coversDefaultClass \Drupal\Component\Utility\Unicode
  */
 class UnicodeTest extends TestCase {
-  use ExpectDeprecationTrait;
 
   /**
    * Tests multibyte encoding.
    *
    * @dataProvider providerTestMimeHeader
    * @covers ::mimeHeaderEncode
-   * @group legacy
    */
   public function testMimeHeaderEncode($value, $encoded) {
-    $this->expectDeprecation('\Drupal\Component\Utility\Unicode::mimeHeaderEncode() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use \Symfony\Component\Mime\Header\UnstructuredHeader instead. See https://www.drupal.org/node/3207439');
     $this->assertEquals($encoded, Unicode::mimeHeaderEncode($value));
   }
 
@@ -48,10 +44,8 @@ class UnicodeTest extends TestCase {
    *
    * @dataProvider providerTestMimeHeaderDecode
    * @covers ::mimeHeaderDecode
-   * @group legacy
    */
   public function testMimeHeaderDecode($value, $encoded) {
-    $this->expectDeprecation('\Drupal\Component\Utility\Unicode::mimeHeaderDecode() is deprecated in drupal:9.2.0 and is removed from drupal:10.0.0. Use iconv_mime_decode() instead. See https://www.drupal.org/node/3207439');
     $this->assertEquals($value, Unicode::mimeHeaderDecode($encoded));
   }
 

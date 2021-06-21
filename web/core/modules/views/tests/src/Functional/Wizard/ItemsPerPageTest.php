@@ -54,8 +54,7 @@ class ItemsPerPageTest extends WizardTestBase {
     $view['block[create]'] = 1;
     $view['block[title]'] = $this->randomMachineName(16);
     $view['block[items_per_page]'] = 3;
-    $this->drupalGet('admin/structure/views/add');
-    $this->submitForm($view, 'Save and edit');
+    $this->drupalPostForm('admin/structure/views/add', $view, 'Save and edit');
 
     // Uncheck items per page in block settings.
     $this->drupalGet($this->getSession()->getCurrentUrl() . '/edit/block_1');
@@ -82,12 +81,12 @@ class ItemsPerPageTest extends WizardTestBase {
     // Make sure the page display shows the nodes we expect, and that they
     // appear in the expected order.
     $this->assertSession()->addressEquals($view['page[path]']);
-    $this->assertSession()->pageTextContains($view['page[title]']);
+    $this->assertText($view['page[title]']);
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertSession()->pageTextContains($node5->label());
-    $this->assertSession()->pageTextContains($node4->label());
-    $this->assertSession()->pageTextContains($node3->label());
-    $this->assertSession()->pageTextContains($node2->label());
+    $this->assertText($node5->label());
+    $this->assertText($node4->label());
+    $this->assertText($node3->label());
+    $this->assertText($node2->label());
     $this->assertNoText($node1->label());
     $this->assertNoText($page_node->label());
     $pos5 = strpos($content, $node5->label());
@@ -101,7 +100,7 @@ class ItemsPerPageTest extends WizardTestBase {
     // Confirm that the block is listed in the block administration UI.
     $this->drupalGet('admin/structure/block/list/' . $this->config('system.theme')->get('default'));
     $this->clickLink('Place block');
-    $this->assertSession()->pageTextContains($view['label']);
+    $this->assertText($view['label']);
 
     // Place the block, visit a page that displays the block, and check that the
     // nodes we expect appear in the correct order.
@@ -109,9 +108,9 @@ class ItemsPerPageTest extends WizardTestBase {
 
     $this->drupalGet('user');
     $content = $this->getSession()->getPage()->getContent();
-    $this->assertSession()->pageTextContains($node5->label());
-    $this->assertSession()->pageTextContains($node4->label());
-    $this->assertSession()->pageTextContains($node3->label());
+    $this->assertText($node5->label());
+    $this->assertText($node4->label());
+    $this->assertText($node3->label());
     $this->assertNoText($node2->label());
     $this->assertNoText($node1->label());
     $this->assertNoText($page_node->label());

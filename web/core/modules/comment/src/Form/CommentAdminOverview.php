@@ -167,7 +167,7 @@ class CommentAdminOverview extends FormBase {
       ->pager(50)
       ->execute();
 
-    /** @var \Drupal\comment\CommentInterface[] $comments */
+    /** @var $comments \Drupal\comment\CommentInterface[] */
     $comments = $this->commentStorage->loadMultiple($cids);
 
     // Build a table listing the appropriate comments.
@@ -188,7 +188,7 @@ class CommentAdminOverview extends FormBase {
     }
 
     foreach ($comments as $comment) {
-      /** @var \Drupal\Core\Entity\EntityInterface $commented_entity */
+      /** @var $commented_entity \Drupal\Core\Entity\EntityInterface */
       $commented_entity = $commented_entities[$comment->getCommentedEntityTypeId()][$comment->getCommentedEntityId()];
       $comment_permalink = $comment->permalink();
       if ($comment->hasField('comment_body') && ($body = $comment->get('comment_body')->value)) {

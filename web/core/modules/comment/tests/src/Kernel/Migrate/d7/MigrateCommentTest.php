@@ -123,8 +123,12 @@ class MigrateCommentTest extends MigrateDrupal7TestBase {
     $node = $comment->getCommentedEntity();
     $this->assertInstanceOf(NodeInterface::class, $node);
     $this->assertSame('1', $node->id());
+  }
 
-    // Tests the migration of comment entity translations.
+  /**
+   * Tests the migration of comment entity translations.
+   */
+  public function testCommentEntityTranslations() {
     $manager = $this->container->get('content_translation.manager');
 
     // Get the comment and its translations.

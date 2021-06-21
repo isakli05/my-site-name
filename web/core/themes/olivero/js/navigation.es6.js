@@ -1,4 +1,4 @@
-((Drupal, once, tabbable) => {
+((Drupal) => {
   /**
    * Checks if navWrapper contains "is-active" class.
    * @param {object} navWrapper
@@ -64,30 +64,22 @@
       toggleNav(props, false);
     });
 
-    // Focus trap. This is added to the header element because the navButton
-    // element is not a child element of the navWrapper element, and the keydown
-    // event would not fire if focus is on the navButton element.
-    props.header.addEventListener('keydown', (e) => {
-      if (e.key === 'Tab' && isNavOpen(props.navWrapper)) {
-        const tabbableNavElements = tabbable.tabbable(props.navWrapper);
-        tabbableNavElements.unshift(props.navButton);
-        const firstTabbableEl = tabbableNavElements[0];
-        const lastTabbableEl =
-          tabbableNavElements[tabbableNavElements.length - 1];
-
+    // Focus trap.
+    props.navWrapper.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
         if (e.shiftKey) {
           if (
-            document.activeElement === firstTabbableEl &&
+            document.activeElement === props.firstFocusableEl &&
             !props.olivero.isDesktopNav()
           ) {
-            lastTabbableEl.focus();
+            props.navButton.focus();
             e.preventDefault();
           }
         } else if (
-          document.activeElement === lastTabbableEl &&
+          document.activeElement === props.lastFocusableEl &&
           !props.olivero.isDesktopNav()
         ) {
-          firstTabbableEl.focus();
+          props.navButton.focus();
           e.preventDefault();
         }
       }
@@ -111,32 +103,36 @@
    * Initialize the navigation JS.
    */
   Drupal.behaviors.oliveroNavigation = {
-    attach(context) {
-      const headerId = 'header';
-      const header = once(
-        'olivero-navigation',
-        `#${headerId}`,
-        context,
-      ).shift();
+    attach(context, settings) {
       const navWrapperId = 'header-nav';
-
-      if (header) {
-        const navWrapper = header.querySelector('#header-nav');
+      const navWrapper = context.querySelector(
+        `#${navWrapperId}:not(.${navWrapperId}-processed)`,
+      );
+      if (navWrapper) {
+        navWrapper.classList.add(`${navWrapperId}-processed`);
         const { olivero } = Drupal;
         const navButton = context.querySelector('.mobile-nav-button');
         const body = context.querySelector('body');
         const overlay = context.querySelector('.overlay');
+        const focusableNavElements = navWrapper.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        const firstFocusableEl = focusableNavElements[0];
+        const lastFocusableEl =
+          focusableNavElements[focusableNavElements.length - 1];
 
         init({
+          settings,
           olivero,
-          header,
           navWrapperId,
           navWrapper,
           navButton,
           body,
           overlay,
+          firstFocusableEl,
+          lastFocusableEl,
         });
       }
     },
   };
-})(Drupal, once, tabbable);
+})(Drupal);

@@ -89,7 +89,7 @@ class EntityContentBaseTest extends MigrateDrupal6TestBase {
   }
 
   /**
-   * Tests that translation destination fails for untranslatable entities.
+   * Test that translation destination fails for untranslatable entities.
    */
   public function testUntranslatable() {
     $this->enableModules(['language_test']);

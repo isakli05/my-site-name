@@ -71,7 +71,7 @@ class GroupedExposedFilterTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests if the right fields are shown and the right values set.
+   * Test if the right fields are shown and the right values set.
    */
   public function testGroupedFilterValuesUI() {
     $web_assert = $this->assertSession();

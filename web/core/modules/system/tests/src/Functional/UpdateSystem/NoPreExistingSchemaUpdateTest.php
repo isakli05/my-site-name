@@ -42,7 +42,7 @@ class NoPreExistingSchemaUpdateTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the system module updates with no dependencies installed.
+   * Test the system module updates with no dependencies installed.
    */
   public function testNoPreExistingSchema() {
     $schema = \Drupal::keyValue('system.schema')->getAll();

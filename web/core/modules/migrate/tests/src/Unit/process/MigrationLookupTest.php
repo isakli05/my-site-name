@@ -101,7 +101,7 @@ class MigrationLookupTest extends MigrationLookupTestCase {
   }
 
   /**
-   * Tests that valid, but technically empty values are not skipped.
+   * Test that valid, but technically empty values are not skipped.
    *
    * @param mixed $value
    *   A valid value.

@@ -172,9 +172,9 @@ abstract class CommentTestBase extends BrowserTestBase {
     if ($contact !== TRUE) {
       // If true then attempting to find error message.
       if ($subject) {
-        $this->assertSession()->pageTextContains($subject);
+        $this->assertText($subject);
       }
-      $this->assertSession()->pageTextContains($comment);
+      $this->assertText($comment);
       // Check the comment ID was extracted.
       $this->assertArrayHasKey(1, $match);
     }
@@ -227,9 +227,8 @@ abstract class CommentTestBase extends BrowserTestBase {
    *   Comment to delete.
    */
   public function deleteComment(CommentInterface $comment) {
-    $this->drupalGet('comment/' . $comment->id() . '/delete');
-    $this->submitForm([], 'Delete');
-    $this->assertSession()->pageTextContains('The comment and all its replies have been deleted.');
+    $this->drupalPostForm('comment/' . $comment->id() . '/delete', [], 'Delete');
+    $this->assertText('The comment and all its replies have been deleted.');
   }
 
   /**
@@ -362,15 +361,14 @@ abstract class CommentTestBase extends BrowserTestBase {
     $edit = [];
     $edit['operation'] = $operation;
     $edit['comments[' . $comment->id() . ']'] = TRUE;
-    $this->drupalGet('admin/content/comment' . ($approval ? '/approval' : ''));
-    $this->submitForm($edit, 'Update');
+    $this->drupalPostForm('admin/content/comment' . ($approval ? '/approval' : ''), $edit, 'Update');
 
     if ($operation == 'delete') {
       $this->submitForm([], 'Delete');
       $this->assertRaw(\Drupal::translation()->formatPlural(1, 'Deleted 1 comment.', 'Deleted @count comments.'));
     }
     else {
-      $this->assertSession()->pageTextContains('The update has been performed.');
+      $this->assertText('The update has been performed.');
     }
   }
 

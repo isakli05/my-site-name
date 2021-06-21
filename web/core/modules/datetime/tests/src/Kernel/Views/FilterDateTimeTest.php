@@ -69,7 +69,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Tests filter operations.
+   * Test filter operations.
    */
   public function testDatetimeFilter() {
     $this->_testOffset();
@@ -78,7 +78,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Tests offset operations.
+   * Test offset operations.
    */
   protected function _testOffset() {
     $view = Views::getView('test_filter_datetime');
@@ -113,7 +113,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Tests between operations.
+   * Test between operations.
    */
   protected function _testBetween() {
     $view = Views::getView('test_filter_datetime');
@@ -176,7 +176,7 @@ class FilterDateTimeTest extends DateTimeHandlerTestBase {
   }
 
   /**
-   * Tests exact date matching.
+   * Test exact date matching.
    */
   protected function _testExact() {
     $view = Views::getView('test_filter_datetime');

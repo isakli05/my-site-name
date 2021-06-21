@@ -82,7 +82,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Tests to confirm the widget is setup.
+   * Test to confirm the widget is setup.
    *
    * @covers \Drupal\telephone\Plugin\Field\FieldWidget\TelephoneDefaultWidget::formElement
    */
@@ -93,7 +93,7 @@ class TelephoneFieldTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the telephone formatter.
+   * Test the telephone formatter.
    *
    * @covers \Drupal\telephone\Plugin\Field\FieldFormatter\TelephoneLinkFormatter::viewElements
    *
@@ -106,8 +106,7 @@ class TelephoneFieldTest extends BrowserTestBase {
       'field_telephone[0][value]' => $input,
     ];
 
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
     $this->assertRaw('<a href="tel:' . $expected . '">');
   }
 

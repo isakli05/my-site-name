@@ -42,7 +42,7 @@ class OverriddenConfigurationTest extends SettingsTrayTestBase {
   }
 
   /**
-   * Tests blocks with overridden related configuration removed when overridden.
+   * Test  blocks with overridden related configuration removed when overridden.
    */
   public function testOverriddenConfigurationRemoved() {
     $web_assert = $this->assertSession();

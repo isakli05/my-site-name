@@ -1784,7 +1784,7 @@ function template_preprocess_pager(&$variables) {
   $route_name = $variables['pager']['#route_name'];
   $route_parameters = isset($variables['pager']['#route_parameters']) ? $variables['pager']['#route_parameters'] : [];
 
-  /** @var \Drupal\Core\Pager\PagerManagerInterface $pager_manager */
+  /* @var $pager_manager \Drupal\Core\Pager\PagerManagerInterface */
   $pager_manager = \Drupal::service('pager.manager');
 
   $pager = $pager_manager->getPager($element);

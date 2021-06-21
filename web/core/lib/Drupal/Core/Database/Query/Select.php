@@ -318,11 +318,9 @@ class Select extends Query implements SelectInterface {
    * {@inheritdoc}
    */
   public function extend($extender_name) {
-    $parts = explode('\\', $extender_name);
-    $class = end($parts);
-    $driver_class = $this->connection->getDriverClass($class);
-    if ($driver_class !== $class) {
-      return new $driver_class($this, $this->connection);
+    $override_class = $extender_name . '_' . $this->connection->driver();
+    if (class_exists($override_class)) {
+      $extender_name = $override_class;
     }
     return new $extender_name($this, $this->connection);
   }

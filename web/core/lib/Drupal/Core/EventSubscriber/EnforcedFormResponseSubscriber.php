@@ -28,7 +28,7 @@ class EnforcedFormResponseSubscriber implements EventSubscriberInterface {
    */
   public function onKernelResponse(ResponseEvent $event) {
     $response = $event->getResponse();
-    if ($response instanceof EnforcedResponse && $event->isMainRequest()) {
+    if ($response instanceof EnforcedResponse && $event->isMasterRequest()) {
       $event->setResponse($response->getResponse());
     }
   }

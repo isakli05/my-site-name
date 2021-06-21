@@ -140,7 +140,7 @@ class BlockContentEntityReferenceSelectionTest extends KernelTestBase {
   }
 
   /**
-   * Tests with no conditions set.
+   * Test with no conditions set.
    *
    * @throws \Drupal\Core\Entity\EntityStorageException
    */

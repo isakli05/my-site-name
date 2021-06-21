@@ -103,16 +103,13 @@ class Schema extends DatabaseSchema {
    * We introspect the database to collect the information required by insert
    * and update queries.
    *
-   * @param string $table
+   * @param $table_name
    *   The non-prefixed name of the table.
    *
-   * @return mixed|object
+   * @return
    *   An object with two member variables:
-   *   - 'blob_fields' that lists all the blob fields in the table.
-   *   - 'sequences' that lists the sequences used in that table.
-   *
-   * @throws \Exception
-   *   Exception thrown when the query for the table information fails.
+   *     - 'blob_fields' that lists all the blob fields in the table.
+   *     - 'sequences' that lists the sequences used in that table.
    */
   public function queryTableInformation($table) {
     // Generate a key to reference this table's information on.
@@ -236,9 +233,6 @@ EOD;
    *
    * @return array
    *   An array containing all the constraint names for the field.
-   *
-   * @throws \Exception
-   *   Exception thrown when the query for the table information fails.
    */
   public function queryFieldInformation($table, $field, $constraint_type = 'c') {
     assert(in_array($constraint_type, ['c', 'f', 'p', 'u', 't', 'x']));
@@ -273,12 +267,12 @@ EOD;
   /**
    * Generate SQL to create a new table from a Drupal schema definition.
    *
-   * @param string $name
+   * @param $name
    *   The name of the table to create.
-   * @param array $table
+   * @param $table
    *   A Schema API table definition array.
    *
-   * @return array
+   * @return
    *   An array of SQL statements to create the table.
    */
   protected function createTableSql($name, $table) {

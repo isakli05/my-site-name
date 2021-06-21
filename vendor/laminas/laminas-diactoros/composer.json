@@ -42,9 +42,7 @@
         "laminas/laminas-coding-standard": "~1.0.0",
         "php-http/psr7-integration-tests": "^1.1",
         "phpspec/prophecy-phpunit": "^2.0",
-        "phpunit/phpunit": "^9.1",
-        "psalm/plugin-phpunit": "^0.14.0",
-        "vimeo/psalm": "^4.3"
+        "phpunit/phpunit": "^9.1"
     },
     "provide": {
         "psr/http-factory-implementation": "1.0",
@@ -89,8 +87,7 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml",
-        "static-analysis": "psalm --shepherd --stats"
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
     "replace": {
         "zendframework/zend-diactoros": "^2.2.1"

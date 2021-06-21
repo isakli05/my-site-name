@@ -123,10 +123,6 @@ class ThemeSettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    *
-   * @param array $form
-   *   An associative array containing the structure of the form.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
    * @param string $theme
    *   The theme name.
    */
@@ -165,10 +161,10 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     // Toggle settings
     $toggles = [
-      'node_user_picture' => $this->t('User pictures in posts'),
-      'comment_user_picture' => $this->t('User pictures in comments'),
-      'comment_user_verification' => $this->t('User verification status in comments'),
-      'favicon' => $this->t('Shortcut icon'),
+      'node_user_picture' => t('User pictures in posts'),
+      'comment_user_picture' => t('User pictures in comments'),
+      'comment_user_verification' => t('User verification status in comments'),
+      'favicon' => t('Shortcut icon'),
     ];
 
     // Some features are not always available
@@ -184,7 +180,7 @@ class ThemeSettingsForm extends ConfigFormBase {
 
     $form['theme_settings'] = [
       '#type' => 'details',
-      '#title' => $this->t('Page element display'),
+      '#title' => t('Page element display'),
       '#open' => TRUE,
     ];
     foreach ($toggles as $name => $title) {
@@ -207,12 +203,12 @@ class ThemeSettingsForm extends ConfigFormBase {
     if ((!$theme || in_array('logo', $features)) && $this->moduleHandler->moduleExists('file')) {
       $form['logo'] = [
         '#type' => 'details',
-        '#title' => $this->t('Logo image'),
+        '#title' => t('Logo image'),
         '#open' => TRUE,
       ];
       $form['logo']['default_logo'] = [
         '#type' => 'checkbox',
-        '#title' => $this->t('Use the logo supplied by the theme'),
+        '#title' => t('Use the logo supplied by the theme'),
         '#default_value' => theme_get_setting('logo.use_default', $theme),
         '#tree' => FALSE,
       ];
@@ -227,14 +223,14 @@ class ThemeSettingsForm extends ConfigFormBase {
       ];
       $form['logo']['settings']['logo_path'] = [
         '#type' => 'textfield',
-        '#title' => $this->t('Path to custom logo'),
+        '#title' => t('Path to custom logo'),
         '#default_value' => theme_get_setting('logo.path', $theme),
       ];
       $form['logo']['settings']['logo_upload'] = [
         '#type' => 'file',
-        '#title' => $this->t('Upload logo image'),
+        '#title' => t('Upload logo image'),
         '#maxlength' => 40,
-        '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your logo."),
+        '#description' => t("If you don't have direct file access to the server, use this field to upload your logo."),
         '#upload_validators' => [
           'file_validate_is_image' => [],
         ],
@@ -244,9 +240,9 @@ class ThemeSettingsForm extends ConfigFormBase {
     if (((!$theme) || in_array('favicon', $features)) && $this->moduleHandler->moduleExists('file')) {
       $form['favicon'] = [
         '#type' => 'details',
-        '#title' => $this->t('Favicon'),
+        '#title' => t('Favicon'),
         '#open' => TRUE,
-        '#description' => $this->t("Your shortcut icon, or favicon, is displayed in the address bar and bookmarks of most browsers."),
+        '#description' => t("Your shortcut icon, or favicon, is displayed in the address bar and bookmarks of most browsers."),
         '#states' => [
           // Hide the shortcut icon settings fieldset when shortcut icon display
           // is disabled.
@@ -257,7 +253,7 @@ class ThemeSettingsForm extends ConfigFormBase {
       ];
       $form['favicon']['default_favicon'] = [
         '#type' => 'checkbox',
-        '#title' => $this->t('Use the favicon supplied by the theme'),
+        '#title' => t('Use the favicon supplied by the theme'),
         '#default_value' => theme_get_setting('favicon.use_default', $theme),
       ];
       $form['favicon']['settings'] = [
@@ -271,13 +267,13 @@ class ThemeSettingsForm extends ConfigFormBase {
       ];
       $form['favicon']['settings']['favicon_path'] = [
         '#type' => 'textfield',
-        '#title' => $this->t('Path to custom icon'),
+        '#title' => t('Path to custom icon'),
         '#default_value' => theme_get_setting('favicon.path', $theme),
       ];
       $form['favicon']['settings']['favicon_upload'] = [
         '#type' => 'file',
-        '#title' => $this->t('Upload favicon image'),
-        '#description' => $this->t("If you don't have direct file access to the server, use this field to upload your shortcut icon."),
+        '#title' => t('Upload favicon image'),
+        '#description' => t("If you don't have direct file access to the server, use this field to upload your shortcut icon."),
         '#upload_validators' => [
           'file_validate_extensions' => [
             'ico png gif jpg jpeg apng svg',
@@ -313,7 +309,7 @@ class ThemeSettingsForm extends ConfigFormBase {
           $local_file = $this->themeManager->getActiveTheme()->getPath() . '/' . $default;
         }
 
-        $element['#description'] = $this->t('Examples: <code>@implicit-public-file</code> (for a file in the public filesystem), <code>@explicit-file</code>, or <code>@local-file</code>.', [
+        $element['#description'] = t('Examples: <code>@implicit-public-file</code> (for a file in the public filesystem), <code>@explicit-file</code>, or <code>@local-file</code>.', [
           '@implicit-public-file' => isset($friendly_path) ? $friendly_path : $default,
           '@explicit-file' => StreamWrapperManager::getScheme($original_path) !== FALSE ? $original_path : 'public://' . $default,
           '@local-file' => $local_file,
@@ -327,9 +323,9 @@ class ThemeSettingsForm extends ConfigFormBase {
       if (function_exists($function)) {
         $form['engine_specific'] = [
           '#type' => 'details',
-          '#title' => $this->t('Theme-engine-specific settings'),
+          '#title' => t('Theme-engine-specific settings'),
           '#open' => TRUE,
-          '#description' => $this->t('These settings only exist for the themes based on the %engine theme engine.', ['%engine' => $themes[$theme]->prefix]),
+          '#description' => t('These settings only exist for the themes based on the %engine theme engine.', ['%engine' => $themes[$theme]->prefix]),
         ];
         $function($form, $form_state);
       }

@@ -31,7 +31,7 @@ class CronRunTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests cron runs.
+   * Test cron runs.
    */
   public function testCronRun() {
     // Run cron anonymously without any cron key.
@@ -71,7 +71,7 @@ class CronRunTest extends BrowserTestBase {
       ->set('interval', $cron_safe_interval)
       ->save();
     $this->drupalGet('');
-    $this->assertSame($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when the cron interval is not passed.');
+    $this->assertTrue($cron_last == \Drupal::state()->get('system.cron_last'), 'Cron does not run when the cron interval is not passed.');
 
     // Test if cron runs when the cron interval was passed.
     $cron_last = time() - 200;
@@ -82,16 +82,15 @@ class CronRunTest extends BrowserTestBase {
     $this->assertLessThan(\Drupal::state()->get('system.cron_last'), $cron_last);
 
     // Disable cron through the interface by setting the interval to zero.
-    $this->drupalGet('admin/config/system/cron');
-    $this->submitForm(['interval' => 0], 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->drupalPostForm('admin/config/system/cron', ['interval' => 0], 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
     $this->drupalLogout();
 
     // Test if cron does not run when the cron interval is set to zero.
     $cron_last = time() - 200;
     \Drupal::state()->set('system.cron_last', $cron_last);
     $this->drupalGet('');
-    $this->assertSame($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when the cron threshold is disabled.');
+    $this->assertTrue($cron_last == \Drupal::state()->get('system.cron_last'), 'Cron does not run when the cron threshold is disabled.');
   }
 
   /**
@@ -104,7 +103,7 @@ class CronRunTest extends BrowserTestBase {
     // The common_test_cron_helper module sets the 'common_test_cron' variable.
     $this->cronRun();
     $result = \Drupal::state()->get('common_test.cron');
-    $this->assertEquals('success', $result, 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
+    $this->assertEqual('success', $result, 'Cron correctly handles exceptions thrown during hook_cron() invocations.');
   }
 
   /**
@@ -123,11 +122,11 @@ class CronRunTest extends BrowserTestBase {
     \Drupal::state()->set('system.cron_last', $cron_last);
 
     $this->submitForm([], 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->assertText('The configuration options have been saved.');
     $this->assertSession()->addressEquals('admin/config/system/cron');
 
     // Check that cron does not run when saving the configuration form.
-    $this->assertEquals($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');
+    $this->assertEqual($cron_last, \Drupal::state()->get('system.cron_last'), 'Cron does not run when saving the configuration form.');
 
     // Check that cron runs when triggered manually.
     $this->submitForm([], 'Run cron');
@@ -148,7 +147,7 @@ class CronRunTest extends BrowserTestBase {
     $this->drupalGet('admin/reports/status');
     $this->clickLink(t('Run cron'));
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('Cron ran successfully.');
+    $this->assertText('Cron ran successfully.');
   }
 
 }

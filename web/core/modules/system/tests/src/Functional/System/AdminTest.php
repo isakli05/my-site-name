@@ -66,7 +66,7 @@ class AdminTest extends BrowserTestBase {
       $this->assertSession()->linkExists($item->getTitle());
       $this->assertSession()->linkByHrefExists($item->getUrlObject()->toString());
       // The description should appear below the link.
-      $this->assertSession()->pageTextContains($item->getDescription());
+      $this->assertText($item->getDescription());
     }
 
     // For each administrative listing page on which the Locale module appears,
@@ -146,7 +146,7 @@ class AdminTest extends BrowserTestBase {
   }
 
   /**
-   * Tests compact mode.
+   * Test compact mode.
    */
   public function testCompactMode() {
     $session = $this->getSession();

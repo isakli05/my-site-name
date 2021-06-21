@@ -5,8 +5,7 @@
 * @preserve
 **/
 
-(function ($, Drupal, window, _ref) {
-  var tabbable = _ref.tabbable;
+(function ($, Drupal, window) {
   Drupal.MediaLibrary = {
     currentSelection: []
   };
@@ -56,16 +55,7 @@
               _this.commands[response[i].command](_this, response[i], status);
             }
           });
-          var mediaLibraryContent = document.getElementById('media-library-content');
-
-          if (mediaLibraryContent) {
-            var tabbableContent = tabbable(mediaLibraryContent);
-
-            if (tabbableContent.length) {
-              tabbableContent[0].focus();
-            }
-          }
-
+          $('#media-library-content :tabbable:first').focus();
           this.settings = null;
         };
 
@@ -214,4 +204,4 @@
   Drupal.theme.mediaLibrarySelectionCount = function () {
     return "<div class=\"media-library-selected-count js-media-library-selected-count\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\"></div>";
   };
-})(jQuery, Drupal, window, window.tabbable);
+})(jQuery, Drupal, window);

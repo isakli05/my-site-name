@@ -22,9 +22,9 @@ class AggregatorAdminTest extends AggregatorTestBase {
     $this->clickLink('Aggregator');
     $this->clickLink('Settings');
     // Make sure that test plugins are present.
-    $this->assertSession()->pageTextContains('Test fetcher');
-    $this->assertSession()->pageTextContains('Test parser');
-    $this->assertSession()->pageTextContains('Test processor');
+    $this->assertText('Test fetcher');
+    $this->assertText('Test parser');
+    $this->assertText('Test processor');
 
     // Set new values and enable test plugins.
     $edit = [
@@ -36,9 +36,8 @@ class AggregatorAdminTest extends AggregatorTestBase {
       'aggregator_parser' => 'aggregator_test_parser',
       'aggregator_processors[aggregator_test_processor]' => 'aggregator_test_processor',
     ];
-    $this->drupalGet('admin/config/services/aggregator/settings');
-    $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
 
     // Check that settings have the correct default value.
     foreach ($edit as $name => $value) {
@@ -46,14 +45,13 @@ class AggregatorAdminTest extends AggregatorTestBase {
     }
 
     // Check for our test processor settings form.
-    $this->assertSession()->pageTextContains('Dummy length setting');
+    $this->assertText('Dummy length setting');
     // Change its value to ensure that settingsSubmit is called.
     $edit = [
       'dummy_length' => 100,
     ];
-    $this->drupalGet('admin/config/services/aggregator/settings');
-    $this->submitForm($edit, 'Save configuration');
-    $this->assertSession()->pageTextContains('The configuration options have been saved.');
+    $this->drupalPostForm('admin/config/services/aggregator/settings', $edit, 'Save configuration');
+    $this->assertText('The configuration options have been saved.');
     $this->assertSession()->fieldValueEquals('dummy_length', 100);
 
     // Make sure settings form is still accessible even after uninstalling a module

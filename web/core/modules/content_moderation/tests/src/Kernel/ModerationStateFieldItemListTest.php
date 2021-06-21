@@ -74,7 +74,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the field item list when accessing an index.
+   * Test the field item list when accessing an index.
    */
   public function testArrayIndex() {
     $this->assertFalse($this->testNode->isPublished());
@@ -82,7 +82,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the field item list when iterating.
+   * Test the field item list when iterating.
    */
   public function testArrayIteration() {
     $states = [];
@@ -125,7 +125,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests an empty value assigned to the field item.
+   * Test an empty value assigned to the field item.
    */
   public function testEmptyFieldItem() {
     $this->testNode->moderation_state->value = '';
@@ -134,7 +134,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests an empty value assigned to the field item list.
+   * Test an empty value assigned to the field item list.
    */
   public function testEmptyFieldItemList() {
     $this->testNode->moderation_state = '';
@@ -143,7 +143,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the field item when it is unset.
+   * Test the field item when it is unset.
    */
   public function testUnsetItemList() {
     unset($this->testNode->moderation_state);
@@ -152,7 +152,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the field item when it is assigned NULL.
+   * Test the field item when it is assigned NULL.
    */
   public function testAssignNullItemList() {
     $this->testNode->moderation_state = NULL;
@@ -176,7 +176,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the list class with a non moderated entity.
+   * Test the list class with a non moderated entity.
    */
   public function testNonModeratedEntity() {
     $unmoderated_node = Node::create([
@@ -248,7 +248,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests updating the state for an entity without a workflow.
+   * Test updating the state for an entity without a workflow.
    */
   public function testEntityWithNoWorkflow() {
     $node_type = NodeType::create([
@@ -273,7 +273,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the moderation_state field after an entity has been serialized.
+   * Test the moderation_state field after an entity has been serialized.
    *
    * @dataProvider entityUnserializeTestCases
    */
@@ -310,7 +310,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests saving a moderated node with an existing ID.
+   * Test saving a moderated node with an existing ID.
    *
    * @dataProvider moderatedEntityWithExistingIdTestCases
    */
@@ -326,7 +326,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests cases for ::testModeratedEntityWithExistingId.
+   * Test cases for ::testModeratedEntityWithExistingId.
    */
   public function moderatedEntityWithExistingIdTestCases() {
     return [
@@ -372,7 +372,7 @@ class ModerationStateFieldItemListTest extends KernelTestBase {
   }
 
   /**
-   * Tests the field item list when used with existing unmoderated content.
+   * Test the field item list when used with existing unmoderated content.
    */
   public function testWithExistingUnmoderatedContent() {
     $node = Node::create([

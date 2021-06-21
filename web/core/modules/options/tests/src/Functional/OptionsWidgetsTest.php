@@ -245,7 +245,7 @@ class OptionsWidgetsTest extends FieldTestBase {
       'card_2[2]' => TRUE,
     ];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('this field cannot hold more than 2 values');
+    $this->assertText('this field cannot hold more than 2 values');
 
     // Submit form: uncheck all options.
     $edit = [
@@ -334,8 +334,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     $this->assertSame('- None -', $option->getText());
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
-    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
 
     // Test optgroups.
@@ -366,8 +365,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = ['card_1' => '_none'];
-    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_1', []);
   }
 
@@ -429,7 +427,7 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Submit form: select the three options while the field accepts only 2.
     $edit = ['card_2[]' => [0 => 0, 1 => 1, 2 => 2]];
     $this->submitForm($edit, 'Save');
-    $this->assertSession()->pageTextContains('this field cannot hold more than 2 values');
+    $this->assertText('this field cannot hold more than 2 values');
 
     // Submit form: uncheck all options.
     $edit = ['card_2[]' => []];
@@ -441,14 +439,12 @@ class OptionsWidgetsTest extends FieldTestBase {
     // Check that the 'none' option has no effect if actual options are selected
     // as well.
     $edit = ['card_2[]' => ['_none' => '_none', 0 => 0]];
-    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', [0]);
 
     // Check that selecting the 'none' option empties the field.
     $edit = ['card_2[]' => ['_none' => '_none']];
-    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
 
     // A required select list does not have an empty key.
@@ -491,8 +487,7 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Submit form: Unselect the option.
     $edit = ['card_2[]' => ['_none' => '_none']];
-    $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('entity_test/manage/' . $entity->id() . '/edit', $edit, 'Save');
     $this->assertFieldValues($entity_init, 'card_2', []);
   }
 
@@ -573,11 +568,8 @@ class OptionsWidgetsTest extends FieldTestBase {
 
     // Display form: check that _none options are present and has label.
     $this->drupalGet('entity_test/manage/' . $entity->id() . '/edit');
-    // Verify that a test radio button has a "None" choice.
-    $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//input[@value="_none"]');
-    // Verify that a test radio button has a "N/A" choice..
-    $this->assertSession()->elementExists('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@id="edit-card-1"]//label[@for="edit-card-1-none"]', "N/A");
+    $this->assertNotEmpty($this->xpath('//div[@id=:id]//input[@value=:value]', [':id' => 'edit-card-1', ':value' => '_none']), 'A test radio button has a "None" choice.');
+    $this->assertNotEmpty($this->xpath('//div[@id=:id]//label[@for=:for and text()=:label]', [':id' => 'edit-card-1', ':for' => 'edit-card-1-none', ':label' => 'N/A']), 'A test radio button has a "N/A" choice.');
 
     // Change it to the select widget.
     $display_repository->getFormDisplay('entity_test', 'entity_test')

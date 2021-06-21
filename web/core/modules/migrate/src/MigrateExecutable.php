@@ -14,7 +14,7 @@ use Drupal\migrate\Event\MigrateRowDeleteEvent;
 use Drupal\migrate\Exception\RequirementsException;
 use Drupal\migrate\Plugin\MigrateIdMapInterface;
 use Drupal\migrate\Plugin\MigrationInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Defines a migrate executable class.
@@ -77,7 +77,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * The event dispatcher.
    *
-   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -97,8 +97,10 @@ class MigrateExecutable implements MigrateExecutableInterface {
    *   The migration to run.
    * @param \Drupal\migrate\MigrateMessageInterface $message
    *   (optional) The migrate message service.
-   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   (optional) The event dispatcher.
+   *
+   * @throws \Drupal\migrate\MigrateException
    */
   public function __construct(MigrationInterface $migration, MigrateMessageInterface $message = NULL, EventDispatcherInterface $event_dispatcher = NULL) {
     $this->migration = $migration;
@@ -133,7 +135,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   /**
    * Gets the event dispatcher.
    *
-   * @return \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
+   * @return \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected function getEventDispatcher() {
     if (!$this->eventDispatcher) {
@@ -367,7 +369,7 @@ class MigrateExecutable implements MigrateExecutableInterface {
   public function processRow(Row $row, array $process = NULL, $value = NULL) {
     foreach ($this->migration->getProcessPlugins($process) as $destination => $plugins) {
       $multiple = FALSE;
-      /** @var \Drupal\migrate\Plugin\MigrateProcessInterface $plugin */
+      /** @var $plugin \Drupal\migrate\Plugin\MigrateProcessInterface */
       foreach ($plugins as $plugin) {
         $definition = $plugin->getPluginDefinition();
         // Many plugins expect a scalar value but the current value of the

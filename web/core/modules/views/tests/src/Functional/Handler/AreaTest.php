@@ -69,16 +69,14 @@ class AreaTest extends ViewTestBase {
       $edit_path = 'admin/structure/views/nojs/handler/test_example_area/default/' . $type . '/test_example';
 
       // First setup an empty label.
-      $this->drupalGet($edit_path);
-      $this->submitForm([], 'Apply');
-      $this->assertSession()->pageTextContains('Test Example area');
+      $this->drupalPostForm($edit_path, [], 'Apply');
+      $this->assertText('Test Example area');
 
       // Then setup a no empty label.
       $labels[$type] = $this->randomMachineName();
-      $this->drupalGet($edit_path);
-      $this->submitForm(['options[admin_label]' => $labels[$type]], 'Apply');
+      $this->drupalPostForm($edit_path, ['options[admin_label]' => $labels[$type]], 'Apply');
       // Make sure that the new label appears on the site.
-      $this->assertSession()->pageTextContains($labels[$type]);
+      $this->assertText($labels[$type]);
 
       // Test that the settings (empty/admin_label) are accessible.
       $this->drupalGet($edit_path);
@@ -188,7 +186,7 @@ class AreaTest extends ViewTestBase {
 
       // Test that each item exists in the list.
       foreach ($available[$type] as $token => $info) {
-        $this->assertSession()->pageTextContains("[$type:$token]");
+        $this->assertText("[$type:$token]");
       }
     }
 
@@ -225,7 +223,7 @@ class AreaTest extends ViewTestBase {
     $view->storage->enable()->save();
 
     $this->drupalGet('node');
-    $this->assertSession()->pageTextContains('Overridden title');
+    $this->assertText('Overridden title');
   }
 
 }

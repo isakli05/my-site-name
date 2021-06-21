@@ -5,10 +5,10 @@
 * @preserve
 **/
 
-(function ($, Drupal, once) {
+(function ($, Drupal) {
   Drupal.behaviors.claroAutoCompete = {
     attach: function attach(context) {
-      once('claroAutoComplete', 'input.form-autocomplete', context).forEach(function (value) {
+      $(context).find('input.form-autocomplete').once('claroAutoComplete').each(function (index, value) {
         var $input = $(value);
         var timeout = 400;
         var classRemoveTimeout;
@@ -30,4 +30,4 @@
       });
     }
   };
-})(jQuery, Drupal, once);
+})(jQuery, Drupal);

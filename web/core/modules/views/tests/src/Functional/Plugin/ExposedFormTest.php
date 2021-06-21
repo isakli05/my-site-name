@@ -147,7 +147,7 @@ class ExposedFormTest extends ViewTestBase {
       'default' => ['This identifier has illegal characters.'],
       'page_1' => ['This identifier has illegal characters.'],
     ];
-    $this->assertEquals($expected, $errors);
+    $this->assertEqual($expected, $errors);
   }
 
   /**
@@ -211,7 +211,7 @@ class ExposedFormTest extends ViewTestBase {
 
     // Test that the block label is found.
     $this->drupalGet('test_exposed_block');
-    $this->assertSession()->pageTextContains($view->getTitle());
+    $this->assertText($view->getTitle());
 
     // Set a custom label on the exposed filter form block.
     $block->getPlugin()->setConfigurationValue('views_label', '<strong>Custom</strong> title<script>alert("hacked!");</script>');
@@ -256,7 +256,7 @@ class ExposedFormTest extends ViewTestBase {
   }
 
   /**
-   * Tests the input required exposed form type.
+   * Test the input required exposed form type.
    */
   public function testInputRequired() {
     $view = View::load('test_exposed_form_buttons');
@@ -268,18 +268,19 @@ class ExposedFormTest extends ViewTestBase {
     $this->assertSession()->statusCodeEquals(200);
     $this->helperButtonHasLabel('edit-submit-test-exposed-form-buttons', 'Apply');
 
-    // Ensure that no results are displayed by default when no input is
-    // provided.
-    $this->assertSession()->elementNotExists('xpath', "//div[contains(@class, 'views-row')]");
+    // Ensure that no results are displayed.
+    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
+    $this->assertCount(0, $rows, 'No rows are displayed by default when no input is provided.');
 
     $this->drupalGet('test_exposed_form_buttons', ['query' => ['type' => 'article']]);
 
-    // Ensure that results are displayed by default when input is provided.
-    $this->assertSession()->elementsCount('xpath', "//div[contains(@class, 'views-row')]", 5);
+    // Ensure that results are displayed.
+    $rows = $this->xpath("//div[contains(@class, 'views-row')]");
+    $this->assertCount(5, $rows, 'All rows are displayed by default when input is provided.');
   }
 
   /**
-   * Tests the "on demand text" for the input required exposed form type.
+   * Test the "on demand text" for the input required exposed form type.
    */
   public function testTextInputRequired() {
     $view = Views::getView('test_exposed_form_buttons');
@@ -295,7 +296,7 @@ class ExposedFormTest extends ViewTestBase {
     // Ensure that the "on demand text" is displayed when no exposed filters are
     // applied.
     $this->drupalGet('test_exposed_form_buttons');
-    $this->assertSession()->pageTextContains('Select any filter and click Apply to see results.');
+    $this->assertText('Select any filter and click Apply to see results.');
 
     // Ensure that the "on demand text" is not displayed when an exposed filter
     // is applied.

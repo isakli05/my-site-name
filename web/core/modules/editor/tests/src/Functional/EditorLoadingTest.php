@@ -245,7 +245,7 @@ class EditorLoadingTest extends BrowserTestBase {
   }
 
   /**
-   * Tests supported element types.
+   * Test supported element types.
    */
   public function testSupportedElementTypes() {
     // Associate the unicorn text editor with the "Full HTML" text format.

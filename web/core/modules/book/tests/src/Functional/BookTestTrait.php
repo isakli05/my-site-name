@@ -141,7 +141,7 @@ trait BookTestTrait {
 
     // Check printer friendly version.
     $this->drupalGet('book/export/html/' . $node->id());
-    $this->assertSession()->pageTextContains($node->label());
+    $this->assertText($node->label());
     $this->assertRaw($node->body->processed);
 
     $number++;
@@ -191,8 +191,7 @@ trait BookTestTrait {
     $edit['book[bid]'] = $book_nid;
 
     if ($parent !== NULL) {
-      $this->drupalGet('node/add/book');
-      $this->submitForm($edit, 'Change book (update list of parents)');
+      $this->drupalPostForm('node/add/book', $edit, 'Change book (update list of parents)');
 
       $edit['book[pid]'] = $parent;
       $this->submitForm($edit, 'Save');
@@ -201,8 +200,7 @@ trait BookTestTrait {
       $this->assertFalse(empty($parent_node->book['has_children']), 'Parent node is marked as having children');
     }
     else {
-      $this->drupalGet('node/add/book');
-      $this->submitForm($edit, 'Save');
+      $this->drupalPostForm('node/add/book', $edit, 'Save');
     }
 
     // Check to make sure the book node was created.

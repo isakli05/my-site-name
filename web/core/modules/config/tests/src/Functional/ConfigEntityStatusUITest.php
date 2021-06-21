@@ -36,8 +36,7 @@ class ConfigEntityStatusUITest extends BrowserTestBase {
       'id' => $id,
       'label' => $this->randomMachineName(),
     ];
-    $this->drupalGet('admin/structure/config_test/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/config_test/add', $edit, 'Save');
 
     $entity = \Drupal::entityTypeManager()->getStorage('config_test')->load($id);
 

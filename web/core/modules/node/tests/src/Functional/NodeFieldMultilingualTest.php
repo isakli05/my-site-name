@@ -48,15 +48,13 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => '1'];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Set "Basic page" content type to use multilingual support.
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/page');
-    $this->submitForm($edit, 'Save content type');
+    $this->drupalPostForm('admin/structure/types/manage/page', $edit, 'Save content type');
     $this->assertRaw(t('The content type %type has been updated.', ['%type' => 'Basic page']));
 
     // Make node body translatable.
@@ -80,8 +78,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $edit = [];
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -131,8 +128,7 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
     $edit = [];
     $edit[$title_key] = $title_value;
     $edit[$body_key] = $body_value;
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the node exists in the database.
     $node = $this->drupalGetNodeByTitle($edit[$title_key]);
@@ -140,7 +136,11 @@ class NodeFieldMultilingualTest extends BrowserTestBase {
 
     // Check if node body is showed.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementTextEquals('xpath', "//article[contains(concat(' ', normalize-space(@class), ' '), ' node ')]//div[contains(concat(' ', normalize-space(@class), ' '), 'node__content')]/descendant::p", $node->body->value);
+    $body = $this->xpath('//article[contains(concat(" ", normalize-space(@class), " "), :node-class)]//div[contains(concat(" ", normalize-space(@class), " "), :content-class)]/descendant::p', [
+      ':node-class' => ' node ',
+      ':content-class' => 'node__content',
+    ]);
+    $this->assertEqual($body[0]->getText(), $node->body->value, 'Node body found.');
   }
 
 }

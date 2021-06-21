@@ -45,7 +45,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   }
 
   /**
-   * Tests switching workspace via the switcher block and admin page.
+   * Test switching workspace via the switcher block and admin page.
    */
   public function testSwitchingWorkspaces() {
     $vultures = $this->createWorkspaceThroughUi('Vultures', 'vultures');
@@ -67,7 +67,7 @@ class WorkspaceSwitcherTest extends BrowserTestBase {
   }
 
   /**
-   * Tests switching workspace via a query parameter.
+   * Test switching workspace via a query parameter.
    */
   public function testQueryParameterNegotiator() {
     $web_assert = $this->assertSession();

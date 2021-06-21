@@ -2,8 +2,7 @@
 
 namespace Drupal\Core\Database\Driver\pgsql;
 
-use Drupal\Core\Database\DatabaseExceptionWrapper;
-use Drupal\Core\Database\IntegrityConstraintViolationException;
+use Drupal\Core\Database\Database;
 use Drupal\Core\Database\Query\Insert as QueryInsert;
 
 // cSpell:ignore nextval setval
@@ -54,6 +53,11 @@ class Insert extends QueryInsert {
           if ($serial_key !== FALSE) {
             $serial_value = $insert_values[$serial_key];
 
+            // Force $last_insert_id to the specified value. This is only done
+            // if $index is 0.
+            if ($index == 0) {
+              $last_insert_id = $serial_value;
+            }
             // Sequences must be greater than or equal to 1.
             if ($serial_value === NULL || !$serial_value) {
               $serial_value = 1;
@@ -80,28 +84,33 @@ class Insert extends QueryInsert {
       }
     }
 
+    // PostgreSQL requires the table name to be specified explicitly
+    // when requesting the last insert ID, so we pass that in via
+    // the options array.
+    $options = $this->queryOptions;
+
+    if (!empty($table_information->sequences)) {
+      $options['sequence_name'] = $table_information->sequences[0];
+    }
+    // If there are no sequences then we can't get a last insert id.
+    elseif ($options['return'] == Database::RETURN_INSERT_ID) {
+      $options['return'] = Database::RETURN_NULL;
+    }
+
     // Create a savepoint so we can rollback a failed query. This is so we can
     // mimic MySQL and SQLite transactions which don't fail if a single query
     // fails. This is important for tables that are created on demand. For
     // example, \Drupal\Core\Cache\DatabaseBackend.
     $this->connection->addSavepoint();
     try {
-      $stmt->execute(NULL, $this->queryOptions);
-      if (isset($table_information->serial_fields[0])) {
-        $last_insert_id = $stmt->fetchField();
-      }
-      $this->connection->releaseSavepoint();
-    }
-    catch (\PDOException $e) {
-      $this->connection->rollbackSavepoint();
-      $message = $e->getMessage() . ": " . $stmt->getQueryString();
-      // Match all SQLSTATE 23xxx errors.
-      if (substr($e->getCode(), -6, -3) == '23') {
-        throw new IntegrityConstraintViolationException($message, $e->getCode(), $e);
+      // Only use the returned last_insert_id if it is not already set.
+      if (!empty($last_insert_id)) {
+        $this->connection->query($stmt, [], $options);
       }
       else {
-        throw new DatabaseExceptionWrapper($message, 0, $e->getCode());
+        $last_insert_id = $this->connection->query($stmt, [], $options);
       }
+      $this->connection->releaseSavepoint();
     }
     catch (\Exception $e) {
       $this->connection->rollbackSavepoint();
@@ -111,7 +120,7 @@ class Insert extends QueryInsert {
     // Re-initialize the values array so that we can re-use this query.
     $this->insertValues = [];
 
-    return $last_insert_id ?? NULL;
+    return $last_insert_id;
   }
 
   public function __toString() {
@@ -129,29 +138,14 @@ class Insert extends QueryInsert {
     // pass it back, as any remaining options are irrelevant.
     if (!empty($this->fromQuery)) {
       $insert_fields_string = $insert_fields ? ' (' . implode(', ', $insert_fields) . ') ' : ' ';
-      $query = $comments . 'INSERT INTO {' . $this->table . '}' . $insert_fields_string . $this->fromQuery;
+      return $comments . 'INSERT INTO {' . $this->table . '}' . $insert_fields_string . $this->fromQuery;
     }
-    else {
-      $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
 
-      $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
-      $query .= implode(', ', $values);
-    }
-    try {
-      // Fetch the list of blobs and sequences used on that table.
-      $table_information = $this->connection->schema()->queryTableInformation($this->table);
-      if (isset($table_information->serial_fields[0])) {
-        // Use RETURNING syntax to get the last insert ID in the same INSERT
-        // query, see https://www.postgresql.org/docs/10/dml-returning.html.
-        $query .= ' RETURNING ' . $table_information->serial_fields[0];
-      }
-    }
-    catch (DatabaseExceptionWrapper $e) {
-      // If we fail to get the table information it is probably because the
-      // table does not exist yet so adding the returning statement is pointless
-      // because the query will fail. This happens for tables created on demand,
-      // for example, cache tables.
-    }
+    $query = $comments . 'INSERT INTO {' . $this->table . '} (' . implode(', ', $insert_fields) . ') VALUES ';
+
+    $values = $this->getInsertPlaceholderFragment($this->insertValues, $this->defaultFields);
+    $query .= implode(', ', $values);
+
     return $query;
   }
 

@@ -1,7 +1,7 @@
 /**
  * @file media_library.ui.es6.js
  */
-(($, Drupal, window, { tabbable }) => {
+(($, Drupal, window) => {
   /**
    * Wrapper object for the current state of the media library.
    */
@@ -103,15 +103,7 @@
 
             // Set focus to the first tabbable element in the media library
             // content.
-            const mediaLibraryContent = document.getElementById(
-              'media-library-content',
-            );
-            if (mediaLibraryContent) {
-              const tabbableContent = tabbable(mediaLibraryContent);
-              if (tabbableContent.length) {
-                tabbableContent[0].focus();
-              }
-            }
+            $('#media-library-content :tabbable:first').focus();
 
             // Remove any response-specific settings so they don't get used on
             // the next call by mistake.
@@ -428,4 +420,4 @@
   Drupal.theme.mediaLibrarySelectionCount = function () {
     return `<div class="media-library-selected-count js-media-library-selected-count" role="status" aria-live="polite" aria-atomic="true"></div>`;
   };
-})(jQuery, Drupal, window, window.tabbable);
+})(jQuery, Drupal, window);

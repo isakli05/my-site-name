@@ -4,9 +4,7 @@ namespace Doctrine\Common\Cache\Psr6;
 
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\ClearableCache;
-use Doctrine\Common\Cache\MultiDeleteCache;
-use Doctrine\Common\Cache\MultiGetCache;
-use Doctrine\Common\Cache\MultiPutCache;
+use Doctrine\Common\Cache\MultiOperationCache;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\DoctrineProvider as SymfonyDoctrineProvider;
@@ -27,7 +25,7 @@ final class CacheAdapter implements CacheItemPoolInterface
 {
     private const RESERVED_CHARACTERS = '{}()/\@:';
 
-    /** @var Cache */
+    /** @var Cache|ClearableCache|MultiOperationCache */
     private $cache;
 
     /** @var CacheItem[] */
@@ -93,7 +91,7 @@ final class CacheAdapter implements CacheItemPoolInterface
 
         assert(self::validKeys($keys));
 
-        $values = $this->doFetchMultiple($keys);
+        $values = $this->cache->fetchMultiple($keys);
         $items  = [];
         foreach ($keys as $key) {
             if (array_key_exists($key, $values)) {
@@ -124,10 +122,6 @@ final class CacheAdapter implements CacheItemPoolInterface
     {
         $this->deferredItems = [];
 
-        if (! $this->cache instanceof ClearableCache) {
-            return false;
-        }
-
         return $this->cache->deleteAll();
     }
 
@@ -152,7 +146,7 @@ final class CacheAdapter implements CacheItemPoolInterface
             unset($this->deferredItems[$key]);
         }
 
-        return $this->doDeleteMultiple($keys);
+        return $this->cache->deleteMultiple($keys);
     }
 
     public function save(CacheItemInterface $item): bool
@@ -202,17 +196,17 @@ final class CacheAdapter implements CacheItemPoolInterface
                 $this->cache->delete(current($expiredKeys));
                 break;
             default:
-                $this->doDeleteMultiple($expiredKeys);
+                $this->cache->deleteMultiple($expiredKeys);
                 break;
         }
 
         if ($itemsCount === 1) {
-            return $this->cache->save($key, $item->get(), (int) $lifetime);
+            return $this->cache->save($key, $item->get(), $lifetime);
         }
 
         $success = true;
         foreach ($byLifetime as $lifetime => $values) {
-            $success = $this->doSaveMultiple($values, $lifetime) && $success;
+            $success = $this->cache->saveMultiple($values, $lifetime) && $success;
         }
 
         return $success;
@@ -253,63 +247,5 @@ final class CacheAdapter implements CacheItemPoolInterface
         }
 
         return true;
-    }
-
-    /**
-     * @param mixed[] $keys
-     */
-    private function doDeleteMultiple(array $keys): bool
-    {
-        if ($this->cache instanceof MultiDeleteCache) {
-            return $this->cache->deleteMultiple($keys);
-        }
-
-        $success = true;
-        foreach ($keys as $key) {
-            $success = $this->cache->delete($key) && $success;
-        }
-
-        return $success;
-    }
-
-    /**
-     * @param mixed[] $keys
-     *
-     * @return mixed[]
-     */
-    private function doFetchMultiple(array $keys): array
-    {
-        if ($this->cache instanceof MultiGetCache) {
-            return $this->cache->fetchMultiple($keys);
-        }
-
-        $values = [];
-        foreach ($keys as $key) {
-            $value = $this->cache->fetch($key);
-            if (! $value) {
-                continue;
-            }
-
-            $values[$key] = $value;
-        }
-
-        return $values;
-    }
-
-    /**
-     * @param mixed[] $keysAndValues
-     */
-    private function doSaveMultiple(array $keysAndValues, int $lifetime = 0): bool
-    {
-        if ($this->cache instanceof MultiPutCache) {
-            return $this->cache->saveMultiple($keysAndValues, $lifetime);
-        }
-
-        $success = true;
-        foreach ($keysAndValues as $key => $value) {
-            $success = $this->cache->save($key, $value, $lifetime) && $success;
-        }
-
-        return $success;
     }
 }

@@ -304,7 +304,7 @@ class LocalTaskManager extends DefaultPluginManager implements LocalTaskManagerI
     }
 
     foreach ($tree as $level => $instances) {
-      /** @var \Drupal\Core\Menu\LocalTaskInterface[] $instances */
+      /** @var $instances \Drupal\Core\Menu\LocalTaskInterface[] */
       foreach ($instances as $plugin_id => $child) {
         $route_name = $child->getRouteName();
         $route_parameters = $child->getRouteParameters($this->routeMatch);

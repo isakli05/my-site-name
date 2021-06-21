@@ -35,7 +35,7 @@ class ThemeTest extends TaxonomyTestBase {
   }
 
   /**
-   * Tests the theme used when adding, viewing and editing taxonomy terms.
+   * Test the theme used when adding, viewing and editing taxonomy terms.
    */
   public function testTaxonomyTermThemes() {
     // Adding a term to a vocabulary is considered an administrative action and

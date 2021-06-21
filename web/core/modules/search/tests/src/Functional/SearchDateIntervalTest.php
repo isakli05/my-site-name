@@ -82,8 +82,7 @@ class SearchDateIntervalTest extends BrowserTestBase {
   public function testDateIntervalQueryAlter() {
     // Search for keyword node.
     $edit = ['keys' => 'node'];
-    $this->drupalGet('search/node');
-    $this->submitForm($edit, 'Search');
+    $this->drupalPostForm('search/node', $edit, 'Search');
 
     // The nodes must have the same node ID but the created date is different.
     // So only the Spanish translation must appear.

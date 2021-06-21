@@ -31,14 +31,11 @@ class FilterNumericWebTest extends UITestBase {
   public function testFilterNumericUI() {
     // Add a page display to the test_view to be able to test the filtering.
     $path = 'test_view-path';
-    $this->drupalGet('admin/structure/views/view/test_view/edit');
-    $this->submitForm([], 'Add Page');
-    $this->drupalGet('admin/structure/views/nojs/display/test_view/page_1/path');
-    $this->submitForm(['path' => $path], 'Apply');
+    $this->drupalPostForm('admin/structure/views/view/test_view/edit', [], 'Add Page');
+    $this->drupalPostForm('admin/structure/views/nojs/display/test_view/page_1/path', ['path' => $path], 'Apply');
     $this->submitForm([], 'Save');
 
-    $this->drupalGet('admin/structure/views/nojs/add-handler/test_view/default/filter');
-    $this->submitForm(['name[views_test_data.age]' => TRUE], 'Add and configure filter criteria');
+    $this->drupalPostForm('admin/structure/views/nojs/add-handler/test_view/default/filter', ['name[views_test_data.age]' => TRUE], 'Add and configure filter criteria');
 
     $this->submitForm([], 'Expose filter');
     $this->submitForm([], 'Grouped filters');
@@ -62,45 +59,42 @@ class FilterNumericWebTest extends UITestBase {
       $this->assertSession()->fieldValueEquals($name, $value);
     }
 
-    $this->drupalGet('admin/structure/views/view/test_view');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
     $this->assertConfigSchemaByName('views.view.test_view');
 
     // Test that the exposed filter works as expected.
     $this->drupalGet('test_view-path');
-    $this->assertSession()->pageTextContains('John');
-    $this->assertSession()->pageTextContains('Paul');
-    $this->assertSession()->pageTextContains('Ringo');
-    $this->assertSession()->pageTextContains('George');
-    $this->assertSession()->pageTextContains('Meredith');
+    $this->assertText('John');
+    $this->assertText('Paul');
+    $this->assertText('Ringo');
+    $this->assertText('George');
+    $this->assertText('Meredith');
     $this->submitForm(['age' => '2'], 'Apply');
-    $this->assertSession()->pageTextContains('John');
-    $this->assertSession()->pageTextContains('Paul');
+    $this->assertText('John');
+    $this->assertText('Paul');
     $this->assertNoText('Ringo');
-    $this->assertSession()->pageTextContains('George');
+    $this->assertText('George');
     $this->assertNoText('Meredith');
 
     // Change the filter to a single filter to test the schema when the operator
     // is not exposed.
-    $this->drupalGet('admin/structure/views/nojs/handler/test_view/default/filter/age');
-    $this->submitForm([], 'Single filter');
+    $this->drupalPostForm('admin/structure/views/nojs/handler/test_view/default/filter/age', [], 'Single filter');
     $edit = [];
     $edit['options[value][value]'] = 25;
     $this->submitForm($edit, 'Apply');
-    $this->drupalGet('admin/structure/views/view/test_view');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
     $this->assertConfigSchemaByName('views.view.test_view');
 
     // Test that the filter works as expected.
     $this->drupalGet('test_view-path');
-    $this->assertSession()->pageTextContains('John');
+    $this->assertText('John');
     $this->assertNoText('Paul');
     $this->assertNoText('Ringo');
     $this->assertNoText('George');
     $this->assertNoText('Meredith');
     $this->submitForm(['age' => '26'], 'Apply');
     $this->assertNoText('John');
-    $this->assertSession()->pageTextContains('Paul');
+    $this->assertText('Paul');
     $this->assertNoText('Ringo');
     $this->assertNoText('George');
     $this->assertNoText('Meredith');
@@ -115,8 +109,7 @@ class FilterNumericWebTest extends UITestBase {
     $edit['options[value][min]'] = 26;
     $edit['options[value][max]'] = 28;
     $this->submitForm($edit, 'Apply');
-    $this->drupalGet('admin/structure/views/view/test_view');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
     $this->assertConfigSchemaByName('views.view.test_view');
 
     $this->submitForm([], 'Update preview');
@@ -138,8 +131,7 @@ class FilterNumericWebTest extends UITestBase {
     $edit['options[operator]'] = '>';
     $edit['options[value][value]'] = 1000;
     $this->submitForm($edit, 'Apply');
-    $this->drupalGet('admin/structure/views/view/test_view');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/views/view/test_view', [], 'Save');
     $this->assertConfigSchemaByName('views.view.test_view');
 
     $this->submitForm([], 'Update preview');

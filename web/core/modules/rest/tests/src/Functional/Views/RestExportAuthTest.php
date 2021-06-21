@@ -43,8 +43,7 @@ class RestExportAuthTest extends ViewTestBase {
     $view_rest_path = 'test-view/rest-export';
 
     // Create new view.
-    $this->drupalGet('admin/structure/views/add');
-    $this->submitForm([
+    $this->drupalPostForm('admin/structure/views/add', [
       'id' => $view_id,
       'label' => $view_label,
       'show[wizard_key]' => 'users',

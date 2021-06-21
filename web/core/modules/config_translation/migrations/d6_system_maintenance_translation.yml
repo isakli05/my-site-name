@@ -19,4 +19,3 @@ destination:
 migration_dependencies:
   required:
     - system_maintenance
-    - language

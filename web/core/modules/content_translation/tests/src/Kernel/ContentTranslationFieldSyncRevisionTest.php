@@ -374,7 +374,7 @@ class ContentTranslationFieldSyncRevisionTest extends EntityKernelTestBase {
   }
 
   /**
-   * Tests changing the default language of an entity.
+   * Test changing the default language of an entity.
    */
   public function testChangeDefaultLanguageNonTranslatableFieldsHidden() {
     $this->setUntranslatableFieldWidgetsDisplay(FALSE);

@@ -22,7 +22,7 @@ class UserSubAdminTest extends BrowserTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Tests create and cancel forms as 'sub-admin'.
+   * Test create and cancel forms as 'sub-admin'.
    */
   public function testSubAdmin() {
     $user = $this->drupalCreateUser(['sub-admin']);
@@ -45,8 +45,7 @@ class UserSubAdminTest extends BrowserTestBase {
       'pass[pass2]' => $pass,
       'notify' => FALSE,
     ];
-    $this->drupalGet('admin/people/create');
-    $this->submitForm($edit, 'Create new account');
+    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
     $this->assertSession()->pageTextContains('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
 
     // Test that the cancel user page has admin fields.

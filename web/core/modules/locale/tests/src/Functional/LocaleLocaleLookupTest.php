@@ -43,27 +43,26 @@ class LocaleLocaleLookupTest extends BrowserTestBase {
    */
   public function testCircularDependency() {
     // Ensure that we can enable early_translation_test on a non-english site.
-    $this->drupalGet('admin/modules');
-    $this->submitForm(['modules[early_translation_test][enable]' => TRUE], 'Install');
+    $this->drupalPostForm('admin/modules', ['modules[early_translation_test][enable]' => TRUE], 'Install');
     $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
-   * Tests language fallback defaults.
+   * Test language fallback defaults.
    */
   public function testLanguageFallbackDefaults() {
     $this->drupalGet('');
     // Ensure state of fallback languages persisted by
     // locale_test_language_fallback_candidates_locale_lookup_alter() is empty.
-    $this->assertEquals([], \Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_candidates'));
+    $this->assertEqual([], \Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_candidates'));
     // Make sure there is enough information provided for alter hooks.
     $context = \Drupal::state()->get('locale.test_language_fallback_candidates_locale_lookup_alter_context');
-    $this->assertEquals('fr', $context['langcode']);
-    $this->assertEquals('locale_lookup', $context['operation']);
+    $this->assertEqual('fr', $context['langcode']);
+    $this->assertEqual('locale_lookup', $context['operation']);
   }
 
   /**
-   * Tests old plural style @count[number] fix.
+   * Test old plural style @count[number] fix.
    *
    * @dataProvider providerTestFixOldPluralStyle
    */

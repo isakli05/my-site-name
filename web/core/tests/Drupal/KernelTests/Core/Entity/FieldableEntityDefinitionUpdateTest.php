@@ -410,12 +410,7 @@ class FieldableEntityDefinitionUpdateTest extends EntityKernelTestBase {
     }
 
     if ($revisionable) {
-      $revisions_result = $this->entityTypeManager
-        ->getStorage($this->entityTypeId)
-        ->getQuery()
-        ->accessCheck(FALSE)
-        ->allRevisions()
-        ->execute();
+      $revisions_result = $this->entityTypeManager->getStorage($this->entityTypeId)->getQuery()->allRevisions()->execute();
       $revisions = $this->entityTypeManager->getStorage($this->entityTypeId)->loadMultipleRevisions(array_keys($revisions_result));
       $this->assertCount(6, $revisions);
 

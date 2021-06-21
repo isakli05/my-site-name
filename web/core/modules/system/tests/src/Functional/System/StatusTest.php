@@ -4,6 +4,7 @@ namespace Drupal\Tests\system\Functional\System;
 
 use Drupal\Core\Url;
 use Drupal\Tests\BrowserTestBase;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
  * Tests output on the status overview page.
@@ -50,7 +51,7 @@ class StatusTest extends BrowserTestBase {
     $this->assertSession()->statusCodeEquals(200);
 
     // Verify that the PHP version is shown on the page.
-    $this->assertSession()->pageTextContains(phpversion());
+    $this->assertText(phpversion());
 
     if (function_exists('phpinfo')) {
       $this->assertSession()->linkByHrefExists(Url::fromRoute('system.php')->toString());
@@ -69,7 +70,7 @@ class StatusTest extends BrowserTestBase {
     // update_test_postupdate_update_8001() needs to be executed.
     drupal_set_installed_schema_version('update_test_postupdate', 8000);
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->pageTextContains('Out of date');
+    $this->assertText('Out of date');
 
     // Now cleanup the executed post update functions.
     drupal_set_installed_schema_version('update_test_postupdate', 8001);
@@ -77,7 +78,7 @@ class StatusTest extends BrowserTestBase {
     $post_update_registry = \Drupal::service('update.post_update_registry');
     $post_update_registry->filterOutInvokedUpdatesByModule('update_test_postupdate');
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->pageTextContains('Out of date');
+    $this->assertText('Out of date');
 
     $this->drupalGet('admin/reports/status/php');
     $this->assertSession()->statusCodeEquals(200);
@@ -86,7 +87,9 @@ class StatusTest extends BrowserTestBase {
     $cron_last_run = \Drupal::state()->get('system.cron_last');
     \Drupal::state()->set('system.cron_last', 0);
     $this->drupalGet('admin/reports/status');
-    $this->assertSession()->elementExists('xpath', '//details[contains(@class, "system-status-report__entry")]//div[contains(text(), "Cron has not run recently")]');
+    $css_selector_converter = new CssSelectorConverter();
+    $xpath = $css_selector_converter->toXPath('details.system-status-report__entry') . '//div[contains(text(), "Cron has not run recently")]';
+    $this->assertNotEmpty($this->xpath($xpath), 'Cron has not run recently error is being displayed.');
     \Drupal::state()->set('system.cron_last', $cron_last_run);
   }
 

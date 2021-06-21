@@ -20,7 +20,7 @@ class ClientErrorResponseSubscriber implements EventSubscriberInterface {
    *   The event to process.
    */
   public function onRespond(ResponseEvent $event) {
-    if (!$event->isMainRequest()) {
+    if (!$event->isMasterRequest()) {
       return;
     }
 

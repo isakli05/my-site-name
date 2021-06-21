@@ -126,7 +126,7 @@ abstract class PathPluginBase extends DisplayPluginBase implements DisplayRouter
   protected function getRoute($view_id, $display_id) {
     $defaults = [
       '_controller' => 'Drupal\views\Routing\ViewPageController::handle',
-      '_title_callback' => 'Drupal\views\Routing\ViewPageController::getTitle',
+      '_title' => $this->view->getTitle(),
       'view_id' => $view_id,
       'display_id' => $display_id,
       '_view_display_show_admin_links' => $this->getOption('show_admin_links'),

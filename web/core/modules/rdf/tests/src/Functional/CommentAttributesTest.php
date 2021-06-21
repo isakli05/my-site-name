@@ -249,11 +249,10 @@ class CommentAttributesTest extends CommentTestBase {
    *
    * Tests the current page for basic comment RDFa markup.
    *
-   * @param \Drupal\comment\CommentInterface $comment
+   * @param $comment
    *   Comment object.
-   * @param array|null $account
-   *   (optional) An array containing information about an anonymous user.
-   *   Defaults to NULL.
+   * @param $account
+   *   An array containing information about an anonymous user.
    */
   public function _testBasicCommentRdfaMarkup(CommentInterface $comment, $account = NULL) {
     $this->drupalGet($this->node->toUrl());

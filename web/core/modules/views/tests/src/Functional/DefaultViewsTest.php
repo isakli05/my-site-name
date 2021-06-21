@@ -132,7 +132,7 @@ class DefaultViewsTest extends ViewTestBase {
   }
 
   /**
-   * Tests that all Default views work as expected.
+   * Test that all Default views work as expected.
    */
   public function testDefaultViews() {
     // Get all default views.

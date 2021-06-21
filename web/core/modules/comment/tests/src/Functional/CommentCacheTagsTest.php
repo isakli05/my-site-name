@@ -96,7 +96,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
   }
 
   /**
-   * Tests that comments invalidate the cache tag of their host entity.
+   * Test that comments correctly invalidate the cache tag of their host entity.
    */
   public function testCommentEntity() {
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'MISS');
@@ -128,7 +128,7 @@ class CommentCacheTagsTest extends EntityWithUriCacheTagsTestBase {
     // Ensure that a new comment only invalidates the commented entity.
     $this->verifyPageCache($this->entityTestCamelid->toUrl(), 'HIT');
     $this->verifyPageCache($this->entityTestHippopotamidae->toUrl(), 'MISS');
-    $this->assertSession()->pageTextContains($hippo_comment->getSubject());
+    $this->assertText($hippo_comment->getSubject());
 
     // Ensure that updating an existing comment only invalidates the commented
     // entity.

@@ -49,24 +49,21 @@ class PathAdminTest extends PathTestBase {
       'path[0][value]' => '/node/' . $node1->id(),
       'alias[0][value]' => $alias1,
     ];
-    $this->drupalGet('admin/config/search/path/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     $alias2 = '/' . $this->randomMachineName(8);
     $edit = [
       'path[0][value]' => '/node/' . $node2->id(),
       'alias[0][value]' => $alias2,
     ];
-    $this->drupalGet('admin/config/search/path/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     $alias3 = '/' . $this->randomMachineName(4) . '/' . $this->randomMachineName(4);
     $edit = [
       'path[0][value]' => '/node/' . $node3->id(),
       'alias[0][value]' => $alias3,
     ];
-    $this->drupalGet('admin/config/search/path/add');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/config/search/path/add', $edit, 'Save');
 
     // Filter by the first alias.
     $edit = [

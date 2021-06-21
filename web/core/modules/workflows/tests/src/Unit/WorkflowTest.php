@@ -120,7 +120,7 @@ class WorkflowTest extends UnitTestCase {
   }
 
   /**
-   * Tests numeric IDs when added to a workflow.
+   * Test numeric IDs when added to a workflow.
    */
   public function testNumericIdSorting() {
     $workflow = new Workflow(['id' => 'test', 'type' => 'test_type'], 'workflow');

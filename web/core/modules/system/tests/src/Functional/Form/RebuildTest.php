@@ -48,8 +48,7 @@ class RebuildTest extends BrowserTestBase {
       'checkbox_1_default_on' => FALSE,
       'text_1' => 'foo',
     ];
-    $this->drupalGet('form-test/form-rebuild-preserve-values');
-    $this->submitForm($edit, 'Add more');
+    $this->drupalPostForm('form-test/form-rebuild-preserve-values', $edit, 'Add more');
 
     $assert_session = $this->assertSession();
 

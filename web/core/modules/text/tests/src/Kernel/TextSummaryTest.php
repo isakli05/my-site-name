@@ -47,7 +47,7 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
-   * Tests summary with long example.
+   * Test summary with long example.
    */
   public function testLongSentence() {
     // 125.
@@ -69,7 +69,7 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
-   * Tests various summary length edge cases.
+   * Test various summary length edge cases.
    */
   public function testLength() {
     FilterFormat::create([
@@ -225,8 +225,8 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
-   * Tests text_summary() returns an empty string without any error when
-   * called with an invalid format.
+   * Test text_summary() returns an empty string without any error when called
+   * with an invalid format.
    */
   public function testInvalidFilterFormat() {
 
@@ -242,7 +242,7 @@ class TextSummaryTest extends KernelTestBase {
   }
 
   /**
-   * Tests required summary.
+   * Test required summary.
    */
   public function testRequiredSummary() {
     $this->installEntitySchema('entity_test');

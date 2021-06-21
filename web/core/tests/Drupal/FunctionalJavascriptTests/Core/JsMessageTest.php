@@ -36,7 +36,7 @@ class JsMessageTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests click on links to show messages and remove messages.
+   * Test click on links to show messages and remove messages.
    */
   public function testAddRemoveMessages() {
     $web_assert = $this->assertSession();

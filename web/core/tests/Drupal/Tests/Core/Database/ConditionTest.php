@@ -9,6 +9,7 @@ use Drupal\Tests\Core\Database\Stub\StubConnection;
 use Drupal\Tests\Core\Database\Stub\StubPDO;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
+use PHPUnit\Framework\Error\Error;
 
 /**
  * @coversDefaultClass \Drupal\Core\Database\Query\Condition
@@ -166,7 +167,7 @@ class ConditionTest extends UnitTestCase {
 
     $condition = $connection->condition('AND');
     $condition->condition('name', 'value', $operator);
-    $this->expectError();
+    $this->expectException(Error::class);
     $condition->compile($connection, $query_placeholder);
   }
 
@@ -181,7 +182,7 @@ class ConditionTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the core Condition can be overridden.
+   * Test that the core Condition can be overridden.
    */
   public function testContribCondition() {
     $mockCondition = $this->getMockBuilder(Condition::class)

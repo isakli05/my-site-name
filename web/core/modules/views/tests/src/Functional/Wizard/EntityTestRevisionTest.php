@@ -26,8 +26,7 @@ class EntityTestRevisionTest extends WizardTestBase {
     $type = [
       'show[wizard_key]' => 'standard:entity_test_rev_revision',
     ];
-    $this->drupalGet('admin/structure/views/add');
-    $this->submitForm($type, 'Update "Show" choice');
+    $this->drupalPostForm('admin/structure/views/add', $type, 'Update "Show" choice');
     $view = [];
     $view['label'] = $this->randomMachineName(16);
     $view['id'] = strtolower($this->randomMachineName(16));

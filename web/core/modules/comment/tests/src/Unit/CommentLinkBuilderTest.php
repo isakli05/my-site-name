@@ -90,7 +90,7 @@ class CommentLinkBuilderTest extends UnitTestCase {
   }
 
   /**
-   * Tests the buildCommentedEntityLinks method.
+   * Test the buildCommentedEntityLinks method.
    *
    * @param \Drupal\node\NodeInterface|\PHPUnit\Framework\MockObject\MockObject $node
    *   Mock node.

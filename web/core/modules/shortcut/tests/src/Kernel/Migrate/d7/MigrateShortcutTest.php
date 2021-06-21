@@ -59,7 +59,7 @@ class MigrateShortcutTest extends MigrateDrupal7TestBase {
   }
 
   /**
-   * Tests the shortcut migration.
+   * Test the shortcut migration.
    */
   public function testShortcutMigration() {
     // Check if the 4 shortcuts were migrated correctly.

@@ -103,7 +103,7 @@ class EntityLabel extends FieldPluginBase {
       return;
     }
 
-    /** @var \Drupal\Core\Entity\EntityInterface $entity */
+    /** @var $entity \Drupal\Core\Entity\EntityInterface */
     $entity = $this->loadedReferencers[$type][$value];
 
     if (!empty($this->options['link_to_entity'])) {

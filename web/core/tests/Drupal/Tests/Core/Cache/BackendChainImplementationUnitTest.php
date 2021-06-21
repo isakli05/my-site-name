@@ -81,7 +81,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests the get feature.
+   * Test the get feature.
    */
   public function testGet() {
     $cached = $this->chain->get('t123');
@@ -98,7 +98,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests the get multiple feature.
+   * Test the get multiple feature.
    */
   public function testGetMultiple() {
     $cids = ['t123', 't23', 't3', 't4'];
@@ -116,7 +116,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that set will propagate.
+   * Test that set will propagate.
    */
   public function testSet() {
     $this->chain->set('test', 123);
@@ -135,7 +135,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that delete will propagate.
+   * Test that delete will propagate.
    */
   public function testDelete() {
     $this->chain->set('test', 5);
@@ -192,8 +192,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the delete all operation is propagated to all backends in the
-   * chain.
+   * Test that the delete all operation is propagated to all backends in the chain.
    */
   public function testDeleteAllPropagation() {
     // Set both expiring and permanent keys.
@@ -210,7 +209,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that the delete tags operation is propagated to all backends
+   * Test that the delete tags operation is propagated to all backends
    * in the chain.
    */
   public function testDeleteTagsPropagation() {
@@ -287,7 +286,7 @@ class BackendChainImplementationUnitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that removing bin propagates to all backends.
+   * Test that removing bin propagates to all backends.
    */
   public function testRemoveBin() {
     $chain = new BackendChain();

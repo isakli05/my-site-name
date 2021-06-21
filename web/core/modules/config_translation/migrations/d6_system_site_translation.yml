@@ -43,4 +43,3 @@ destination:
 migration_dependencies:
   required:
     - system_site
-    - language

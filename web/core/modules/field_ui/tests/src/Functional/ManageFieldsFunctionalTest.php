@@ -204,7 +204,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       }
     }
 
-    $this->assertEquals($number_of_links, $number_of_links_found);
+    $this->assertEqual($number_of_links, $number_of_links_found);
   }
 
   /**
@@ -239,7 +239,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'settings[test_field_setting]' => $string,
     ];
-    $this->assertSession()->pageTextContains('Default value');
+    $this->assertText('Default value');
     $this->submitForm($edit, 'Save settings');
 
     // Assert the field settings are correct.
@@ -282,18 +282,16 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => '',
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Number of values is required.');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertText('Number of values is required.');
 
     // Submit a custom number.
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 6,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Updated field Body field settings.');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertSession()->fieldValueEquals('cardinality', 'number');
     $this->assertSession()->fieldValueEquals('cardinality_number', 6);
@@ -306,8 +304,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Add two entries in the body.
     $edit = ['title[0][value]' => 'Cardinality', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2'];
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
 
     // Assert that you can't set the cardinality to a lower number than the
     // highest delta of this field.
@@ -315,22 +312,19 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 1,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 2]));
 
     // Create a second entity with three values.
     $edit = ['title[0][value]' => 'Cardinality 3', 'body[0][value]' => 'Body 1', 'body[1][value]' => 'Body 2', 'body[2][value]' => 'Body 3'];
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
 
     // Set to unlimited.
     $edit = [
       'cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
-    $this->assertSession()->pageTextContains('Updated field Body field settings.');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
+    $this->assertText('Updated field Body field settings.');
     $this->drupalGet($field_edit_path);
     $this->assertSession()->fieldValueEquals('cardinality', FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
     $this->assertSession()->fieldValueEquals('cardinality_number', 1);
@@ -341,24 +335,21 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 1,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 2]));
 
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 2,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 3]));
 
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
 
     // Test the cardinality validation is not access sensitive.
 
@@ -366,8 +357,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'cardinality' => (string) FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $node = $this->drupalCreateNode([
       'private' => TRUE,
       'uid' => 0,
@@ -387,22 +377,19 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'cardinality' => 'number',
       'cardinality_number' => 2,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $this->assertRaw(t('There are @count entities with @delta or more values in this field.', ['@count' => 2, '@delta' => 3]));
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 3,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
     $this->assertRaw(t('There is @count entity with @delta or more values in this field.', ['@count' => 1, '@delta' => 4]));
     $edit = [
       'cardinality' => 'number',
       'cardinality_number' => 4,
     ];
-    $this->drupalGet($field_edit_path);
-    $this->submitForm($edit, 'Save field settings');
+    $this->drupalPostForm($field_edit_path, $edit, 'Save field settings');
   }
 
   /**
@@ -455,11 +442,11 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
   public function assertFieldSettings($bundle, $field_name, $string = 'dummy test string', $entity_type = 'node') {
     // Assert field storage settings.
     $field_storage = FieldStorageConfig::loadByName($entity_type, $field_name);
-    $this->assertSame($string, $field_storage->getSetting('test_field_storage_setting'), 'Field storage settings were found.');
+    $this->assertTrue($field_storage->getSetting('test_field_storage_setting') == $string, 'Field storage settings were found.');
 
     // Assert field settings.
     $field = FieldConfig::loadByName($entity_type, $bundle, $field_name);
-    $this->assertSame($string, $field->getSetting('test_field_setting'), 'Field settings were found.');
+    $this->assertTrue($field->getSetting('test_field_setting') == $string, 'Field settings were found.');
   }
 
   /**
@@ -479,9 +466,8 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'label' => $field_exceed_max_length_label,
       'field_name' => $field_exceed_max_length_input,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->contentType . '/fields/add-field');
-    $this->submitForm($edit, 'Save and continue');
-    $this->assertSession()->pageTextContains('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->contentType . '/fields/add-field', $edit, 'Save and continue');
+    $this->assertText('Machine-readable name cannot be longer than 22 characters but is currently 23 characters long.');
 
     // Create a valid field.
     $this->fieldUIAddNewField('admin/structure/types/manage/' . $this->contentType, $this->fieldNameInput, $this->fieldLabel);
@@ -522,17 +508,15 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     // Check that invalid default values are rejected.
     $edit = [$element_name => '-1'];
-    $this->drupalGet($admin_path);
-    $this->submitForm($edit, 'Save settings');
-    $this->assertSession()->pageTextContains("$field_name does not accept the value -1");
+    $this->drupalPostForm($admin_path, $edit, 'Save settings');
+    $this->assertText("$field_name does not accept the value -1");
 
     // Check that the default value is saved.
     $edit = [$element_name => '1'];
-    $this->drupalGet($admin_path);
-    $this->submitForm($edit, 'Save settings');
-    $this->assertSession()->pageTextContains("Saved $field_name configuration");
+    $this->drupalPostForm($admin_path, $edit, 'Save settings');
+    $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEquals([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
+    $this->assertEqual([['value' => 1]], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
     // Check that the default value shows up in the form
     $this->drupalGet($admin_path);
@@ -541,9 +525,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Check that the default value can be emptied.
     $edit = [$element_name => ''];
     $this->submitForm($edit, 'Save settings');
-    $this->assertSession()->pageTextContains("Saved $field_name configuration");
+    $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEquals([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
+    $this->assertEqual([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
     // Check that the default value can be empty when the field is marked as
     // required and can store unlimited values.
@@ -559,9 +543,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
 
     $this->drupalGet($admin_path);
     $this->submitForm([], 'Save settings');
-    $this->assertSession()->pageTextContains("Saved $field_name configuration");
+    $this->assertText("Saved $field_name configuration");
     $field = FieldConfig::loadByName('node', $this->contentType, $field_name);
-    $this->assertEquals([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
+    $this->assertEqual([], $field->getDefaultValueLiteral(), 'The default value was correctly saved.');
 
     // Check that the default widget is used when the field is hidden.
     $display_repository->getFormDisplay($field->getTargetEntityTypeId(), $field->getTargetBundle())
@@ -621,16 +605,14 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Try with an entity key.
     $edit['field_name'] = 'title';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    $this->drupalPostForm("$bundle_path/fields/add-field", $edit, 'Save and continue');
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
 
     // Try with a base field.
     $edit['field_name'] = 'sticky';
     $bundle_path = 'admin/structure/types/manage/' . $this->contentType;
-    $this->drupalGet("{$bundle_path}/fields/add-field");
-    $this->submitForm($edit, 'Save and continue');
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    $this->drupalPostForm("$bundle_path/fields/add-field", $edit, 'Save and continue');
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
   }
 
   /**
@@ -731,10 +713,9 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
       'new_storage_type' => 'entity_reference',
     ];
     $url = 'admin/structure/types/manage/' . $this->contentType . '/fields/add-field';
-    $this->drupalGet($url);
-    $this->submitForm($edit, 'Save and continue');
+    $this->drupalPostForm($url, $edit, 'Save and continue');
 
-    $this->assertSession()->pageTextContains('The machine-readable name is already in use. It must be unique.');
+    $this->assertText('The machine-readable name is already in use. It must be unique.');
     $this->assertSession()->addressEquals($url);
   }
 
@@ -745,8 +726,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $options = [
       'query' => ['destinations' => ['http://example.com']],
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.body/storage', $options);
-    $this->submitForm([], 'Save field settings');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.body/storage', [], 'Save field settings', $options);
     // The external redirect should not fire.
     $this->assertSession()->addressEquals('admin/structure/types/manage/article/fields/node.article.body/storage?destinations%5B0%5D=http%3A//example.com');
     $this->assertSession()->statusCodeEquals(200);
@@ -797,19 +777,17 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     $edit = [
       'description' => '<strong>Test with an upload field.',
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_image');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_image', $edit, 'Save settings');
 
-    // Check that hook_field_widget_single_element_form_alter() does believe
-    // this is the default value form.
+    // Check that hook_field_widget_form_alter() does believe this is the
+    // default value form.
     $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
-    $this->assertSession()->pageTextContains('From hook_field_widget_single_element_form_alter(): Default form is true.');
+    $this->assertText('From hook_field_widget_form_alter(): Default form is true.');
 
     $edit = [
       'description' => '<em>Test with a non upload field.',
     ];
-    $this->drupalGet('admin/structure/types/manage/article/fields/node.article.field_tags');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/structure/types/manage/article/fields/node.article.field_tags', $edit, 'Save settings');
 
     $this->drupalGet('node/add/article');
     $this->assertRaw('<strong>Test with an upload field.</strong>');
@@ -821,7 +799,7 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
    */
   public function fieldListAdminPage() {
     $this->drupalGet('admin/reports/fields');
-    $this->assertSession()->pageTextContains($this->fieldName);
+    $this->assertText($this->fieldName);
     $this->assertSession()->linkByHrefExists('admin/structure/types/manage/' . $this->contentType . '/fields');
   }
 
@@ -841,21 +819,21 @@ class ManageFieldsFunctionalTest extends BrowserTestBase {
     // Add a field with every possible preconfigured value.
     $this->fieldUIAddNewField(NULL, 'test_custom_options', 'Test label', 'field_ui:test_field_with_preconfigured_options:custom_options');
     $field_storage = FieldStorageConfig::loadByName('node', 'field_test_custom_options');
-    $this->assertEquals(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, $field_storage->getCardinality());
-    $this->assertEquals('preconfigured_storage_setting', $field_storage->getSetting('test_field_storage_setting'));
+    $this->assertEqual(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED, $field_storage->getCardinality());
+    $this->assertEqual('preconfigured_storage_setting', $field_storage->getSetting('test_field_storage_setting'));
 
     $field = FieldConfig::loadByName('node', 'article', 'field_test_custom_options');
     $this->assertTrue($field->isRequired());
-    $this->assertEquals('preconfigured_field_setting', $field->getSetting('test_field_setting'));
+    $this->assertEqual('preconfigured_field_setting', $field->getSetting('test_field_setting'));
 
     /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $display_repository */
     $display_repository = \Drupal::service('entity_display.repository');
 
     $form_display = $display_repository->getFormDisplay('node', 'article');
-    $this->assertEquals('test_field_widget_multiple', $form_display->getComponent('field_test_custom_options')['type']);
+    $this->assertEqual('test_field_widget_multiple', $form_display->getComponent('field_test_custom_options')['type']);
     $view_display = $display_repository->getViewDisplay('node', 'article');
-    $this->assertEquals('field_test_multiple', $view_display->getComponent('field_test_custom_options')['type']);
-    $this->assertEquals('altered dummy test string', $view_display->getComponent('field_test_custom_options')['settings']['test_formatter_setting_multiple']);
+    $this->assertEqual('field_test_multiple', $view_display->getComponent('field_test_custom_options')['type']);
+    $this->assertEqual('altered dummy test string', $view_display->getComponent('field_test_custom_options')['settings']['test_formatter_setting_multiple']);
   }
 
   /**

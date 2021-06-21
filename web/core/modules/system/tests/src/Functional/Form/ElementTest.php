@@ -113,9 +113,9 @@ class ElementTest extends BrowserTestBase {
 
     // Verify that wrapper id is different from element id.
     foreach (['checkboxes', 'radios'] as $type) {
-      // A single element id is found.
-      $this->assertSession()->elementsCount('xpath', "//div[@id='edit-$type']", 1);
+      $element_ids = $this->xpath('//div[@id=:id]', [':id' => 'edit-' . $type]);
       $wrapper_ids = $this->xpath('//fieldset[@id=:id]', [':id' => 'edit-' . $type . '--wrapper']);
+      $this->assertCount(1, $element_ids, new FormattableMarkup('A single element id found for type %type', ['%type' => $type]));
       $this->assertCount(1, $wrapper_ids, new FormattableMarkup('A single wrapper id found for type %type', ['%type' => $type]));
     }
   }
@@ -139,14 +139,19 @@ class ElementTest extends BrowserTestBase {
    */
   public function testGroupElements() {
     $this->drupalGet('form-test/group-details');
-    $this->assertSession()->elementsCount('xpath', '//div[@class="details-wrapper"]//div[@class="details-wrapper"]//label', 1);
+    $elements = $this->xpath('//div[@class="details-wrapper"]//div[@class="details-wrapper"]//label');
+    $this->assertCount(1, $elements);
     $this->drupalGet('form-test/group-container');
-    $this->assertSession()->elementsCount('xpath', '//div[@id="edit-container"]//div[@class="details-wrapper"]//label', 1);
+    $elements = $this->xpath('//div[@id="edit-container"]//div[@class="details-wrapper"]//label');
+    $this->assertCount(1, $elements);
     $this->drupalGet('form-test/group-fieldset');
-    $this->assertSession()->elementsCount('xpath', '//fieldset[@id="edit-fieldset"]//div[@id="edit-meta"]//label', 1);
+    $elements = $this->xpath('//fieldset[@id="edit-fieldset"]//div[@id="edit-meta"]//label');
+    $this->assertCount(1, $elements);
     $this->drupalGet('form-test/group-vertical-tabs');
-    $this->assertSession()->elementsCount('xpath', '//div[@data-vertical-tabs-panes]//details[@id="edit-meta"]//label', 1);
-    $this->assertSession()->elementsCount('xpath', '//div[@data-vertical-tabs-panes]//details[@id="edit-meta-2"]//label', 1);
+    $elements = $this->xpath('//div[@data-vertical-tabs-panes]//details[@id="edit-meta"]//label');
+    $this->assertCount(1, $elements);
+    $elements = $this->xpath('//div[@data-vertical-tabs-panes]//details[@id="edit-meta-2"]//label');
+    $this->assertCount(1, $elements);
   }
 
   /**
@@ -189,9 +194,8 @@ class ElementTest extends BrowserTestBase {
    * Tests form element error messages.
    */
   public function testFormElementErrors() {
-    $this->drupalGet('form_test/details-form');
-    $this->submitForm([], 'Submit');
-    $this->assertSession()->pageTextContains('I am an error on the details element.');
+    $this->drupalPostForm('form_test/details-form', [], 'Submit');
+    $this->assertText('I am an error on the details element.');
   }
 
   /**

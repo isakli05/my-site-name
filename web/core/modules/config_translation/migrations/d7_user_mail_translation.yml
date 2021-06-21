@@ -79,5 +79,4 @@ destination:
   translations: true
 migration_dependencies:
   required:
-    - language
     - d7_user_mail

@@ -102,7 +102,7 @@ class Definition
     /**
      * Sets a factory.
      *
-     * @param string|array|Reference|null $factory A PHP function, reference or an array containing a class/Reference and a method to call
+     * @param string|array|Reference $factory A PHP function, reference or an array containing a class/Reference and a method to call
      *
      * @return $this
      */
@@ -392,6 +392,7 @@ class Definition
         foreach ($this->calls as $i => $call) {
             if ($call[0] === $method) {
                 unset($this->calls[$i]);
+                break;
             }
         }
 
@@ -505,7 +506,7 @@ class Definition
      */
     public function getTag($name)
     {
-        return $this->tags[$name] ?? [];
+        return isset($this->tags[$name]) ? $this->tags[$name] : [];
     }
 
     /**

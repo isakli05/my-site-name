@@ -87,7 +87,7 @@ class NegotiationMiddlewareTest extends UnitTestCase {
   }
 
   /**
-   * Tests that handle() correctly hands off to sub application.
+   * Test that handle() correctly hands off to sub application.
    *
    * @covers ::handle
    */

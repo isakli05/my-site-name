@@ -19,15 +19,20 @@ trait AssertButtonsTrait {
     // Verify that the number of buttons passed as parameters is
     // available in the dropbutton widget.
     if ($dropbutton) {
+      $i = 0;
       $count = count($buttons);
 
       // Assert there is no save button.
       $this->assertSession()->buttonNotExists('Save');
 
       // Dropbutton elements.
-      $this->assertSession()->elementsCount('xpath', '//div[@class="dropbutton-wrapper"]//input[@type="submit"]', $count);
-      for ($i = 0; $i++; $i < $count) {
-        $this->assertSession()->elementTextEquals('xpath', "(//div[@class='dropbutton-wrapper']//input[@type='submit'])[{$i + 1}]", $buttons[$i]);
+      /** @var \Behat\Mink\Element\NodeElement[] $elements */
+      $elements = $this->xpath('//div[@class="dropbutton-wrapper"]//input[@type="submit"]');
+      $this->assertCount($count, $elements);
+      foreach ($elements as $element) {
+        $value = $element->getValue() ?: '';
+        $this->assertEqual($buttons[$i], $value);
+        $i++;
       }
     }
     else {

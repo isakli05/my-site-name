@@ -113,7 +113,7 @@ class EnvironmentCleaner implements EnvironmentCleanerInterface {
    *   The number of tables that were removed.
    */
   protected function doCleanDatabase() {
-    /** @var \Drupal\Core\Database\Schema $schema */
+    /* @var $schema \Drupal\Core\Database\Schema */
     $schema = $this->testDatabase->schema();
     $tables = $schema->findTables('test%');
     $count = 0;

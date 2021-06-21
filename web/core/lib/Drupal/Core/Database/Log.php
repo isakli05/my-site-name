@@ -22,8 +22,8 @@ class Log {
    *
    * array(
    *   $logging_key = array(
-   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0),
-   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0, 'start' => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0),
+   *     array('query' => '', 'args' => array(), 'caller' => '', 'target' => '', 'time' => 0),
    *   ),
    * );
    *
@@ -103,18 +103,14 @@ class Log {
   /**
    * Log a query to all active logging keys.
    *
-   * @param \Drupal\Core\Database\StatementInterface $statement
+   * @param $statement
    *   The prepared statement object to log.
-   * @param array $args
+   * @param $args
    *   The arguments passed to the statement object.
-   * @param float $time
-   *   The time the query took to execute as a float (in seconds with
-   *   microsecond precision).
-   * @param float $start
-   *   The time the query started as a float (in seconds since the Unix epoch
-   *   with microsecond precision).
+   * @param $time
+   *   The time in milliseconds the query took to execute.
    */
-  public function log(StatementInterface $statement, $args, $time, float $start = NULL) {
+  public function log(StatementInterface $statement, $args, $time) {
     foreach (array_keys($this->queryLog) as $key) {
       $this->queryLog[$key][] = [
         'query' => $statement->getQueryString(),
@@ -122,7 +118,6 @@ class Log {
         'target' => $statement->dbh->getTarget(),
         'caller' => $this->findCaller(),
         'time' => $time,
-        'start' => $start,
       ];
     }
   }
@@ -149,12 +144,26 @@ class Log {
    *   database call itself.
    */
   public function findCaller() {
-    $driver_namespace = Database::getConnectionInfo($this->connectionKey)['default']['namespace'];
-    $stack = static::removeDatabaseEntries($this->getDebugBacktrace(), $driver_namespace);
+    $stack = $this->getDebugBacktrace();
 
-    // Return the first function call whose stack entry has a 'file' key, that
-    // is, it is not a callback or a closure.
-    for ($i = 0; $i < count($stack); $i++) {
+    $driver_namespace = Database::getConnectionInfo($this->connectionKey)['default']['namespace'];
+
+    // Starting from the very first entry processed during the request, find
+    // the first function call that can be identified as a call to a
+    // method/function in the database layer.
+    for ($n = count($stack) - 1; $n >= 0; $n--) {
+      // If the call was made from a function, 'class' will be empty. We give
+      // it a default empty string value in that case.
+      $class = $stack[$n]['class'] ?? '';
+
+      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $driver_namespace, 0) === 0) {
+        break;
+      }
+    }
+
+    // Return the previous function call whose stack entry has a 'file' key,
+    // that is, it is not a callback or a closure.
+    for ($i = $n; $i < count($stack); $i++) {
       if (!empty($stack[$i]['file'])) {
         return [
           'file' => $stack[$i]['file'],
@@ -166,33 +175,6 @@ class Log {
         ];
       }
     }
-  }
-
-  /**
-   * Removes database related calls from a backtrace array.
-   *
-   * @param array $backtrace
-   *   A standard PHP backtrace. Passed by reference.
-   * @param string $driver_namespace
-   *   The PHP namespace of the database driver.
-   *
-   * @return array
-   *   The cleaned backtrace array.
-   */
-  public static function removeDatabaseEntries(array $backtrace, string $driver_namespace): array {
-    // Starting from the very first entry processed during the request, find
-    // the first function call that can be identified as a call to a
-    // method/function in the database layer.
-    for ($n = count($backtrace) - 1; $n >= 0; $n--) {
-      // If the call was made from a function, 'class' will be empty. We give
-      // it a default empty string value in that case.
-      $class = $backtrace[$n]['class'] ?? '';
-      if (strpos($class, __NAMESPACE__, 0) === 0 || strpos($class, $driver_namespace, 0) === 0) {
-        break;
-      }
-    }
-
-    return array_values(array_slice($backtrace, $n));
   }
 
   /**

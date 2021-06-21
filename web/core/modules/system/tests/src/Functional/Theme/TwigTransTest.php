@@ -74,11 +74,11 @@ class TwigTransTest extends BrowserTestBase {
     $this->rebuildContainer();
 
     // Check that lolspeak is the default language for the site.
-    $this->assertEquals('xx', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Lolspeak is the default language');
+    $this->assertEqual('xx', \Drupal::languageManager()->getDefaultLanguage()->getId(), 'Lolspeak is the default language');
   }
 
   /**
-   * Tests Twig "trans" tags.
+   * Test Twig "trans" tags.
    */
   public function testTwigTransTags() {
     // Run this once without and once with Twig debug because trans can work
@@ -98,7 +98,7 @@ class TwigTransTest extends BrowserTestBase {
   }
 
   /**
-   * Tests empty Twig "trans" tags.
+   * Test empty Twig "trans" tags.
    */
   public function testEmptyTwigTransTags() {
     $elements = [
@@ -126,25 +126,25 @@ class TwigTransTest extends BrowserTestBase {
    */
   protected function assertTwigTransTags() {
     // Assert that {% trans "Hello sun." %} is translated correctly.
-    $this->assertSession()->pageTextContains('OH HAI SUNZ');
+    $this->assertText('OH HAI SUNZ');
 
     // Assert that {% trans "Hello sun." %} with {"context": "Lolspeak"} is
     // translated correctly.
-    $this->assertSession()->pageTextContains('O HAI SUNZZZZZZZ');
+    $this->assertText('O HAI SUNZZZZZZZ');
 
     // Assert that {{ "Hello Earth."|trans }} is translated correctly.
-    $this->assertSession()->pageTextContains('O HERRO ERRRF.');
+    $this->assertText('O HERRO ERRRF.');
 
     // Assert that {% trans %}Hello moon.{% endtrans %} is translated correctly.
-    $this->assertSession()->pageTextContains('OH HAI TEH MUUN');
+    $this->assertText('OH HAI TEH MUUN');
 
     // Assert that {% trans %} with {% plural count = 1 %} is translated
     // correctly.
-    $this->assertSession()->pageTextContains('O HAI STARRRRR');
+    $this->assertText('O HAI STARRRRR');
 
     // Assert that {% trans %} with {% plural count = 2 %} is translated
     // correctly.
-    $this->assertSession()->pageTextContains('O HAI 2 STARZZZZ');
+    $this->assertText('O HAI 2 STARZZZZ');
 
     // Assert that {{ token }} was successfully translated and prefixed
     // with "@".
@@ -160,19 +160,19 @@ class TwigTransTest extends BrowserTestBase {
 
     // Assert that {% trans %} with a context only msgid is excluded from
     // translation.
-    $this->assertSession()->pageTextContains('I have context.');
+    $this->assertText('I have context.');
 
     // Assert that {% trans with {"context": "Lolspeak"} %} was successfully
     // translated with context.
-    $this->assertSession()->pageTextContains('I HAZ KONTEX.');
+    $this->assertText('I HAZ KONTEX.');
 
     // Assert that {% trans with {"langcode": "zz"} %} is successfully
     // translated in specified language.
-    $this->assertSession()->pageTextContains('O HAI NU TXT.');
+    $this->assertText('O HAI NU TXT.');
 
     // Assert that {% trans with {"context": "Lolspeak", "langcode": "zz"} %}
     // is successfully translated with context in specified language.
-    $this->assertSession()->pageTextContains('O HAI NU TXTZZZZ.');
+    $this->assertText('O HAI NU TXTZZZZ.');
 
     // Makes sure https://www.drupal.org/node/2489024 doesn't happen without
     // twig debug.
@@ -198,8 +198,7 @@ class TwigTransTest extends BrowserTestBase {
         ];
 
         // Install the language in Drupal.
-        $this->drupalGet('admin/config/regional/language/add');
-        $this->submitForm($edit, 'Add custom language');
+        $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add custom language');
         $this->assertRaw('"edit-languages-' . $langcode . '-weight"');
 
         // Import the custom .po contents for the language.
@@ -210,8 +209,7 @@ class TwigTransTest extends BrowserTestBase {
           'langcode' => $langcode,
           'customized' => TRUE,
         ];
-        $this->drupalGet('admin/config/regional/translate/import');
-        $this->submitForm($options, 'Import');
+        $this->drupalPostForm('admin/config/regional/translate/import', $options, 'Import');
         $file_system->unlink($filename);
       }
     }

@@ -84,7 +84,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
     // Run cron to ensure the content is indexed.
     $this->cronRun();
     $this->drupalGet('admin/reports/dblog');
-    $this->assertSession()->pageTextContains('Cron run completed');
+    $this->assertText('Cron run completed');
   }
 
   /**
@@ -96,8 +96,7 @@ class SearchNumberMatchingTest extends BrowserTestBase {
 
       // Verify that the node title does not appear on the search page
       // with a dummy search.
-      $this->drupalGet('search/node');
-      $this->submitForm(['keys' => 'foo'], 'Search');
+      $this->drupalPostForm('search/node', ['keys' => 'foo'], 'Search');
       $this->assertNoText($node->label());
 
       // Now verify that we can find node i by searching for any of the
@@ -108,9 +107,8 @@ class SearchNumberMatchingTest extends BrowserTestBase {
         // "not keyword" when searching.
         $number = ltrim($number, '-');
 
-        $this->drupalGet('search/node');
-        $this->submitForm(['keys' => $number], 'Search');
-        $this->assertSession()->pageTextContains($node->label());
+        $this->drupalPostForm('search/node', ['keys' => $number], 'Search');
+        $this->assertText($node->label());
       }
     }
 

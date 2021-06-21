@@ -21,7 +21,7 @@ class IndexPhpTest extends BrowserTestBase {
   }
 
   /**
-   * Tests index.php handling.
+   * Test index.php handling.
    */
   public function testIndexPhpHandling() {
     $index_php = $GLOBALS['base_url'] . '/index.php';

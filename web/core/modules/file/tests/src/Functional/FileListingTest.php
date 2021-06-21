@@ -89,7 +89,7 @@ class FileListingTest extends FileFieldTestBase {
 
     $this->drupalGet('admin/content/files');
     $this->assertSession()->statusCodeEquals(200);
-    $this->assertSession()->pageTextContains('No files available.');
+    $this->assertText('No files available.');
     $this->drupalGet('admin/content/files');
     $this->assertSession()->statusCodeEquals(200);
 
@@ -115,7 +115,7 @@ class FileListingTest extends FileFieldTestBase {
 
     foreach ($nodes as $node) {
       $file = File::load($node->file->target_id);
-      $this->assertSession()->pageTextContains($file->getFilename());
+      $this->assertText($file->getFilename());
       $this->assertSession()->linkByHrefExists(file_create_url($file->getFileUri()));
       $this->assertSession()->linkByHrefExists('admin/content/files/usage/' . $file->id());
     }
@@ -146,16 +146,16 @@ class FileListingTest extends FileFieldTestBase {
       $usage = $file_usage->listUsage($file);
       $this->drupalGet('admin/content/files/usage/' . $file->id());
       $this->assertSession()->statusCodeEquals(200);
-      $this->assertSession()->pageTextContains($node->getTitle());
+      $this->assertText($node->getTitle());
       // Verify that registering entity type is found on usage page.
-      $this->assertSession()->pageTextContains('node');
+      $this->assertText('node');
       // Verify that registering module is found on usage page.
-      $this->assertSession()->pageTextContains('file');
+      $this->assertText('file');
       foreach ($usage as $module) {
         foreach ($module as $entity_type) {
           foreach ($entity_type as $entity) {
             // Verify that usage count is found on usage page.
-            $this->assertSession()->pageTextContains($entity);
+            $this->assertText($entity);
           }
         }
       }
@@ -207,7 +207,7 @@ class FileListingTest extends FileFieldTestBase {
     $this->assertSession()->statusCodeEquals(200);
     // Entity name should be displayed, but not linked if Entity::toUrl
     // throws an exception
-    $this->assertSession()->pageTextContains($entity_name);
+    $this->assertText($entity_name);
     $this->assertSession()->linkNotExists($entity_name, 'Linked entity name not added to file usage listing.');
     $this->assertSession()->linkExists($node->getTitle());
   }

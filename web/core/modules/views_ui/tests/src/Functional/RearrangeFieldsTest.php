@@ -64,8 +64,7 @@ class RearrangeFieldsTest extends UITestBase {
 
     // Checks that a field is not deleted if a value is not passed back.
     $fields = [];
-    $this->drupalGet('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field');
-    $this->submitForm($fields, 'Apply');
+    $this->drupalPostForm('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field', $fields, 'Apply');
     $this->assertFieldOrder($view_name, $this->getViewFields($view_name));
 
     // Checks that revers the new field order is respected.
@@ -75,8 +74,7 @@ class RearrangeFieldsTest extends UITestBase {
       $fields['fields[' . $field . '][weight]'] = $delta;
     }
     $fields_count = count($fields);
-    $this->drupalGet('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field');
-    $this->submitForm($fields, 'Apply');
+    $this->drupalPostForm('admin/structure/views/nojs/rearrange/' . $view_name . '/default/field', $fields, 'Apply');
     $this->assertFieldOrder($view_name, $reversedFields);
 
     // Checks that there is a remove link for each field.

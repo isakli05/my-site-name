@@ -45,7 +45,7 @@ class WorkspaceAccessTest extends KernelTestBase {
   }
 
   /**
-   * Tests cases for testWorkspaceAccess().
+   * Test cases for testWorkspaceAccess().
    *
    * @return array
    *   An array of operations and permissions to test with.

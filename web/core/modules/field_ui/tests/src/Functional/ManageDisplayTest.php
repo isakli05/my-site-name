@@ -121,16 +121,14 @@ class ManageDisplayTest extends BrowserTestBase {
       'fields[field_test][type]' => 'field_test_with_prepare_view',
       'fields[field_test][region]' => 'content',
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, 'Save');
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in view modes that use 'default' settings.");
 
     // Specialize the 'rss' mode, check that the field is displayed the same.
     $edit = [
       "display_modes_custom[rss]" => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, 'Save');
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected in newly specialized 'rss' mode.");
 
     // Set the field to 'hidden' in the view mode, check that the field is
@@ -138,8 +136,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $edit = [
       'fields[field_test][region]' => 'hidden',
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display/rss');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display/rss', $edit, 'Save');
     $this->assertNodeViewNoText($node, 'rss', $value, "The field is hidden in 'rss' mode.");
 
     // Set the view mode back to 'default', check that the field is displayed
@@ -147,16 +144,14 @@ class ManageDisplayTest extends BrowserTestBase {
     $edit = [
       "display_modes_custom[rss]" => FALSE,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, 'Save');
     $this->assertNodeViewText($node, 'rss', $output['field_test_with_prepare_view'], "The field is displayed as expected when 'rss' mode is set back to 'default' settings.");
 
     // Specialize the view mode again.
     $edit = [
       "display_modes_custom[rss]" => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/' . $this->type . '/display');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/' . $this->type . '/display', $edit, 'Save');
     // Check that the previous settings for the view mode have been kept.
     $this->assertNodeViewNoText($node, 'rss', $value, "The previous settings are kept when 'rss' mode is specialized again.");
   }
@@ -196,8 +191,7 @@ class ManageDisplayTest extends BrowserTestBase {
     $this->assertNoText('Use custom display settings for the following view modes');
 
     // This may not trigger a notice when 'view_modes_custom' isn't available.
-    $this->drupalGet('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/display');
-    $this->submitForm([], 'Save');
+    $this->drupalPostForm('admin/structure/taxonomy/manage/' . $this->vocabulary . '/overview/display', [], 'Save');
   }
 
   /**

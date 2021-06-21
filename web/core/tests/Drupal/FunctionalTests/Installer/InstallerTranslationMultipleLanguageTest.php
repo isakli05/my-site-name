@@ -76,17 +76,17 @@ ENDPO;
    */
   public function testTranslationsLoaded() {
     // Ensure the title is correct.
-    $this->assertEquals('SITE_NAME_' . $this->langcode, \Drupal::config('system.site')->get('name'));
+    $this->assertEqual('SITE_NAME_' . $this->langcode, \Drupal::config('system.site')->get('name'));
 
     // Verify German and Spanish were configured.
     $this->drupalGet('admin/config/regional/language');
-    $this->assertSession()->pageTextContains('German');
-    $this->assertSession()->pageTextContains('Spanish');
+    $this->assertText('German');
+    $this->assertText('Spanish');
     // If the installer was English or we used a profile that keeps English, we
     // expect that configured also. Otherwise English should not be configured
     // on the site.
     if ($this->langcode == 'en' || $this->profile == 'testing_multilingual_with_english') {
-      $this->assertSession()->pageTextContains('English');
+      $this->assertText('English');
     }
     else {
       $this->assertNoText('English');
@@ -114,14 +114,14 @@ ENDPO;
     if ($this->langcode == 'de') {
       // Active configuration should be in German and no German override should
       // exist.
-      $this->assertEquals('Anonymous de', $config->get('anonymous'));
-      $this->assertEquals('de', $config->get('langcode'));
+      $this->assertEqual('Anonymous de', $config->get('anonymous'));
+      $this->assertEqual('de', $config->get('langcode'));
       $this->assertTrue($override_de->isNew());
 
       if ($this->profile == 'testing_multilingual_with_english') {
         // English is already added in this profile. Should make the override
         // available.
-        $this->assertEquals('Anonymous', $override_en->get('anonymous'));
+        $this->assertEqual('Anonymous', $override_en->get('anonymous'));
       }
       else {
         // English is not yet available.
@@ -129,10 +129,9 @@ ENDPO;
 
         // Adding English should make the English override available.
         $edit = ['predefined_langcode' => 'en'];
-        $this->drupalGet('admin/config/regional/language/add');
-        $this->submitForm($edit, 'Add language');
+        $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
         $override_en = $language_manager->getLanguageConfigOverride('en', 'user.settings');
-        $this->assertEquals('Anonymous', $override_en->get('anonymous'));
+        $this->assertEqual('Anonymous', $override_en->get('anonymous'));
       }
 
       // Activate a module, to make sure that config is not overridden by module
@@ -141,24 +140,23 @@ ENDPO;
         'modules[views][enable]' => TRUE,
         'modules[filter][enable]' => TRUE,
       ];
-      $this->drupalGet('admin/modules');
-      $this->submitForm($edit, 'Install');
+      $this->drupalPostForm('admin/modules', $edit, 'Install');
 
       // Verify the strings from the translation are still as expected.
       $this->verifyImportedStringsTranslated();
     }
     else {
       // Active configuration should be English.
-      $this->assertEquals('Anonymous', $config->get('anonymous'));
-      $this->assertEquals('en', $config->get('langcode'));
+      $this->assertEqual('Anonymous', $config->get('anonymous'));
+      $this->assertEqual('en', $config->get('langcode'));
       // There should not be an English override.
       $this->assertTrue($override_en->isNew());
       // German should be an override.
-      $this->assertEquals('Anonymous de', $override_de->get('anonymous'));
+      $this->assertEqual('Anonymous de', $override_de->get('anonymous'));
     }
 
     // Spanish is always an override (never used as installation language).
-    $this->assertEquals('Anonymous es', $override_es->get('anonymous'));
+    $this->assertEqual('Anonymous es', $override_es->get('anonymous'));
 
   }
 
@@ -175,9 +173,8 @@ ENDPO;
         $edit['langcode'] = $langcode;
         $edit['translation'] = 'translated';
         $edit['string'] = $sample;
-        $this->drupalGet('admin/config/regional/translate');
-        $this->submitForm($edit, 'Filter');
-        $this->assertSession()->pageTextContains($sample . ' ' . $langcode);
+        $this->drupalPostForm('admin/config/regional/translate', $edit, 'Filter');
+        $this->assertText($sample . ' ' . $langcode);
       }
     }
   }

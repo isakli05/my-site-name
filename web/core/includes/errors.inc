@@ -79,7 +79,6 @@ function _drupal_error_handler_real($error_level, $message, $filename, $line) {
       'severity_level' => $severity_level,
       'backtrace' => $backtrace,
       '@backtrace_string' => (new \Exception())->getTraceAsString(),
-      'exception' => NULL,
     ], $recoverable || $to_string);
   }
   // If the site is a test site then fail for user deprecations so they can be
@@ -134,12 +133,10 @@ function error_displayable($error = NULL) {
  * Logs a PHP error or exception and displays an error page in fatal cases.
  *
  * @param $error
- *   An array with the following keys: %type, @message, %function, %file, %line,
- *   @backtrace_string, severity_level, backtrace, and exception. All the
- *   parameters are plain-text, with the exception of @message, which needs to
- *   be an HTML string, backtrace, which is a standard PHP backtrace, and
- *   exception, which is the exception object (or NULL if the error is not an
- *   exception).
+ *   An array with the following keys: %type, @message, %function, %file,
+ *   %line, @backtrace_string, severity_level, and backtrace. All the parameters
+ *   are plain-text, with the exception of @message, which needs to be an HTML
+ *   string, and backtrace, which is a standard PHP backtrace.
  * @param bool $fatal
  *   TRUE for:
  *   - An exception is thrown and not caught by something else.
@@ -149,12 +146,13 @@ function error_displayable($error = NULL) {
 function _drupal_log_error($error, $fatal = FALSE) {
   $is_installer = InstallerKernel::installationAttempted();
 
-  // Backtrace, exception and 'severity_level' are not valid replacement values
-  // for t().
-  $backtrace = $error['backtrace'];
-  $exception = $error['exception'];
+  // Remove 'severity_level' as is not a valid replacement for t().
   $severity = $error['severity_level'];
-  unset($error['backtrace'], $error['exception'], $error['severity_level']);
+  unset($error['severity_level']);
+
+  // Backtrace array is not a valid replacement value for t().
+  $backtrace = $error['backtrace'];
+  unset($error['backtrace']);
 
   // When running inside the testing framework, we relay the errors
   // to the tested site by the way of HTTP headers.
@@ -169,10 +167,10 @@ function _drupal_log_error($error, $fatal = FALSE) {
   // installer.
   if (\Drupal::hasService('logger.factory')) {
     try {
-      // Provide the PHP backtrace and exception to logger implementations. Add
+      // Provide the PHP backtrace to logger implementations. Add
       // 'severity_level' to the context to maintain BC and allow logging
       // implementations to use it.
-      \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'exception' => $exception, 'severity_level' => $severity]);
+      \Drupal::logger('php')->log($severity, '%type: @message in %function (line %line of %file) @backtrace_string.', $error + ['backtrace' => $backtrace, 'severity_level' => $severity]);
     }
     catch (\Exception $e) {
       // We can't log, for example because the database connection is not
@@ -217,6 +215,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
 
       // If error type is 'User notice' then treat it as debug information
       // instead of an error message.
+      // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
         $class = 'status';
@@ -268,7 +267,7 @@ function _drupal_log_error($error, $fatal = FALSE) {
           '#title' => 'Error',
           '#markup' => $message,
         ];
-        install_display_output($output, $GLOBALS['install_state']);
+        install_display_output($output, $GLOBALS['install_state'], $response->headers->all());
         exit;
       }
 

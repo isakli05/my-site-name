@@ -60,21 +60,18 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $edit = [
       'predefined_langcode' => 'hu',
     ];
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
     $edit = [
       'site_default_language' => 'hu',
     ];
-    $this->drupalGet('admin/config/regional/language');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalPostForm('admin/config/regional/language', $edit, 'Save configuration');
 
     // Tests the initial language after changing the site default language.
     // First unhide the language selector.
     $edit = [
       'language_configuration[language_alterable]' => TRUE,
     ];
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, 'Save content type');
     $this->drupalGet('node/add/article');
     // Ensure that the language is selectable on node add page when language
     // not hidden.
@@ -97,8 +94,7 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
     $edit = [
       'language_configuration[langcode]' => 'en',
     ];
-    $this->drupalGet('admin/structure/types/manage/article');
-    $this->submitForm($edit, 'Save content type');
+    $this->drupalPostForm('admin/structure/types/manage/article', $edit, 'Save content type');
     $this->drupalGet('node/add/article');
     $this->assertTrue($this->assertSession()->optionExists('edit-langcode-0-value', 'en')->isSelected());
   }
@@ -112,28 +108,32 @@ class NodeTypeInitialLanguageTest extends NodeTestBase {
       'title[0][value]' => $this->randomMachineName(8),
       'body[0][value]' => $this->randomMachineName(16),
     ];
-    $this->drupalGet('node/add/article');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/article', $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotEmpty($node, 'Node found in database.');
 
     // Loads node page and check if Language field is hidden by default.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementNotExists('xpath', '//div[@id="field-language-display"]/div');
+    $language_field = $this->xpath('//div[@id=:id]/div', [
+      ':id' => 'field-language-display',
+    ]);
+    $this->assertTrue(empty($language_field), 'Language field value is not shown by default on node page.');
 
     // Configures Language field formatter and check if it is saved.
     $edit = [
       'fields[langcode][type]' => 'language',
       'fields[langcode][region]' => 'content',
     ];
-    $this->drupalGet('admin/structure/types/manage/article/display');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('admin/structure/types/manage/article/display', $edit, 'Save');
     $this->drupalGet('admin/structure/types/manage/article/display');
     $this->assertTrue($this->assertSession()->optionExists('edit-fields-langcode-type', 'language')->isSelected());
 
     // Loads node page and check if Language field is shown.
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->elementExists('xpath', '//div[@id="field-language-display"]/div');
+    $language_field = $this->xpath('//div[@id=:id]/div', [
+      ':id' => 'field-language-display',
+    ]);
+    $this->assertFalse(empty($language_field), 'Language field value is shown on node page.');
   }
 
 }

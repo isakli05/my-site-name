@@ -50,7 +50,9 @@ abstract class TourResourceTestBase extends EntityResourceTestBase {
           'label' => 'Llama',
           'body' => 'Who handle the awesomeness of llamas?',
           'weight' => 100,
-          'selector' => '#tour-llama-1',
+          'attributes' => [
+            'data-id' => 'tour-llama-1',
+          ],
         ],
       ],
     ]);
@@ -82,7 +84,9 @@ abstract class TourResourceTestBase extends EntityResourceTestBase {
           'label' => 'Llama',
           'body' => 'Who handle the awesomeness of llamas?',
           'weight' => 100,
-          'selector' => '#tour-llama-1',
+          'attributes' => [
+            'data-id' => 'tour-llama-1',
+          ],
         ],
       ],
       'uuid' => $this->entity->uuid(),

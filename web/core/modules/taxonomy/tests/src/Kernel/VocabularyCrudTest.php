@@ -40,7 +40,7 @@ class VocabularyCrudTest extends KernelTestBase {
   }
 
   /**
-   * Tests deleting a taxonomy that contains terms.
+   * Test deleting a taxonomy that contains terms.
    */
   public function testTaxonomyVocabularyDeleteWithTerms() {
     $vocabulary = $this->createVocabulary();
@@ -127,7 +127,7 @@ class VocabularyCrudTest extends KernelTestBase {
   }
 
   /**
-   * Tests uninstall and reinstall of the taxonomy module.
+   * Test uninstall and reinstall of the taxonomy module.
    */
   public function testUninstallReinstall() {
     $vocabulary = $this->createVocabulary();

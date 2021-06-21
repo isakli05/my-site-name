@@ -53,8 +53,7 @@ class StateValuesCleanAdvancedTest extends BrowserTestBase {
     $edit = ['files[image]' => \Drupal::service('file_system')->realpath($this->image->uri)];
 
     // Post the form.
-    $this->drupalGet('form_test/form-state-values-clean-advanced');
-    $this->submitForm($edit, 'Submit');
+    $this->drupalPostForm('form_test/form-state-values-clean-advanced', $edit, 'Submit');
 
     // Expecting a 200 HTTP code.
     $this->assertSession()->statusCodeEquals(200);

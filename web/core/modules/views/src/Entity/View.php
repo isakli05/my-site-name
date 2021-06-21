@@ -378,7 +378,7 @@ class View extends ConfigEntityBase implements ViewEntityInterface {
         'default' => [
           'display_plugin' => 'default',
           'id' => 'default',
-          'display_title' => 'Default',
+          'display_title' => 'Master',
           'position' => 0,
           'display_options' => [],
         ],

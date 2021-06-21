@@ -147,7 +147,7 @@ class ModeratedContentViewTest extends BrowserTestBase {
   }
 
   /**
-   * Tests the moderated content page with multilingual content.
+   * Test the moderated content page with multilingual content.
    */
   public function testModeratedContentPageMultilingual() {
     ConfigurableLanguage::createFromLangcode('fr')->save();

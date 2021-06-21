@@ -38,8 +38,8 @@ class UserCreateTest extends BrowserTestBase {
     $user = $this->drupalCreateUser(['administer users']);
     $this->drupalLogin($user);
 
-    $this->assertEquals(REQUEST_TIME, $user->getCreatedTime(), 'Creating a user sets default "created" timestamp.');
-    $this->assertEquals(REQUEST_TIME, $user->getChangedTime(), 'Creating a user sets default "changed" timestamp.');
+    $this->assertEqual(REQUEST_TIME, $user->getCreatedTime(), 'Creating a user sets default "created" timestamp.');
+    $this->assertEqual(REQUEST_TIME, $user->getChangedTime(), 'Creating a user sets default "changed" timestamp.');
 
     // Create a field.
     $field_name = 'test_field';
@@ -105,20 +105,19 @@ class UserCreateTest extends BrowserTestBase {
         'pass[pass2]' => $pass,
         'notify' => $notify,
       ];
-      $this->drupalGet('admin/people/create');
-      $this->submitForm($edit, 'Create new account');
+      $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
 
       if ($notify) {
-        $this->assertSession()->pageTextContains('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
+        $this->assertText('A welcome message with further instructions has been emailed to the new user ' . $edit['name'] . '.');
         $this->assertCount(1, $this->drupalGetMails(), 'Notification email sent');
       }
       else {
-        $this->assertSession()->pageTextContains('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
+        $this->assertText('Created a new user account for ' . $edit['name'] . '. No email has been sent.');
         $this->assertCount(0, $this->drupalGetMails(), 'Notification email not sent');
       }
 
       $this->drupalGet('admin/people');
-      $this->assertSession()->pageTextContains($edit['name']);
+      $this->assertText($edit['name']);
       $user = user_load_by_name($name);
       $this->assertTrue($user->isActive(), 'User is not blocked');
     }
@@ -133,9 +132,8 @@ class UserCreateTest extends BrowserTestBase {
       'pass[pass2]' => 0,
       'notify' => FALSE,
     ];
-    $this->drupalGet('admin/people/create');
-    $this->submitForm($edit, 'Create new account');
-    $this->assertSession()->pageTextContains("Created a new user account for $name. No email has been sent");
+    $this->drupalPostForm('admin/people/create', $edit, 'Create new account');
+    $this->assertText("Created a new user account for $name. No email has been sent");
     $this->assertNoText('Password field is required');
   }
 

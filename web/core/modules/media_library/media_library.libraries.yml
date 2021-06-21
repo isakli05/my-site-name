@@ -34,4 +34,3 @@ ui:
     - core/drupal.announce
     - core/jquery.once
     - media_library/view
-    - core/tabbable

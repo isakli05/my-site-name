@@ -48,7 +48,7 @@ class LocaleStringTest extends KernelTestBase {
   }
 
   /**
-   * Tests CRUD API.
+   * Test CRUD API.
    */
   public function testStringCrudApi() {
     // Create source string.
@@ -119,7 +119,7 @@ class LocaleStringTest extends KernelTestBase {
   }
 
   /**
-   * Tests Search API loading multiple objects.
+   * Test Search API loading multiple objects.
    */
   public function testStringSearchApi() {
     $language_count = 3;
@@ -211,7 +211,7 @@ class LocaleStringTest extends KernelTestBase {
    */
   protected function createAllTranslations(StringInterface $source, array $values = []) {
     $list = [];
-    /** @var \Drupal\Core\Language\LanguageManagerInterface $language_manager */
+    /* @var $language_manager \Drupal\Core\Language\LanguageManagerInterface */
     $language_manager = $this->container->get('language_manager');
     foreach ($language_manager->getLanguages() as $language) {
       $list[$language->getId()] = $this->createTranslation($source, $language->getId(), $values);

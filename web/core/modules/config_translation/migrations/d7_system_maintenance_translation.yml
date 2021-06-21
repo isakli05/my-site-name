@@ -17,5 +17,4 @@ destination:
   translations: true
 migration_dependencies:
   required:
-    - language
     - system_maintenance

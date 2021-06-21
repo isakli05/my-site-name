@@ -391,9 +391,7 @@ class ViewEditForm extends ViewFormBase {
   /**
    * Helper function to get the display details section of the edit UI.
    *
-   * @param \Drupal\views_ui\ViewUI $view
-   *   The ViewUI entity.
-   * @param array $display
+   * @param $display
    *
    * @return array
    *   A renderable page build array.
@@ -406,7 +404,7 @@ class ViewEditForm extends ViewFormBase {
     ];
 
     $is_display_deleted = !empty($display['deleted']);
-    // The default display cannot be duplicated.
+    // The master display cannot be duplicated.
     $is_default = $display['id'] == 'default';
     // @todo: Figure out why getOption doesn't work here.
     $is_enabled = $view->getExecutable()->displayHandlers->get($display['id'])->isEnabled();

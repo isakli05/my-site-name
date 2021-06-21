@@ -31,11 +31,11 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
   protected $defaultTheme = 'stark';
 
   /**
-   * Number of results for the Default display.
+   * Number of results for the Master display.
    *
    * @var int
    */
-  protected $defaultDisplayResults = 5;
+  protected $masterDisplayResults = 5;
 
   /**
    * Number of results for the Block display.
@@ -83,7 +83,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
     $this->container->get('views.views_data')->clear();
 
     // Create some comments and attach them to the created node.
-    for ($i = 0; $i < $this->defaultDisplayResults; $i++) {
+    for ($i = 0; $i < $this->masterDisplayResults; $i++) {
       /** @var \Drupal\comment\CommentInterface $comment */
       $comment = Comment::create([
         'status' => CommentInterface::PUBLISHED,
@@ -97,7 +97,7 @@ class DefaultViewRecentCommentsTest extends ViewTestBase {
       $comment->comment_body->format = 'full_html';
 
       // Ensure comments are sorted in ascending order.
-      $time = REQUEST_TIME + ($this->defaultDisplayResults - $i);
+      $time = REQUEST_TIME + ($this->masterDisplayResults - $i);
       $comment->setCreatedTime($time);
       $comment->changed->value = $time;
 

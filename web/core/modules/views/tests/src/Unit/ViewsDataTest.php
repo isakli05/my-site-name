@@ -419,9 +419,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a single table and warm cache.
-   *
-   * Warm cache:
+   * Tests the cache calls for a single table and warm cache for:
    *   - all tables
    *   - views_test_data
    */
@@ -447,7 +445,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a different table than the one in cache.
+   * Tests the cache calls for a different table than the one in cache:
    *
    * Warm cache:
    *   - all tables
@@ -482,7 +480,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a non-existent table.
+   * Tests the cache calls for a non-existent table:
    *
    * Warm cache:
    *   - all tables
@@ -520,7 +518,7 @@ class ViewsDataTest extends UnitTestCase {
   }
 
   /**
-   * Tests the cache calls for a non-existent table.
+   * Tests the cache calls for a non-existent table:
    *
    * Warm cache:
    *   - all tables

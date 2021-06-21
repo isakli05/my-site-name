@@ -48,13 +48,11 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
     // Install French language.
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Enable URL language detection and selection.
     $edit = ['language_interface[enabled][language-url]' => 1];
-    $this->drupalGet('admin/config/regional/language/detection');
-    $this->submitForm($edit, 'Save settings');
+    $this->drupalPostForm('admin/config/regional/language/detection', $edit, 'Save settings');
 
     // Check that drupalSettings contains path prefix.
     $this->drupalGet('fr/admin/config/regional/language/detection');
@@ -71,7 +69,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     // Check that URL rewriting is not applied to subrequests.
     $this->drupalGet('language_test/subrequest');
-    $this->assertSession()->pageTextContains($this->webUser->getAccountName());
+    $this->assertText($this->webUser->getAccountName());
   }
 
   /**
@@ -118,8 +116,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
       'domain[en]' => $base_url_host,
       'domain[fr]' => $language_domain,
     ];
-    $this->drupalGet('admin/config/regional/language/detection/url');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalPostForm('admin/config/regional/language/detection/url', $edit, 'Save configuration');
     // Rebuild the container so that the new language gets picked up by services
     // that hold the list of languages.
     $this->rebuildContainer();
@@ -149,7 +146,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     $expected = ($index_php ? 'http://example.fr:88/index.php' : 'http://example.fr:88') . rtrim(base_path(), '/') . '/';
 
-    $this->assertEquals($expected, $url, 'The right port is used.');
+    $this->assertEqual($expected, $url, 'The right port is used.');
 
     // If we set the port explicitly, it should not be overridden.
     $url = Url::fromRoute('<front>', [], [
@@ -160,7 +157,7 @@ class LanguageUrlRewritingTest extends BrowserTestBase {
 
     $expected = $index_php ? 'http://example.fr:90/index.php' : 'http://example.fr:90' . rtrim(base_path(), '/') . '/';
 
-    $this->assertEquals($expected, $url, 'A given port is not overridden.');
+    $this->assertEqual($expected, $url, 'A given port is not overridden.');
 
   }
 

@@ -147,7 +147,7 @@ class QueryTest extends DatabaseTestBase {
     $count = $this->connection->query('SELECT COUNT(*) + :count FROM {test}', [
       ':count' => 3,
     ])->fetchField();
-    $this->assertEquals($count_expected, $count);
+    $this->assertEqual($count_expected, $count);
   }
 
   /**

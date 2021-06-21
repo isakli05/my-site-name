@@ -66,13 +66,11 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     // Add a second and third language.
     $edit = [];
     $edit['predefined_langcode'] = 'fr';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     $edit = [];
     $edit['predefined_langcode'] = 'nl';
-    $this->drupalGet('admin/config/regional/language/add');
-    $this->submitForm($edit, 'Add language');
+    $this->drupalPostForm('admin/config/regional/language/add', $edit, 'Add language');
 
     // Enable translation for "Basic page" nodes.
     $edit = [
@@ -80,8 +78,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
       'settings[node][page][translatable]' => 1,
       "settings[node][page][fields][$this->fieldName]" => 1,
     ];
-    $this->drupalGet('admin/config/regional/content-language');
-    $this->submitForm($edit, 'Save configuration');
+    $this->drupalPostForm('admin/config/regional/content-language', $edit, 'Save configuration');
   }
 
   /**
@@ -99,13 +96,11 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $edit = [];
     $name = 'files[' . $this->fieldName . '_0]';
     $edit[$name] = \Drupal::service('file_system')->realpath($this->drupalGetTestFiles('text')[0]->uri);
-    $this->drupalGet('node/' . $default_language_node->id() . '/edit');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/' . $default_language_node->id() . '/edit', $edit, 'Save');
     $first_fid = $this->getLastFileId();
 
     // Translate the node into French: remove the existing file.
-    $this->drupalGet('node/' . $default_language_node->id() . '/translations/add/en/fr');
-    $this->submitForm([], 'Remove');
+    $this->drupalPostForm('node/' . $default_language_node->id() . '/translations/add/en/fr', [], 'Remove');
 
     // Upload a different file.
     $edit = [];
@@ -120,7 +115,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
 
-    /** @var \Drupal\file\FileInterface $file */
+    /* @var $file \Drupal\file\FileInterface */
 
     // Ensure the file status of the first file permanent.
     $file = File::load($first_fid);
@@ -131,8 +126,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertTrue($file->isPermanent());
 
     // Translate the node into dutch: remove the existing file.
-    $this->drupalGet('node/' . $default_language_node->id() . '/translations/add/en/nl');
-    $this->submitForm([], 'Remove');
+    $this->drupalPostForm('node/' . $default_language_node->id() . '/translations/add/en/nl', [], 'Remove');
 
     // Upload a different file.
     $edit = [];
@@ -160,8 +154,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertTrue($file->isPermanent());
 
     // Edit the second translation: remove the existing file.
-    $this->drupalGet('fr/node/' . $default_language_node->id() . '/edit');
-    $this->submitForm([], 'Remove');
+    $this->drupalPostForm('fr/node/' . $default_language_node->id() . '/edit', [], 'Remove');
 
     // Upload a different file.
     $edit = [];
@@ -185,8 +178,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertTrue($file->isPermanent());
 
     // Delete the third translation.
-    $this->drupalGet('nl/node/' . $default_language_node->id() . '/delete');
-    $this->submitForm([], 'Delete Dutch translation');
+    $this->drupalPostForm('nl/node/' . $default_language_node->id() . '/delete', [], 'Delete Dutch translation');
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
 
@@ -202,8 +194,7 @@ class FileOnTranslatedEntityTest extends FileFieldTestBase {
     $this->assertTrue($file->isTemporary());
 
     // Delete the all translations.
-    $this->drupalGet('node/' . $default_language_node->id() . '/delete');
-    $this->submitForm([], 'Delete all translations');
+    $this->drupalPostForm('node/' . $default_language_node->id() . '/delete', [], 'Delete all translations');
 
     \Drupal::entityTypeManager()->getStorage('file')->resetCache();
 

@@ -72,11 +72,10 @@ class NodeCreationTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the Basic page has been created.
-    $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
+    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -97,8 +96,8 @@ class NodeCreationTest extends NodeTestBase {
     $node_type->save();
 
     $this->drupalGet('node/' . $node->id());
-    $this->assertSession()->pageTextContains($node->getOwner()->getAccountName());
-    $this->assertSession()->pageTextContains($this->container->get('date.formatter')->format($node->getCreatedTime()));
+    $this->assertText($node->getOwner()->getAccountName());
+    $this->assertText($this->container->get('date.formatter')->format($node->getCreatedTime()));
 
     // Check if the node revision checkbox is not rendered on node creation form.
     $admin_user = $this->drupalCreateUser([
@@ -160,15 +159,14 @@ class NodeCreationTest extends NodeTestBase {
     $edit = [];
     $edit['title[0][value]'] = $this->randomMachineName(8);
     $edit['body[0][value]'] = $this->randomMachineName(16);
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
 
     // Check that the user was redirected to the home page.
     $this->assertSession()->addressEquals('');
-    $this->assertSession()->pageTextContains('Test page text');
+    $this->assertText('Test page text');
 
     // Confirm that the node was created.
-    $this->assertSession()->pageTextContains('Basic page ' . $edit['title[0][value]'] . ' has been created.');
+    $this->assertText('Basic page ' . $edit['title[0][value]'] . ' has been created.');
 
     // Verify that the creation message contains a link to a node.
     $this->assertSession()->elementExists('xpath', '//div[@data-drupal-messages]//a[contains(@href, "node/")]');
@@ -187,8 +185,7 @@ class NodeCreationTest extends NodeTestBase {
       'title[0][value]' => $this->randomMachineName(8),
       'body[0][value]' => $this->randomMachineName(16),
     ];
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertNotNull($node->getCreatedTime());
 
@@ -200,8 +197,7 @@ class NodeCreationTest extends NodeTestBase {
       'created[0][value][date]' => date('Y-m-d', $date),
       'created[0][value][time]' => date('H:i:s', $date),
     ];
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertEquals($date, $node->getCreatedTime());
 
@@ -213,8 +209,7 @@ class NodeCreationTest extends NodeTestBase {
       'created[0][value][date]' => date('Y-m-d', $date),
       'created[0][value][time]' => date('H:i:s', $date),
     ];
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $node = $this->drupalGetNodeByTitle($edit['title[0][value]']);
     $this->assertEquals($date, $node->getCreatedTime());
 
@@ -225,8 +220,7 @@ class NodeCreationTest extends NodeTestBase {
       'created[0][value][date]' => '2013-13-13',
       'created[0][value][time]' => '11:00:00',
     ];
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $this->assertSession()->pageTextContains('The Authored on date is invalid.');
     $this->assertFalse($this->drupalGetNodeByTitle($edit['title[0][value]']));
 
@@ -237,8 +231,7 @@ class NodeCreationTest extends NodeTestBase {
       'created[0][value][date]' => '2012-01-01',
       'created[0][value][time]' => '30:00:00',
     ];
-    $this->drupalGet('node/add/page');
-    $this->submitForm($edit, 'Save');
+    $this->drupalPostForm('node/add/page', $edit, 'Save');
     $this->assertSession()->pageTextContains('The Authored on date is invalid.');
     $this->assertFalse($this->drupalGetNodeByTitle($edit['title[0][value]']));
   }

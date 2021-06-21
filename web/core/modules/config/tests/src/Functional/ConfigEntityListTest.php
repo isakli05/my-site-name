@@ -168,25 +168,29 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->titleEquals('Test configuration | Drupal');
 
     // Test for the table.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table', 1);
+    $element = $this->xpath('//div[@class="layout-content"]//table');
+    $this->assertCount(1, $element, 'Configuration entity list table found.');
 
     // Test the table header.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/thead/tr/th', 3);
+    $elements = $this->xpath('//div[@class="layout-content"]//table/thead/tr/th');
+    $this->assertCount(3, $elements, 'Correct number of table header cells found.');
 
     // Test the contents of each th cell.
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[1]', 'Label');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[2]', 'Machine name');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/thead/tr/th[3]', 'Operations');
+    $expected_items = ['Label', 'Machine name', 'Operations'];
+    foreach ($elements as $key => $element) {
+      $this->assertSame($expected_items[$key], $element->getText());
+    }
 
     // Check the number of table row cells.
-    $this->assertSession()->elementsCount('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td', 3);
+    $elements = $this->xpath('//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td');
+    $this->assertCount(3, $elements, 'Correct number of table row cells found.');
 
     // Check the contents of each row cell. The first cell contains the label,
     // the second contains the machine name, and the third contains the
     // operations list.
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[1]', 'Default');
-    $this->assertSession()->elementTextEquals('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[2]', 'dotted.default');
-    $this->assertSession()->elementExists('xpath', '//div[@class="layout-content"]//table/tbody/tr[@class="odd"]/td[3]//ul');
+    $this->assertSame('Default', $elements[0]->getText());
+    $this->assertSame('dotted.default', $elements[1]->getText());
+    $this->assertNotEmpty($elements[2]->find('xpath', '//ul'), 'Operations list found.');
 
     // Add a new entity using the operations link.
     $this->assertSession()->linkExists('Add test configuration');
@@ -246,11 +250,11 @@ class ConfigEntityListTest extends BrowserTestBase {
     $this->assertSession()->elementNotExists('xpath', '//td[text() = "dotted.default"]');
 
     // Confirm that the empty text is displayed.
-    $this->assertSession()->pageTextContains('There are no test configuration entities yet.');
+    $this->assertText('There are no test configuration entities yet.');
   }
 
   /**
-   * Tests paging.
+   * Test paging.
    */
   public function testPager() {
     $this->drupalLogin($this->drupalCreateUser([

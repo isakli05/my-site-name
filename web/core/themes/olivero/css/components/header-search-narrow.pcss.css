@@ -5,12 +5,12 @@
 
 @import "../base/variables.pcss.css";
 
-.block-search-narrow {
+.search-narrow__wrapper {
   margin-inline: calc(-1 * var(--sp));
   margin-block-end: var(--sp2);
   background: var(--color--black);
 
-  & .search-block-form {
+  & form {
     display: flex;
   }
 
@@ -48,8 +48,7 @@
     }
 
     &:focus {
-      outline: solid 4px transparent;
-      outline-offset: -4px;
+      outline: 0;
       background-size: 100% 5px;
 
       /*
@@ -116,8 +115,7 @@
     }
 
     &:focus {
-      outline: solid 4px transparent;
-      outline-offset: -4px;
+      outline: 0;
       box-shadow: none;
 
       & span:after {
@@ -162,13 +160,13 @@
   }
 }
 
-body:not(.is-always-mobile-nav) .block-search-narrow {
+body:not(.is-always-mobile-nav) .search-narrow__wrapper {
   @media (--nav) {
     display: none;
   }
 }
 
-[dir="rtl"] .block-search-narrow {
+[dir="rtl"] .search-narrow__wrapper {
   & input[type="search"] {
     background-position: bottom right;
   }

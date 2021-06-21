@@ -178,7 +178,7 @@ class FieldEntityTranslationTest extends ViewTestBase {
         'sticky' => $row->find('xpath', (new CssSelectorConverter())->toXPath('.views-field-sticky span.field-content'))->getText(),
       ];
     }
-    $this->assertEquals($expected, $actual);
+    $this->assertEqual($expected, $actual);
   }
 
 }

@@ -83,7 +83,7 @@ class EntityCrudHookTest extends EntityKernelTestBase {
     // Sort the positions and ensure they remain in the same order.
     $sorted = $positions;
     sort($sorted);
-    $this->assertSame($positions, $sorted, 'The hook messages appear in the correct order.');
+    $this->assertTrue($sorted == $positions, 'The hook messages appear in the correct order.');
   }
 
   /**
