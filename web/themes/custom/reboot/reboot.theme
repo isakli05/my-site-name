@@ -1,0 +1,8 @@
+<?php 
+
+function reboot_preprocess_node(&$variables)
+{
+  $variables['today'] = date('H:i, m-d-Y');
+}
+
+?>

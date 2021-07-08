@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * Preprocess function for node.html.twig.
+ */
+function icecream_preprocess_node(&$variables)
+{
+  // If the current user is logged in, and they are the owner of the node
+  // being viewed, add a suffix to the label variable.
+  $variables['current_user_is_owner'] = FALSE;
+
+  if ($variables['logged_in'] == TRUE && $variables['node']->getOwnerId() == $variables['user']->id()) {
+    $variables['label']['#suffix'] = '[you are the author]';
+    $variables['current_user_is_owner'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK_alter().
+ */
+function icecream_theme_suggestions_node_alter(array &$suggestions, array $variables) {
+  $logged_in = \Drupal::currentUser()->isAuthenticated();
+  if ($logged_in) {
+    $suggestions[] = 'node__' . 'authenticated';
+  }
+}
+
